@@ -8,10 +8,8 @@ cd ${PDIR}
 
 SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
 BINDIR=${SYNTAXNET_HOME}/bazel-bin/syntaxnet
-CONTEXT=${CDIR}/testdata/context.pbtxt
+CONTEXT=${CDIR}/testdata/context.pbtxt.parser
 TMP_DIR=${CDIR}/testdata/tmp/syntaxnet-output
-#CONTEXT=${CDIR}/UD_English/context.pbtxt
-#TMP_DIR=${CDIR}/UD_English/tmp/syntaxnet-output
 
 mkdir -p $TMP_DIR
 cat $CONTEXT | sed "s=OUTPATH=$TMP_DIR=" > $TMP_DIR/context

@@ -34,21 +34,21 @@ input {
   name: 'training-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/testdata_tag/mini-training-set'
+    file_pattern: 'work/testdata/mini-training-set'
   }
 }
 input {
   name: 'tuning-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/testdata_tag/mini-training-set'
+    file_pattern: 'work/testdata/mini-training-set'
   }
 }
 input {
   name: 'dev-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/testdata_tag/mini-training-set'
+    file_pattern: 'work/testdata/mini-training-set'
   }
 }
 input {

@@ -109,19 +109,26 @@ fi
 
 cd ${PDIR}
 
+python=/usr/bin/python
+
 SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
-CONTEXT=${CDIR}/testdata_tag/context.pbtxt
-TMP_DIR=${CDIR}/syntaxnet/testdata_tag/tmp/syntaxnet-output
+CONTEXT=${CDIR}/UD_English/context.pbtxt
+TMP_DIR=${CDIR}/UD_English/tmp/syntaxnet-output
 
-$BINDIR/parser_trainer \
-  --task_context=$CONTEXT \
+# convert
+${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-train.conllu > ${CDIR}/UD_English/en-ud-train.conllu.conv
+${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-dev.conllu > ${CDIR}/UD_English/en-ud-dev.conllu.conv
+${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
+
+${BINDIR}/parser_trainer \
+  --task_context=${CONTEXT} \
   --arg_prefix=brain_pos \
   --compute_lexicon \
   --graph_builder=greedy \
   --training_corpus=training-corpus \
   --tuning_corpus=tuning-corpus \
-  --output_path=$TMP_DIR \
+  --output_path=${TMP_DIR} \
   --batch_size=32 \
   --decay_steps=3600 \
   --hidden_layer_sizes=128 \

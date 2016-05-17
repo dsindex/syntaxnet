@@ -13,8 +13,12 @@ CDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]})))
 PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
 cd ${PDIR}
 
-PARSER_EVAL=bazel-bin/syntaxnet/parser_eval
-MODEL_DIR=syntaxnet/models/parsey_mcparseface
+SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
+BINDIR=${SYNTAXNET_HOME}/bazel-bin/syntaxnet
+
+PARSER_EVAL=${BINDIR}/parser_eval
+CONLL2TREE=${BINDIR}/conll2tree
+MODEL_DIR=${SYNTAXNET_HOME}/syntaxnet/models/parsey_mcparseface
 [[ "$1" == "--conll" ]] && INPUT_FORMAT=stdin-conll || INPUT_FORMAT=stdin
 
 $PARSER_EVAL \
@@ -29,7 +33,7 @@ $PARSER_EVAL \
   --batch_size=1024 \
   --alsologtostderr \
    | \
-  $PARSER_EVAL \
+$PARSER_EVAL \
   --input=stdin-conll \
   --output=stdout-conll \
   --hidden_layer_sizes=512,512 \
@@ -41,6 +45,6 @@ $PARSER_EVAL \
   --batch_size=1024 \
   --alsologtostderr \
   | \
-  bazel-bin/syntaxnet/conll2tree \
+$CONLL2TREE \
   --task_context=$MODEL_DIR/context.pbtxt \
   --alsologtostderr

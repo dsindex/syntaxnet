@@ -117,9 +117,9 @@ CONTEXT=${CDIR}/UD_English/context.pbtxt
 TMP_DIR=${CDIR}/UD_English/tmp/syntaxnet-output
 
 # convert
-${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-train.conllu > ${CDIR}/UD_English/en-ud-train.conllu.conv
-${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-dev.conllu > ${CDIR}/UD_English/en-ud-dev.conllu.conv
-${python} ${CDIR}/UD_English/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
+${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-train.conllu > ${CDIR}/UD_English/en-ud-train.conllu.conv
+${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-dev.conllu > ${CDIR}/UD_English/en-ud-dev.conllu.conv
+${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
 
 ${BINDIR}/parser_trainer \
   --task_context=${CONTEXT} \

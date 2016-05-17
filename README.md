@@ -32,5 +32,5 @@ $ ./parser_trainer_test.sh
 ```
 (for example, training UD_English)
 $ ./train.sh
-
+(and follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)
 ```

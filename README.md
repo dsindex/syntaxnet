@@ -18,16 +18,19 @@ $ ./parser_trainer_test.sh
 - download univeral dependency treebank data 
   - http://universaldependencies.org/#en)
   ```
-  mkdir corpus
-  cd orpus
+  $ cd work
+  $ mkdir corpus
+  $ cd corpus
   (downloading ud-treebanks-v1.2.tgz)
-  tar -zxvf ud-treebanks-v1.2.tgz  
-  ls universal-dependencies-1.2 
-  UD_Ancient_Greek  UD_Basque  UD_Czech ....
+  $ tar -zxvf ud-treebanks-v1.2.tgz  
+  $ ls universal-dependencies-1.2 
+  $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
+  $ cp -rf universal-dependencies-1.2/UD_English ../
   ```
 
 - training other corpus
 ```
-(training UD_English)
+(for example, training UD_English)
 $ ./train.sh
+
 ```

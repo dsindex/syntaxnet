@@ -25,7 +25,6 @@ $ ./parser_trainer_test.sh
   $ tar -zxvf ud-treebanks-v1.2.tgz  
   $ ls universal-dependencies-1.2 
   $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
-  $ cp -rf universal-dependencies-1.2/UD_English ../
   ```
 
 - training other corpus

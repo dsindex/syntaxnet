@@ -156,7 +156,7 @@ function preprocess_with_tagger {
 }
 #preprocess_with_tagger
 
-PARSER_PARAMS=200x200-0.08-4400-0.85-4
+LP_PARAMS=200x200-0.08-4400-0.85-4
 function pretrain_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
@@ -172,23 +172,44 @@ function pretrain_parser {
 	  --seed=4 \
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
-	  --params=${PARSER_PARAMS}
+	  --params=${LP_PARAMS}
 }
 #pretrain_parser
 
 function evaluate_parser {
 	for SET in training tuning dev; do
 		${BINDIR}/parser_eval \
-		--task_context=${TMP_DIR}/brain_parser/greedy/${PARSER_PARAMS}/context \
+		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 		--hidden_layer_sizes=200,200 \
 		--input=tagged-$SET-corpus \
 		--output=parsed-$SET-corpus \
 		--arg_prefix=brain_parser \
 		--graph_builder=greedy \
-		--model_path=${TMP_DIR}/brain_parser/greedy/${PARSER_PARAMS}/model
+		--model_path=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model
 	done
 }
-evaluate_parser
+#evaluate_parser
+
+GP_PARAMS=200x200-0.02-100-0.9-0
+function train_parser {
+	${BINDIR}/parser_trainer \
+	  --arg_prefix=brain_parser \
+	  --batch_size=8 \
+	  --decay_steps=100 \
+	  --graph_builder=structured \
+	  --hidden_layer_sizes=200,200 \
+	  --learning_rate=0.02 \
+	  --momentum=0.9 \
+	  --output_path=${TMP_DIR} \
+	  --task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
+	  --seed=0 \
+	  --training_corpus=projectivized-training-corpus \
+	  --tuning_corpus=tagged-tuning-corpus \
+	  --params=${GP_PARAMS} \
+	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
+	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1
+}
+train_parser
 
 close_fd
 

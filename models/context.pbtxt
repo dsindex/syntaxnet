@@ -14,6 +14,10 @@ Parameter {
   name: 'brain_parser_scoring'
   value: 'default'
 }
+Parameter {
+  name: "brain_parser_transition_system"
+  value: "arc-standard"
+}
 
 Parameter {
   name: 'brain_pos_embedding_dims'
@@ -28,112 +32,45 @@ Parameter {
   value: 'stack(3).word stack(2).word stack(1).word stack.word input.word input(1).word input(2).word input(3).word;input.digit input.hyphen;stack.suffix(length=2) input.suffix(length=2) input(1).suffix(length=2);stack.prefix(length=2) input.prefix(length=2) input(1).prefix(length=2)'
 }
 Parameter {
-  name: 'brain_pos_transition_system'
-  value: 'tagger'
+  name: "brain_pos_transition_system"
+  value: "tagger"
 }
 
 input {
-  name: 'training-corpus'
-  record_format: 'conll-sentence'
+  name: "tag-map"
   Part {
-    file_pattern: 'work/UD_English/en-ud-train.conllu.conv'
+    file_pattern: "work/models/tag-map"
   }
 }
 input {
-  name: 'tuning-corpus'
-  record_format: 'conll-sentence'
+  name: "tag-to-category"
   Part {
-    file_pattern: 'work/UD_English/en-ud-dev.conllu.conv'
+    file_pattern: "work/models/fine-to-universal.map"
   }
 }
 input {
-  name: 'dev-corpus'
-  record_format: 'conll-sentence'
+  name: "word-map"
   Part {
-    file_pattern: 'work/UD_English/en-ud-dev.conllu.conv'
+    file_pattern: "work/models/word-map"
   }
 }
 input {
-  name: 'tagged-training-corpus'
-  creator: 'brain_pos/greedy'
-  record_format: 'conll-sentence'
+  name: "label-map"
+  Part {
+    file_pattern: "work/models/label-map"
+  }
 }
 input {
-  name: 'tagged-tuning-corpus'
-  creator: 'brain_pos/greedy'
-  record_format: 'conll-sentence'
+  name: "prefix-table"
+  Part {
+    file_pattern: "work/models/prefix-table"
+  }
 }
 input {
-  name: 'tagged-dev-corpus'
-  creator: 'brain_pos/greedy'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'label-map'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'word-map'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'lcword-map'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'tag-map'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'category-map'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'prefix-table'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'suffix-table'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'tag-to-category'
-  creator: 'brain_pos/greedy'
-}
-input {
-  name: 'projectivized-training-corpus'
-  creator: 'brain_parser/greedy'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'parsed-training-corpus'
-  creator: 'brain_parser/greedy'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'parsed-tuning-corpus'
-  creator: 'brain_parser/greedy'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'parsed-dev-corpus'
-  creator: 'brain_parser/greedy'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'beam-parsed-training-corpus'
-  creator: 'brain_parser/structured'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'beam-parsed-tuning-corpus'
-  creator: 'brain_parser/structured'
-  record_format: 'conll-sentence'
-}
-input {
-  name: 'beam-parsed-dev-corpus'
-  creator: 'brain_parser/structured'
-  record_format: 'conll-sentence'
+  name: "suffix-table"
+  Part {
+    file_pattern: "work/models/suffix-table"
+  }
 }
 input {
   name: 'stdin'

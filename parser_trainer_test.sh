@@ -72,8 +72,7 @@ STRUCT_PARAMS=128-0.001-3600-0.9-0
   --learning_rate=0.001 \
   --momentum=0.9 \
   --pretrained_params=$TMP_DIR/brain_parser/greedy/$PARAMS/model \
-  --pretrained_params_names=\
-embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0 \
+  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0 \
   --output_path=$TMP_DIR \
   --task_context=$TMP_DIR/context \
   --training_corpus=training-corpus \

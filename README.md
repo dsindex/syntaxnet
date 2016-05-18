@@ -54,3 +54,8 @@ INFO:tensorflow:Seconds elapsed in evaluation: 5.42, eval metric: 82.67%
 INFO:tensorflow:Seconds elapsed in evaluation: 57.69, eval metric: 83.95%
 ...
 ```
+
+- test training model
+```
+$ echo "this is my own tagger and parser" | ./test.sh
+```

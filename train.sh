@@ -176,6 +176,20 @@ function pretrain_parser {
 }
 #pretrain_parser
 
+function evaluate_parser {
+	for SET in training tuning dev; do
+		${BINDIR}/parser_eval \
+		--task_context=${TMP_DIR}/brain_parser/greedy/${PARSER_PARAMS}/context \
+		--hidden_layer_sizes=200,200 \
+		--input=tagged-$SET-corpus \
+		--output=parsed-$SET-corpus \
+		--arg_prefix=brain_parser \
+		--graph_builder=greedy \
+		--model_path=${TMP_DIR}/brain_parser/greedy/${PARSER_PARAMS}/model
+	done
+}
+evaluate_parser
+
 close_fd
 
 # end main

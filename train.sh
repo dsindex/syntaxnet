@@ -144,7 +144,7 @@ function train_pos_tagger {
 #train_pos_tagger
 
 function preprocess_with_tagger {
-	for SET in training tuning dev; do
+	for SET in training tuning tst; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
 		--hidden_layer_sizes=128 \
@@ -178,7 +178,7 @@ function pretrain_parser {
 #pretrain_parser
 
 function evaluate_pretrained_parser {
-	for SET in training tuning dev; do
+	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 		--hidden_layer_sizes=200,200 \
@@ -213,7 +213,8 @@ function train_parser {
 #train_parser
 
 function evaluate_parser {
-	for SET in training tuning dev; do
+	#for SET in training tuning test; do
+	for SET in test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/context \
 		--hidden_layer_sizes=200,200 \

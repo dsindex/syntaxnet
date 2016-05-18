@@ -47,10 +47,10 @@ input {
   }
 }
 input {
-  name: 'dev-corpus'
+  name: 'test-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/UD_English/en-ud-dev.conllu.conv'
+    file_pattern: 'work/UD_English/en-ud-test.conllu.conv'
   }
 }
 input {
@@ -64,7 +64,7 @@ input {
   record_format: 'conll-sentence'
 }
 input {
-  name: 'tagged-dev-corpus'
+  name: 'tagged-test-corpus'
   creator: 'brain_pos/greedy'
   record_format: 'conll-sentence'
 }
@@ -116,7 +116,7 @@ input {
   record_format: 'conll-sentence'
 }
 input {
-  name: 'parsed-dev-corpus'
+  name: 'parsed-test-corpus'
   creator: 'brain_parser/greedy'
   record_format: 'conll-sentence'
 }
@@ -131,7 +131,7 @@ input {
   record_format: 'conll-sentence'
 }
 input {
-  name: 'beam-parsed-dev-corpus'
+  name: 'beam-parsed-test-corpus'
   creator: 'brain_parser/structured'
   record_format: 'conll-sentence'
 }

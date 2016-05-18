@@ -44,7 +44,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 1.26, eval metric: 92.04%
 ...
 INFO:tensorflow:Seconds elapsed in evaluation: 4.97, eval metric: 82.20%
 ...
-#evaluate parser
+#evaluate pretrained parser
 ...
 INFO:tensorflow:Seconds elapsed in evaluation: 44.30, eval metric: 92.36%
 ...
@@ -54,11 +54,25 @@ INFO:tensorflow:Seconds elapsed in evaluation: 5.42, eval metric: 82.67%
 ...
 INFO:tensorflow:Seconds elapsed in evaluation: 57.69, eval metric: 83.95%
 ...
-INFO:tensorflow:Seconds elapsed in evaluation: 60.70, eval metric: 83.24%
+#evaluate parser
+...
+INFO:tensorflow:Seconds elapsed in evaluation: 283.77, eval metric: 96.54%
+...
+INFO:tensorflow:Seconds elapsed in evaluation: 34.49, eval metric: 84.09%
 ...
 ```
 
 - test new model
 ```
 $ echo "this is my own tagger and parser" | ./test.sh
+...
+Input: this is my own tagger and parser
+Parse:
+tagger NN ROOT
+ +-- this DT nsubj
+ +-- is VBZ cop
+ +-- my PRP$ nmod:poss
+ +-- own JJ amod
+ +-- and CC cc
+ +-- parser NN conj
 ```

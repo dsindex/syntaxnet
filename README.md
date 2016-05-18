@@ -70,4 +70,39 @@ tagger NN ROOT
  +-- own JJ amod
  +-- and CC cc
  +-- parser NN conj
+
+* original model's output
+$ echo "this is my own tagger and parser" | ./demo.sh
+Input: this is my own tagger and parser
+Parse:
+tagger NN ROOT
+ +-- this DT nsubj
+ +-- is VBZ cop
+ +-- my PRP$ poss
+ +-- own JJ amod
+ +-- and CC cc
+ +-- parser ADD conj 
+
+$ echo "Bob brought the pizza to Alice ." | ./test.sh
+Input: Bob brought the pizza to Alice .
+Parse:
+brought VBD ROOT
+ +-- Bob NNP nsubj
+ +-- pizza NN dobj
+ |   +-- the DT det
+ +-- Alice NNP nmod
+ |   +-- to IN case
+ +-- . . punct
+
+* original model's output
+$ echo "Bob brought the pizza to Alice ." | ./demo.sh
+Input: Bob brought the pizza to Alice .
+Parse:
+brought VBD ROOT
+ +-- Bob NNP nsubj
+ +-- pizza NN dobj
+ |   +-- the DT det
+ +-- to IN prep
+ |   +-- Alice NNP pobj
+ +-- . . punct
 ```

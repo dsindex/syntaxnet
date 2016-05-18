@@ -8,7 +8,7 @@ cd ${PDIR}
 
 SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
 BINDIR=${SYNTAXNET_HOME}/bazel-bin/syntaxnet
-CONTEXT=${CDIR}/testdata/context.pbtxt.parser
+CONTEXT=${CDIR}/testdata/context.pbtxt
 TMP_DIR=${CDIR}/testdata/tmp/syntaxnet-output
 
 mkdir -p $TMP_DIR

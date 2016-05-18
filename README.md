@@ -30,6 +30,12 @@ $ ./parser_trainer_test.sh
 - training other corpus
 ```
 (for example, training UD_English)
+(follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)
 $ ./train.sh
-(and follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)
+(preprocessing with tagger)
+...
+INFO:tensorflow:Seconds elapsed in evaluation: 9.77, eval metric: 99.71%
+...
+INFO:tensorflow:Seconds elapsed in evaluation: 1.26, eval metric: 92.04%
+...
 ```

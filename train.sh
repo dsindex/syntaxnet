@@ -167,14 +167,14 @@ function pretrain_parser {
 	  --hidden_layer_sizes=200,200 \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
-	  --output_path=models \
-	  --task_context=models/brain_pos/greedy/${POS_PARAMS}/context \
+	  --output_path=${TMP_DIR} \
+	  --task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
 	  --seed=4 \
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${PARSER_PARAMS}
 }
-pretrain_parser
+#pretrain_parser
 
 close_fd
 

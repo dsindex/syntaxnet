@@ -145,13 +145,13 @@ function train_pos_tagger {
 function preprocess_with_tagger {
 	for SET in training tuning dev; do
 		${BINDIR}/parser_eval \
-		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
-		--hidden_layer_sizes=128 \
-		--input=$SET-corpus \
-		--output=tagged-$SET-corpus \
-		--arg_prefix=brain_pos \
-		--graph_builder=greedy \
-		--model_path=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model
+	  --task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
+	  --hidden_layer_sizes=128 \
+	  --input=$SET-corpus \
+	  --output=tagged-$SET-corpus \
+	  --arg_prefix=brain_pos \
+	  --graph_builder=greedy \
+	  --model_path=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model
 	done
 }
 #preprocess_with_tagger
@@ -179,13 +179,13 @@ function pretrain_parser {
 function evaluate_parser {
 	for SET in training tuning dev; do
 		${BINDIR}/parser_eval \
-		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
-		--hidden_layer_sizes=200,200 \
-		--input=tagged-$SET-corpus \
-		--output=parsed-$SET-corpus \
-		--arg_prefix=brain_parser \
-		--graph_builder=greedy \
-		--model_path=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model
+	  --task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
+	  --hidden_layer_sizes=200,200 \
+	  --input=tagged-$SET-corpus \
+	  --output=parsed-$SET-corpus \
+	  --arg_prefix=brain_parser \
+	  --graph_builder=greedy \
+	  --model_path=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model
 	done
 }
 #evaluate_parser

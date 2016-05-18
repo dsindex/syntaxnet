@@ -12,7 +12,8 @@ $ pwd
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ echo "hello syntaxnet" | ./demo.sh
-$ ./parser_trainer_test.sh 
+(training parser only with parsed corpus)
+$ ./parser_trainer_test.sh
 ```
 
 - download univeral dependency treebank data 
@@ -27,7 +28,7 @@ $ ./parser_trainer_test.sh
   $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
   ```
 
-- training tagger/parser with another corpus
+- training tagger and parser with another corpus
 ```
 (for example, training UD_English)
 (follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)

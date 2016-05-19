@@ -32,7 +32,7 @@ $ ./parser_trainer_test.sh
 ```
 (for example, training UD_English)
 (follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)
-$ ./train.sh
+$ ./train.sh -v -v
 ...
 #preprocessing with tagger
 INFO:tensorflow:Seconds elapsed in evaluation: 9.77, eval metric: 99.71%
@@ -55,6 +55,11 @@ INFO:tensorflow:Seconds elapsed in evaluation: 283.77, eval metric: 96.54%
 INFO:tensorflow:Seconds elapsed in evaluation: 34.49, eval metric: 84.09%
 INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 ...
+```
+
+- training parser only
+```
+$ ./train_p.sh -v -v
 ```
 
 - test new model

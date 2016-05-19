@@ -31,7 +31,7 @@ $ ./parser_trainer_test.sh
 - training tagger and parser with another corpus
 ```
 (for example, training UD_English)
-(follow instructions in https://github.com/tensorflow/models/tree/master/syntaxnet)
+(detail instructions can be found in https://github.com/tensorflow/models/tree/master/syntaxnet)
 $ ./train.sh -v -v
 ...
 #preprocessing with tagger
@@ -59,7 +59,9 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 
 - training parser only
 ```
+(in case you have other pos-tagger and want to build parser only from the parsed corpus) 
 $ ./train_p.sh -v -v
+...
 #pretrain parser
 ...
 #evaluate pretrained parser

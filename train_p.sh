@@ -113,8 +113,10 @@ python=/usr/bin/python
 SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
-CONTEXT=${CDIR}/UD_English/context.pbtxt
-TMP_DIR=${CDIR}/UD_English/tmp/syntaxnet-output
+CONTEXT=${CDIR}/UD_English/context.pbtxt_p
+TMP_DIR=${CDIR}/UD_English/tmp_p/syntaxnet-output
+mkdir -p ${TMP_DIR}
+cat ${CONTEXT} | sed "s=OUTPATH=${TMP_DIR}=" > ${TMP_DIR}/context
 MODEL_DIR=${CDIR}/models
 
 function convert_corpus {
@@ -123,52 +125,21 @@ function convert_corpus {
 	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
 }
 
-POS_PARAMS=128-0.08-3600-0.9-0
-function train_pos_tagger {
-	${BINDIR}/parser_trainer \
-	  --task_context=${CONTEXT} \
-	  --arg_prefix=brain_pos \
-	  --compute_lexicon \
-	  --graph_builder=greedy \
-	  --training_corpus=training-corpus \
-	  --tuning_corpus=tuning-corpus \
-	  --output_path=${TMP_DIR} \
-	  --batch_size=32 \
-	  --decay_steps=3600 \
-	  --hidden_layer_sizes=128 \
-	  --learning_rate=0.08 \
-	  --momentum=0.9 \
-	  --seed=0 \
-	  --params=${POS_PARAMS}
-}
-
-function preprocess_with_tagger {
-	for SET in training tuning test; do
-		${BINDIR}/parser_eval \
-		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
-		--hidden_layer_sizes=128 \
-		--input=$SET-corpus \
-		--output=tagged-$SET-corpus \
-		--arg_prefix=brain_pos \
-		--graph_builder=greedy \
-		--model_path=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model
-	done
-}
-
 LP_PARAMS=200x200-0.08-4400-0.85-4
 function pretrain_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
 	  --batch_size=32 \
-	  --projectivize_training_set \
+	  --compute_lexicon \
 	  --decay_steps=4400 \
 	  --graph_builder=greedy \
 	  --hidden_layer_sizes=200,200 \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
 	  --output_path=${TMP_DIR} \
-	  --task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
+	  --task_context=${TMP_DIR}/context \
 	  --seed=4 \
+	  --projectivize_training_set \
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${LP_PARAMS} \
@@ -196,6 +167,7 @@ function train_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
 	  --batch_size=8 \
+	  --compute_lexicon \
 	  --decay_steps=100 \
 	  --graph_builder=structured \
 	  --hidden_layer_sizes=200,200 \
@@ -208,7 +180,11 @@ function train_parser {
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${GP_PARAMS} \
 	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
-	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1
+	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
+	  --num_epochs=20 \
+	  --report_every=25 \
+	  --checkpoint_every=200 \
+	  --logtostderr
 }
 
 function evaluate_parser {
@@ -227,18 +203,16 @@ function evaluate_parser {
 function copy_model {
 	# needs :  fine-to-universal.map  label-map  parser-params	prefix-table  suffix-table  tag-map  tagger-params  word-map
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model ${MODEL_DIR}/tagger-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-map ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-table ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/tag-to-category ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model ${MODEL_DIR}/tagger-params
+	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/*-map ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/*-table ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/tag-to-category ${MODEL_DIR}/
 }
 
-#convert_corpus
-#train_pos_tagger
-#preprocess_with_tagger
+convert_corpus
 #pretrain_parser
 #evaluate_pretrained_parser
-#train_parser
+train_parser
 #evaluate_parser
 #copy_model
 

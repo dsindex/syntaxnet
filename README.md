@@ -60,6 +60,16 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 - training parser only
 ```
 $ ./train_p.sh -v -v
+#pretrain parser
+...
+#evaluate pretrained parser
+INFO:tensorflow:Seconds elapsed in evaluation: 44.15, eval metric: 92.21%
+INFO:tensorflow:Seconds elapsed in evaluation: 5.56, eval metric: 87.84%
+INFO:tensorflow:Seconds elapsed in evaluation: 5.43, eval metric: 86.56%
+...
+#train parser
+
+#evaluate parser
 ```
 
 - test new model

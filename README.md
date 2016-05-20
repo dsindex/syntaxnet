@@ -133,4 +133,10 @@ brought VBD ROOT
 $ ./split.sh
 $ ./c2d.sh
 $ ./train_sejong.sh
+#pretrain parser
+...
+INFO:tensorflow:Seconds elapsed in evaluation: 13.62, eval metric: 92.66%
+...
+#evaluate pretrained parser
+...
 ```

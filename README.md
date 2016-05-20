@@ -70,8 +70,12 @@ INFO:tensorflow:Seconds elapsed in evaluation: 5.56, eval metric: 87.84%
 INFO:tensorflow:Seconds elapsed in evaluation: 5.43, eval metric: 86.56%
 ...
 #train parser
-
+...
 #evaluate parser
+INFO:tensorflow:Seconds elapsed in evaluation: 279.04, eval metric: 94.60%
+INFO:tensorflow:Seconds elapsed in evaluation: 33.19, eval metric: 88.60%
+INFO:tensorflow:Seconds elapsed in evaluation: 32.57, eval metric: 87.77%
+...
 ```
 
 - test new model

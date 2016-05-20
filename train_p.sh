@@ -201,20 +201,19 @@ function evaluate_parser {
 }
 
 function copy_model {
-	# needs :  fine-to-universal.map  label-map  parser-params	prefix-table  suffix-table  tag-map  tagger-params  word-map
+	# needs : category-map  label-map	lcword-map  prefix-table  suffix-table	tag-map  tag-to-category  word-map
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
-	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model ${MODEL_DIR}/tagger-params
-	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/*-map ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/*-table ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/tag-to-category ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/*-map ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/*-table ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
 }
 
 convert_corpus
-#pretrain_parser
-#evaluate_pretrained_parser
+pretrain_parser
+evaluate_pretrained_parser
 train_parser
-#evaluate_parser
-#copy_model
+evaluate_parser
+copy_model
 
 close_fd
 

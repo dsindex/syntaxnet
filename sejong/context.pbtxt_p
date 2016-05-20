@@ -19,21 +19,21 @@ input {
   name: 'tagged-training-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/sejong/deptree.txt.v3.train'
+    file_pattern: 'work/sejong/wdir/deptree.txt.v3.train'
   }
 }
 input {
   name: 'tagged-tuning-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/sejong/deptree.txt.v3.dev'
+    file_pattern: 'work/sejong/wdir/deptree.txt.v3.dev'
   }
 }
 input {
   name: 'tagged-test-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/sejong/deptree.txt.v3.test'
+    file_pattern: 'work/sejong/wdir/deptree.txt.v3.test'
   }
 }
 input {

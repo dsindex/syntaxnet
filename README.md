@@ -132,4 +132,5 @@ brought VBD ROOT
 ```
 $ ./split.sh
 $ ./c2d.sh
+$ ./train_sejong.sh
 ```

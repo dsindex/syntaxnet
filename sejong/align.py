@@ -35,10 +35,14 @@ def split_row(n_bucket, seq, eoj, mlist, ptst, gov) :
 	mlist_max = len(mlist)
 	for morph, tag in mlist :
 		nseq = seq + '-' + str(idx)
-		if idx != mlist_max : ngov = seq + '-' + str(idx+1)
-		else : ngov = gov + '-' + '1'
-		if VERBOSE : print nseq + '\t' + morph + '\t' + tag + '\t' + ptst + '\t' + ngov
-		n_bucket.append([nseq, morph, tag, ptst, ngov])
+		if idx != mlist_max : 
+			ngov = seq + '-' + str(idx+1)
+			nptst = 'MOD'
+		else : 
+			ngov = gov + '-' + '1'
+			nptst = ptst
+		if VERBOSE : print nseq + '\t' + morph + '\t' + tag + '\t' + nptst + '\t' + ngov
+		n_bucket.append([nseq, morph, tag, nptst, ngov])
 		idx += 1
 
 def spill(bucket) :

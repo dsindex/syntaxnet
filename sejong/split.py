@@ -12,11 +12,6 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def spill(bucket, idx, mode) :
-	'''
-	정답데이터를 n조각으로 분리
-	- 1~n-1 : train
-	- 0   : test
-	'''
 	ok = False
 	if mode == 0 : # train
 		if idx % 10 != 1 and idx % 10 != 2 : ok = True

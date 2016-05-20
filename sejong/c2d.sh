@@ -94,13 +94,13 @@ if [ ! -e ${CDIR}/log ]; then
 fi
 LDIR=${CDIR}/log
 
-# for test
-${python} ${CDIR}/c2d.py --mode=0 < ${WDIR}/sejong_treebank.txt.v1.test > ${WDIR}/sejong_treebank.txt.v2.test 2> ${WDIR}/sejong_treebank.txt.v2.test.err
-${python} ${CDIR}/c2d.py --mode=1 < ${WDIR}/sejong_treebank.txt.v2.test > ${WDIR}/deptree.txt.v2.test         2> ${WDIR}/deptree.txt.v2.test.err
+for SET in train dev test; do
+	${python} ${CDIR}/c2d.py --mode=0 < ${WDIR}/sejong_treebank.txt.v1.${SET} > ${WDIR}/sejong_treebank.txt.v2.${SET} 2> ${WDIR}/sejong_treebank.txt.v2.${SET}.err
+	${python} ${CDIR}/c2d.py --mode=1 < ${WDIR}/sejong_treebank.txt.v2.${SET} > ${WDIR}/deptree.txt.v2.${SET}         2> ${WDIR}/deptree.txt.v2.${SET}.err
+	${python} ${CDIR}/align.py < ${WDIR}/deptree.txt.v2.${SET} > ${WDIR}/deptree.txt.v3.${SET}
+done
 
-# for train
-${python} ${CDIR}/c2d.py --mode=0 < ${WDIR}/sejong_treebank.txt.v1.train > ${WDIR}/sejong_treebank.txt.v2.train 2> ${WDIR}/sejong_treebank.txt.v2.train.err
-${python} ${CDIR}/c2d.py --mode=1 < ${WDIR}/sejong_treebank.txt.v2.train > ${WDIR}/deptree.txt.v2.train         2> ${WDIR}/deptree.txt.v2.train.err
+
 
 close_fd
 

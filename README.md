@@ -127,3 +127,9 @@ brought VBD ROOT
  |   +-- Alice NNP pobj
  +-- . . punct
 ```
+
+- training parser with korean sejong treebank corpus
+```
+$ ./split.sh
+$ ./c2d.sh
+```

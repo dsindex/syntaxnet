@@ -85,7 +85,10 @@ if __name__ == '__main__':
 		entry_b = b_data[i]
 		if VERBOSE :
 			if entry_a[4] != 'MOD' and entry_b[4] == 'MOD' :
-				msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]'
+				if compare(entry_a, entry_b) == 1 :
+					msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]' + '\t' + '[success]'
+				else :
+					msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]' + '\t' + '[failure]'
 				print msg
 			else :
 				msg = '\t'.join(entry_a + entry_b)

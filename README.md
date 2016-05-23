@@ -143,8 +143,13 @@ INFO:tensorflow:Seconds elapsed in evaluation: 15.50, eval metric: 93.41%
 INFO:tensorflow:Seconds elapsed in evaluation: 15.25, eval metric: 93.28%
 ...
 #evaluate pretrained parser by eoj-based
-accuracy(UAS) = 0.871814
-accuracy(UAS) = 0.858425
-accuracy(UAS) = 0.855628
+accuracy(UAS) = 0.884871
+accuracy(UAS) = 0.865384
+accuracy(UAS) = 0.860740
 ...
+#train parser
+
+#evaluate parser
+
+#evaluate parser by eoj-based
 ```

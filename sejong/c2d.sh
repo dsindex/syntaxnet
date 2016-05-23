@@ -94,7 +94,7 @@ if [ ! -e ${CDIR}/log ]; then
 fi
 LDIR=${CDIR}/log
 
-for SET in train dev test; do
+for SET in training tuning test; do
 	${python} ${CDIR}/c2d.py --mode=0 < ${WDIR}/sejong_treebank.txt.v1.${SET} > ${WDIR}/sejong_treebank.txt.v2.${SET} 2> ${WDIR}/sejong_treebank.txt.v2.${SET}.err
 	${python} ${CDIR}/c2d.py --mode=1 < ${WDIR}/sejong_treebank.txt.v2.${SET} > ${WDIR}/deptree.txt.v2.${SET}         2> ${WDIR}/deptree.txt.v2.${SET}.err
 	${python} ${CDIR}/align.py < ${WDIR}/deptree.txt.v2.${SET} > ${WDIR}/deptree.txt.v3.${SET}

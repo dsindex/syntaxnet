@@ -19,14 +19,14 @@ input {
   name: 'tagged-training-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/sejong/wdir/deptree.txt.v3.train'
+    file_pattern: 'work/sejong/wdir/deptree.txt.v3.training'
   }
 }
 input {
   name: 'tagged-tuning-corpus'
   record_format: 'conll-sentence'
   Part {
-    file_pattern: 'work/sejong/wdir/deptree.txt.v3.dev'
+    file_pattern: 'work/sejong/wdir/deptree.txt.v3.tuning'
   }
 }
 input {

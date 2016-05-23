@@ -130,8 +130,8 @@ brought VBD ROOT
 
 - training parser with korean sejong treebank corpus
 ```
-$ ./split.sh
-$ ./c2d.sh
+$ ./sejong/split.sh
+$ ./sejong/c2d.sh
 $ ./train_sejong.sh
 #pretrain parser
 ...
@@ -141,5 +141,10 @@ INFO:tensorflow:Seconds elapsed in evaluation: 13.62, eval metric: 92.66%
 INFO:tensorflow:Seconds elapsed in evaluation: 121.55, eval metric: 94.03%
 INFO:tensorflow:Seconds elapsed in evaluation: 15.50, eval metric: 93.41%
 INFO:tensorflow:Seconds elapsed in evaluation: 15.25, eval metric: 93.28%
+...
+#evaluate pretrained parser by eoj-based
+accuracy(UAS) = 0.871814
+accuracy(UAS) = 0.858425
+accuracy(UAS) = 0.855628
 ...
 ```

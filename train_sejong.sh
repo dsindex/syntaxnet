@@ -155,6 +155,12 @@ function evaluate_pretrained_parser {
 	done
 }
 
+function evaluate_pretrained_parser_by_eoj {
+	for SET in training tuning test; do
+		${python} ${CDIR}/sejong/eval_by_eoj.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus
+	done
+}
+
 GP_PARAMS=128-0.02-100-0.9
 function train_parser {
 	${BINDIR}/parser_trainer \
@@ -184,8 +190,8 @@ function evaluate_parser {
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/context \
 		--hidden_layer_sizes=128 \
-		--input=tagged-$SET-corpus \
-		--output=beam-parsed-$SET-corpus \
+		--input=tagged-${SET}-corpus \
+		--output=beam-parsed-${SET}-corpus \
 		--arg_prefix=brain_parser \
 		--graph_builder=structured \
 		--model_path=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model
@@ -200,8 +206,9 @@ function copy_model {
 	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
 }
 
-pretrain_parser
+#pretrain_parser
 evaluate_pretrained_parser
+evaluate_pretrained_parser_by_eoj
 exit
 train_parser
 evaluate_parser

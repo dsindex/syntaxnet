@@ -94,8 +94,8 @@ if [ ! -e ${CDIR}/log ]; then
 fi
 LDIR=${CDIR}/log
 
-${python} ${CDIR}/split.py --mode=0 < ${CDIR}/sejong_treebank.txt.v1 > ${WDIR}/sejong_treebank.txt.v1.train
-${python} ${CDIR}/split.py --mode=1 < ${CDIR}/sejong_treebank.txt.v1 > ${WDIR}/sejong_treebank.txt.v1.dev
+${python} ${CDIR}/split.py --mode=0 < ${CDIR}/sejong_treebank.txt.v1 > ${WDIR}/sejong_treebank.txt.v1.training
+${python} ${CDIR}/split.py --mode=1 < ${CDIR}/sejong_treebank.txt.v1 > ${WDIR}/sejong_treebank.txt.v1.tuning
 ${python} ${CDIR}/split.py --mode=2 < ${CDIR}/sejong_treebank.txt.v1 > ${WDIR}/sejong_treebank.txt.v1.test
 
 close_fd

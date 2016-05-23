@@ -28,8 +28,8 @@ def read_file(filename) :
 		tokens = line.split('\t')
 		length = len(tokens)
 		if length != 10 : continue
-		# ex) 1	의상	의상	NNG	NNG	_	2	MOD	_	_
-		#     2	서	서	JKB	JKB	_	4	NP_AJT	_	_
+		# ex) 1  의상  의상  NNG  NNG  _  2  MOD     _  _
+		#     2  서    서    JKB  JKB  _  4  NP_AJT  _  _
 		idx = tokens[0]
 		morph = tokens[1]
 		tag = tokens[3]
@@ -83,7 +83,13 @@ if __name__ == '__main__':
 	for i in xrange(max) :
 		entry_a = a_data[i]
 		entry_b = b_data[i]
-		if VERBOSE : print '\t'.join(entry_a + entry_b)
+		if VERBOSE :
+			if entry_a[4] != 'MOD' and entry_b[4] == 'MOD' :
+				msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]'
+				print msg
+			else :
+				msg = '\t'.join(entry_a + entry_b)
+				print msg
 		# entry : [idx, morph, tag, gov, label]
 		if entry_a[4] == 'MOD' : continue
 		ret = compare(entry_a, entry_b)

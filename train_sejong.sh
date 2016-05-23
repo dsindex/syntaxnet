@@ -198,6 +198,12 @@ function evaluate_parser {
 	done
 }
 
+function evaluate_parser_by_eoj {
+	for SET in training tuning test; do
+		${python} ${CDIR}/sejong/eval_by_eoj.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus
+	done
+}
+
 function copy_model {
 	# needs : category-map  label-map	lcword-map  prefix-table  suffix-table	tag-map  tag-to-category  word-map
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
@@ -206,12 +212,12 @@ function copy_model {
 	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
 }
 
-#pretrain_parser
+pretrain_parser
 evaluate_pretrained_parser
 evaluate_pretrained_parser_by_eoj
-exit
 train_parser
 evaluate_parser
+evaluate_parser_by_eoj
 copy_model
 
 close_fd

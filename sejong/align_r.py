@@ -32,20 +32,20 @@ def spill(bucket) :
 	mseq2seq = {0:0}
 	seq = 1
 	n_bucket = []
-	prev_mptst = None
+	prev_misc = None
 	for line in bucket :
-		mseq,morph,_,tag,_,_,mgov,mptst,_,_ = line.split('\t',9)
+		mseq,morph,_,tag,_,_,mgov,mptst,_,misc = line.split('\t',9)
 		mseq = int(mseq)
 		mgov = int(mgov)
-		if prev_mptst == None :
+		if prev_misc == None :
 			n_bucket.append([mseq, morph, tag, mgov, mptst])
 		else :
-			if prev_mptst != 'MOD' :
+			if prev_misc != 'I' :
 				seq, out = n_spill(n_bucket, seq, mseq2seq)
 				result.append(out)
 				n_bucket = []
 			n_bucket.append([mseq, morph, tag, mgov, mptst])
-		prev_mptst = mptst
+		prev_misc = misc
 
 	if len(n_bucket) != 0 :
 		seq, out = n_spill(n_bucket, seq, mseq2seq)

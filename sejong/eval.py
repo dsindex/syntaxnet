@@ -27,15 +27,21 @@ def read_file(filename) :
 		if not line : continue
 		tokens = line.split('\t')
 		length = len(tokens)
-		if length != 10 : continue
-		# ex) 1  의상  의상  NNG  NNG  _  2  MOD     _  _
-		#     2  서    서    JKB  JKB  _  4  NP_AJT  _  _
-		idx = tokens[0]
-		morph = tokens[1]
-		tag = tokens[3]
-		gov = tokens[6]
-		label = tokens[7]
-		entry = [idx, morph, tag, gov, label]
+		
+		if length == 5 :
+			seq = tokens[0]
+			eoj = tokens[1]
+			analyzed = tokens[2]
+			ptst = tokens[3]
+			gov = tokens[4]
+		if length == 4 :
+			seq = tokens[0]
+			eoj = ''
+			analyzed = tokens[1]
+			ptst = tokens[2]
+			gov = tokens[3]
+
+		entry = [seq, eoj, analyzed, ptst, gov]
 		data.append(entry)
 	close_file(fid)
 	return data
@@ -46,10 +52,11 @@ def compare(entry_a, entry_b) :
 	0  : 다름
 	1  : 같음
 
-	entry : [idx, morph, tag, gov, label]
+	entry : [seq, eoj, analyzed, ptst, gov]
 	'''
-	if entry_a[0] != entry_b[0] or entry_a[1] != entry_b[1] : return -1
-	if entry_a[3] == entry_b[3] : return 1
+	if entry_a[0] != entry_b[0] : return -1
+	if entry_a[2].replace(' ','') != entry_b[2].replace(' ','') : return -1
+	if entry_a[4] == entry_b[4] : return 1
 	return 0
 
 if __name__ == '__main__':
@@ -83,18 +90,6 @@ if __name__ == '__main__':
 	for i in xrange(max) :
 		entry_a = a_data[i]
 		entry_b = b_data[i]
-		if VERBOSE :
-			if entry_a[4] != 'MOD' and entry_b[4] == 'MOD' :
-				if compare(entry_a, entry_b) == 1 :
-					msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]' + '\t' + '[success]'
-				else :
-					msg = '\t'.join(entry_a + entry_b) + '\t' + '[noise]' + '\t' + '[failure]'
-				print msg
-			else :
-				msg = '\t'.join(entry_a + entry_b)
-				print msg
-		# entry : [idx, morph, tag, gov, label]
-		if entry_a[4] == 'MOD' : continue
 		ret = compare(entry_a, entry_b)
 		if ret == -1 : 
 			sys.stderr.write("input files are not aligned\n")

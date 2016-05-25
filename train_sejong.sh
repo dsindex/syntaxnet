@@ -119,15 +119,19 @@ mkdir -p ${TMP_DIR}
 cat ${CONTEXT} | sed "s=OUTPATH=${TMP_DIR}=" > ${TMP_DIR}/context
 MODEL_DIR=${CDIR}/models
 
-LP_PARAMS=128-0.08-4400-0.85
+HIDDEN_LAYER_SIZES=1024,512
+HIDDEN_LAYER_PARAMS=1024,512
+BATCH_SIZE=128
+
+LP_PARAMS=${HIDDEN_LAYER_PARAMS}-0.08-4400-0.85
 function pretrain_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
-	  --batch_size=32 \
+	  --batch_size=${BATCH_SIZE} \
 	  --compute_lexicon \
 	  --decay_steps=4400 \
 	  --graph_builder=greedy \
-	  --hidden_layer_sizes=128 \
+	  --hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
 	  --output_path=${TMP_DIR} \
@@ -136,7 +140,7 @@ function pretrain_parser {
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${LP_PARAMS} \
-	  --num_epochs=5 \
+	  --num_epochs=2 \
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
 	  --logtostderr
@@ -146,9 +150,10 @@ function evaluate_pretrained_parser {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
-		--hidden_layer_sizes=128 \
-		--input=tagged-$SET-corpus \
-		--output=parsed-$SET-corpus \
+		--batch_size=${BATCH_SIZE} \
+		--hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
+		--input=tagged-${SET}-corpus \
+		--output=parsed-${SET}-corpus \
 		--arg_prefix=brain_parser \
 		--graph_builder=greedy \
 		--model_path=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model
@@ -157,19 +162,20 @@ function evaluate_pretrained_parser {
 
 function evaluate_pretrained_parser_by_eoj {
 	for SET in training tuning test; do
-		${python} ${CDIR}/sejong/eval_by_eoj.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus
+		${python} ${CDIR}/sejong/aligh_r.py < ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
+		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
 	done
 }
 
-GP_PARAMS=128-0.02-100-0.9
+GP_PARAMS=${HIDDEN_LAYER_PARAMS}-0.02-100-0.9
 function train_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
-	  --batch_size=8 \
+	  --batch_size=${BATCH_SIZE} \
 	  --compute_lexicon \
 	  --decay_steps=100 \
 	  --graph_builder=structured \
-	  --hidden_layer_sizes=128 \
+	  --hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.02 \
 	  --momentum=0.9 \
 	  --output_path=${TMP_DIR} \
@@ -179,7 +185,7 @@ function train_parser {
 	  --params=${GP_PARAMS} \
 	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
 	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
-	  --num_epochs=5 \
+	  --num_epochs=3 \
 	  --report_every=25 \
 	  --checkpoint_every=200 \
 	  --logtostderr
@@ -189,7 +195,8 @@ function evaluate_parser {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/context \
-		--hidden_layer_sizes=128 \
+		--batch_size=${BATCH_SIZE} \
+		--hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
 		--input=tagged-${SET}-corpus \
 		--output=beam-parsed-${SET}-corpus \
 		--arg_prefix=brain_parser \
@@ -200,7 +207,8 @@ function evaluate_parser {
 
 function evaluate_parser_by_eoj {
 	for SET in training tuning test; do
-		${python} ${CDIR}/sejong/eval_by_eoj.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus
+		${python} ${CDIR}/sejong/aligh_r.py < ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
+		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
 	done
 }
 

@@ -72,9 +72,17 @@ def spill(bucket) :
 
 	# print CONLL-U format
 	for seq,morph,tag,ptst,gov in nn_bucket :
+		id = seq
+		form = morph
+		lemma = morph
+		upostag = tag
+		xpostag = tag
+		feats = '_'
+		head = gov
+		deprel = ptst
+		deps = '_'
 		misc = '_'
-		if ptst == 'MOD' : misc = 'I'
-		print '\t'.join([str(e) for e in [seq,morph,morph,tag,tag,'_',gov,ptst,'_',misc]])
+		print '\t'.join([str(e) for e in [id,form,lemma,upostag,xpostag,feats,head,deprel,deps,misc]])
 	print '\n',
 
 	return 1

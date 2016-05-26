@@ -121,7 +121,7 @@ MODEL_DIR=${CDIR}/models
 
 HIDDEN_LAYER_SIZES=512,512
 HIDDEN_LAYER_PARAMS=512,512
-BATCH_SIZE=128
+BATCH_SIZE=256
 
 LP_PARAMS=${HIDDEN_LAYER_PARAMS}-0.08-4400-0.85
 function pretrain_parser {
@@ -162,7 +162,9 @@ function evaluate_pretrained_parser {
 
 function evaluate_pretrained_parser_by_eoj {
 	for SET in training tuning test; do
-		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
+		cut -f8 ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} > ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel
+		paste ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-add
+		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-add > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
 		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
 	done
 }
@@ -207,7 +209,9 @@ function evaluate_parser {
 
 function evaluate_parser_by_eoj {
 	for SET in training tuning test; do
-		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
+		cut -f8 ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} > ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel
+		paste ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-add
+		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-add > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
 		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
 	done
 }
@@ -223,7 +227,6 @@ function copy_model {
 pretrain_parser
 evaluate_pretrained_parser
 evaluate_pretrained_parser_by_eoj
-exit
 train_parser
 evaluate_parser
 evaluate_parser_by_eoj

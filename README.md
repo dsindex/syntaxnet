@@ -8,7 +8,7 @@ syntaxnet
 ```
 (after installing syntaxnet)
 $ pwd
-/root/syntaxnet/models/syntaxnet
+/path/to/models/syntaxnet
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ echo "hello syntaxnet" | ./demo.sh

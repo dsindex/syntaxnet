@@ -6,7 +6,7 @@ PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
 
 cd ${PDIR}
 
-SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
+SYNTAXNET_HOME=${PDIR}
 BINDIR=${SYNTAXNET_HOME}/bazel-bin/syntaxnet
 CONTEXT=${CDIR}/testdata/context.pbtxt
 TMP_DIR=${CDIR}/testdata/tmp/syntaxnet-output

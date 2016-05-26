@@ -110,7 +110,7 @@ fi
 cd ${PDIR}
 
 python=/usr/bin/python
-SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
+SYNTAXNET_HOME=${PDIR}
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
 CONTEXT=${CDIR}/UD_English/context.pbtxt_p

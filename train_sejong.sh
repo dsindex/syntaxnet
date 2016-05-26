@@ -110,7 +110,7 @@ fi
 cd ${PDIR}
 
 python=/usr/bin/python
-SYNTAXNET_HOME=/root/syntaxnet/models/syntaxnet
+SYNTAXNET_HOME=${PDIR}
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
 CONTEXT=${CDIR}/sejong/context.pbtxt_p
@@ -140,7 +140,7 @@ function pretrain_parser {
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${LP_PARAMS} \
-	  --num_epochs=2 \
+	  --num_epochs=10 \
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
 	  --logtostderr
@@ -187,7 +187,7 @@ function train_parser {
 	  --params=${GP_PARAMS} \
 	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
 	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
-	  --num_epochs=3 \
+	  --num_epochs=5 \
 	  --report_every=25 \
 	  --checkpoint_every=200 \
 	  --logtostderr

@@ -122,7 +122,7 @@ MODEL_DIR=${CDIR}/models
 HIDDEN_LAYER_SIZES=512,512
 HIDDEN_LAYER_PARAMS=512,512
 BATCH_SIZE=256
-BEAM_SIZE=8
+BEAM_SIZE=16
 
 LP_PARAMS=${HIDDEN_LAYER_PARAMS}-0.08-4400-0.85
 function pretrain_parser {
@@ -135,13 +135,14 @@ function pretrain_parser {
 	  --hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
+	  --beam_size=1 \
 	  --output_path=${TMP_DIR} \
 	  --task_context=${TMP_DIR}/context \
 	  --projectivize_training_set \
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${LP_PARAMS} \
-	  --num_epochs=10 \
+	  --num_epochs=20 \
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
 	  --logtostderr
@@ -153,6 +154,7 @@ function evaluate_pretrained_parser {
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 		--batch_size=${BATCH_SIZE} \
 		--hidden_layer_sizes=${HIDDEN_LAYER_SIZES} \
+		--beam_size=1 \
 		--input=tagged-${SET}-corpus \
 		--output=parsed-${SET}-corpus \
 		--arg_prefix=brain_parser \
@@ -190,7 +192,7 @@ function train_parser {
 	  --params=${GP_PARAMS} \
 	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
 	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
-	  --num_epochs=5 \
+	  --num_epochs=10 \
 	  --report_every=25 \
 	  --checkpoint_every=200 \
 	  --logtostderr

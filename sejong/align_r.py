@@ -57,7 +57,10 @@ def spill(bucket) :
 				' + '.join(analyzed) + '\t' + ','.join([str(e) for e in mgov_list]) + \
 				'\t' + ptst
 		gov = mseq2seq[mgov_list[-1]] 
-		print str(seq) + '\t' + ' + '.join(analyzed) + '\t' + ptst + '\t' + str(gov)
+		p = str(seq) + '\t' + ' + '.join(analyzed) + '\t' + ptst + '\t' + str(gov)
+		print p
+		if seq == gov :
+			sys.stderr.write('[ERROR]' + '\t' + p + '\n')
 
 	print '\n',
 

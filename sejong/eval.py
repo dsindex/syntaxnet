@@ -124,6 +124,7 @@ if __name__ == '__main__':
 			sys.stderr.write("can't compare differenct sentences\n")
 			skip_sentences += 1
 			continue
+		print '; ' + ' '.join([entry_a[1] for entry_a in sent_a])
 		for j in xrange(size_a) :
 			entry_a = sent_a[j]
 			entry_b = sent_b[j]
@@ -133,10 +134,10 @@ if __name__ == '__main__':
 				sys.exit(1)
 			if ret == 1 : 
 				success += 1
-				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b) + '\t' + 'SUCCESS'			
+				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b[3:]) + '\t' + 'SUCCESS'			
 			if ret == 0 : 
 				failure += 1
-				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b) + '\t' + 'FAILURE'
+				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b[3:]) + '\t' + 'FAILURE'
 		print '\n',			
 
 	accuracy = success / float(success + failure)

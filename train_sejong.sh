@@ -165,7 +165,8 @@ function evaluate_pretrained_parser_by_eoj {
 		cut -f8 ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} > ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel
 		paste ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-add
 		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-add > ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
-		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj
+		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj \
+			> ${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/parsed-${SET}-corpus-eoj-ret
 	done
 }
 
@@ -212,7 +213,8 @@ function evaluate_parser_by_eoj {
 		cut -f8 ${CDIR}/sejong/wdir/deptree.txt.v3.${SET} > ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel
 		paste ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus ${CDIR}/sejong/wdir/deptree.txt.v3.${SET}.deprel > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-add
 		${python} ${CDIR}/sejong/align_r.py < ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-add > ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
-		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj
+		${python} ${CDIR}/sejong/eval.py -a ${CDIR}/sejong/wdir/deptree.txt.v2.${SET} -b ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj \
+			> ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/beam-parsed-${SET}-corpus-eoj-ret
 	done
 }
 

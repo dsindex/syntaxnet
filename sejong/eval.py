@@ -131,10 +131,18 @@ if __name__ == '__main__':
 			if ret == -1 : 
 				sys.stderr.write("input files are not aligned\n")
 				sys.exit(1)
-			if ret == 1 : success += 1
-			if ret == 0 : failure += 1
+			if ret == 1 : 
+				success += 1
+				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b) + '\t' + 'SUCCESS'			
+			if ret == 0 : 
+				failure += 1
+				print '\t'.join(entry_a) + '\t' + '\t'.join(entry_b) + '\t' + 'FAILURE'
+		print '\n',			
 
 	accuracy = success / float(success + failure)
-	print 'skip_sentences, total_sentences = %s, %s' % (skip_sentences, total_sentences) 
-	print 'accuracy(UAS) = %f' % (accuracy)
+	p = 'skip_sentences, total_sentences = %s, %s' % (skip_sentences, total_sentences) 
+	sys.stderr.write(p + '\n')
+	p = 'accuracy(UAS) = %f' % (accuracy)
+	sys.stderr.write(p + '\n')
+	
 

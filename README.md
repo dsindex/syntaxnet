@@ -150,8 +150,17 @@ accuracy(UAS) = 0.875776
 accuracy(UAS) = 0.875855
 ...
 #train parser
-
+INFO:tensorflow:Seconds elapsed in evaluation: 137.36, eval metric: 94.12%
+...
 #evaluate parser
+INFO:tensorflow:Seconds elapsed in evaluation: 930.60, eval metric: 96.56%
+INFO:tensorflow:Seconds elapsed in evaluation: 118.21, eval metric: 94.07%
+INFO:tensorflow:Seconds elapsed in evaluation: 116.51, eval metric: 94.07%
+...
 
 #evaluate parser by eoj-based
+accuracy(UAS) = 0.932052
+accuracy(UAS) = 0.881340
+accuracy(UAS) = 0.882807
+...
 ```

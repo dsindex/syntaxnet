@@ -13,12 +13,20 @@ sys.setdefaultencoding('utf-8')
 
 def spill(bucket, idx, mode) :
 	ok = False
-	if mode == 0 : # train
-		if idx % 10 != 1 and idx % 10 != 2 : ok = True
+	'''
 	if mode == 1 : # dev
 		if idx % 10 == 1 : ok = True
 	if mode == 2 : # test
 		if idx % 10 == 2 : ok = True
+	if mode == 0 : # train
+		if idx % 10 != 1 and idx % 10 != 2 : ok = True
+	'''
+	if mode == 1 : # dev
+		if idx % 10 == 2 : ok = True
+	if mode == 2 : # test
+		if idx % 10 == 3 : ok = True
+	if mode == 0 : # train
+		if idx % 10 != 2 and idx % 10 != 3 : ok = True
 
 	idx += 1
 	if not ok : return idx

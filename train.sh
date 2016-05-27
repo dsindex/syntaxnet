@@ -201,6 +201,7 @@ function train_parser {
 	  --hidden_layer_sizes=200,200 \
 	  --learning_rate=0.02 \
 	  --momentum=0.9 \
+	  --beam_size=8 \
 	  --output_path=${TMP_DIR} \
 	  --task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 	  --seed=0 \
@@ -216,6 +217,7 @@ function evaluate_parser {
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/context \
 		--hidden_layer_sizes=200,200 \
+		--beam_size=8 \
 		--input=tagged-$SET-corpus \
 		--output=beam-parsed-$SET-corpus \
 		--arg_prefix=brain_parser \

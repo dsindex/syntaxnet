@@ -137,30 +137,30 @@ $ ./sejong/c2d.sh
 $ ./train_sejong.sh
 #pretrain parser
 ...
-INFO:tensorflow:Seconds elapsed in evaluation: 13.62, eval metric: 92.66%
+NFO:tensorflow:Seconds elapsed in evaluation: 14.18, eval metric: 93.43%
 ...
 #evaluate pretrained parser
-INFO:tensorflow:Seconds elapsed in evaluation: 121.55, eval metric: 94.03%
-INFO:tensorflow:Seconds elapsed in evaluation: 15.50, eval metric: 93.41%
-INFO:tensorflow:Seconds elapsed in evaluation: 15.25, eval metric: 93.28%
+INFO:tensorflow:Seconds elapsed in evaluation: 116.08, eval metric: 95.11%
+INFO:tensorflow:Seconds elapsed in evaluation: 14.60, eval metric: 93.76%
+INFO:tensorflow:Seconds elapsed in evaluation: 14.45, eval metric: 93.78%
 ...
 #evaluate pretrained parser by eoj-based
-accuracy(UAS) = 0.908898
-accuracy(UAS) = 0.875776
-accuracy(UAS) = 0.875855
+accuracy(UAS) = 0.903289
+accuracy(UAS) = 0.876198
+accuracy(UAS) = 0.876888
 ...
 #train parser
 INFO:tensorflow:Seconds elapsed in evaluation: 137.36, eval metric: 94.12%
 ...
 #evaluate parser
-INFO:tensorflow:Seconds elapsed in evaluation: 930.60, eval metric: 96.56%
-INFO:tensorflow:Seconds elapsed in evaluation: 118.21, eval metric: 94.07%
-INFO:tensorflow:Seconds elapsed in evaluation: 116.51, eval metric: 94.07%
+INFO:tensorflow:Seconds elapsed in evaluation: 1806.21, eval metric: 96.37%
+INFO:tensorflow:Seconds elapsed in evaluation: 224.40, eval metric: 94.19%
+INFO:tensorflow:Seconds elapsed in evaluation: 223.75, eval metric: 94.25%
 ...
 
 #evaluate parser by eoj-based
-accuracy(UAS) = 0.932052
-accuracy(UAS) = 0.881340
-accuracy(UAS) = 0.882807
+accuracy(UAS) = 0.928845
+accuracy(UAS) = 0.886139
+accuracy(UAS) = 0.887824
 ...
 ```

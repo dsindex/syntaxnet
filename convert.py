@@ -35,6 +35,8 @@ if __name__ == '__main__':
 			continue
 		tokens = line.split('\t')
 		if tokens[4] != '_' :
+			tokens[4] = tokens[3] # there is no XPOS
+		else :
 			tokens[3] = tokens[4] # UPOS <- XPOS
 		print '\t'.join(tokens)
 

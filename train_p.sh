@@ -113,16 +113,19 @@ python=/usr/bin/python
 SYNTAXNET_HOME=${PDIR}
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
-CONTEXT=${CDIR}/UD_English/context.pbtxt_p
-TMP_DIR=${CDIR}/UD_English/tmp_p/syntaxnet-output
+CORPUS_DIR=${CDIR}/UD_English
+
+CONTEXT=${CORPUS_DIR}/context.pbtxt_p
+TMP_DIR=${CORPUS_DIR}/tmp_p/syntaxnet-output
 mkdir -p ${TMP_DIR}
 cat ${CONTEXT} | sed "s=OUTPATH=${TMP_DIR}=" > ${TMP_DIR}/context
 MODEL_DIR=${CDIR}/models
 
 function convert_corpus {
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-train.conllu > ${CDIR}/UD_English/en-ud-train.conllu.conv
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-dev.conllu > ${CDIR}/UD_English/en-ud-dev.conllu.conv
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
+	corpus_dir=$1
+	for corpus in $(ls ${corpus_dir}/*.conllu); do
+		${python} ${CDIR}/convert.py < ${corpus} > ${corpus}.conv
+	done
 }
 
 LP_PARAMS=200x200-0.08-4400-0.85-4
@@ -210,7 +213,7 @@ function copy_model {
 	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
 }
 
-convert_corpus
+convert_corpus ${CORPUS_DIR}
 pretrain_parser
 evaluate_pretrained_parser
 train_parser

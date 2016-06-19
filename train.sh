@@ -113,14 +113,17 @@ python=/usr/bin/python
 SYNTAXNET_HOME=${PDIR}
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
-CONTEXT=${CDIR}/UD_English/context.pbtxt
-TMP_DIR=${CDIR}/UD_English/tmp/syntaxnet-output
+CORPUS_DIR=${CDIR}/UD_English
+
+CONTEXT=${CORPUS_DIR}/context.pbtxt
+TMP_DIR=${CORPUS_DIR}/tmp/syntaxnet-output
 MODEL_DIR=${CDIR}/models
 
 function convert_corpus {
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-train.conllu > ${CDIR}/UD_English/en-ud-train.conllu.conv
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-dev.conllu > ${CDIR}/UD_English/en-ud-dev.conllu.conv
-	${python} ${CDIR}/convert.py < ${CDIR}/UD_English/en-ud-test.conllu > ${CDIR}/UD_English/en-ud-test.conllu.conv
+	corpus_dir=$1
+	for corpus in $(ls ${corpus_dir}/*.conllu); do
+		${python} ${CDIR}/convert.py < ${corpus} > ${corpus}.conv
+	done
 }
 
 POS_PARAMS=128-0.08-3600-0.9-0
@@ -235,7 +238,7 @@ function copy_model {
 	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/tag-to-category ${MODEL_DIR}/
 }
 
-convert_corpus
+convert_corpus ${CORPUS_DIR}
 train_pos_tagger
 preprocess_with_tagger
 pretrain_parser

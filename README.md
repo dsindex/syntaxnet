@@ -164,3 +164,5 @@ accuracy(UAS) = 0.886139
 accuracy(UAS) = 0.887824
 ...
 ```
+
+- comparison to [BIST parser](https://github.com/dsindex/bist-parser)

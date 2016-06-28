@@ -94,7 +94,7 @@ tagger NN ROOT
  +-- and CC cc
  +-- parser NN conj
 
-* original model's output
+* original model
 $ echo "this is my own tagger and parser" | ./demo.sh
 Input: this is my own tagger and parser
 Parse:
@@ -117,7 +117,7 @@ brought VBD ROOT
  |   +-- to IN case
  +-- . . punct
 
-* original model's output
+* original model
 $ echo "Bob brought the pizza to Alice ." | ./demo.sh
 Input: Bob brought the pizza to Alice .
 Parse:

@@ -5,7 +5,7 @@ syntaxnet
   - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
 
 - how to test
-```
+```shell
 (after installing syntaxnet)
 $ pwd
 /path/to/models/syntaxnet
@@ -18,7 +18,7 @@ $ ./parser_trainer_test.sh
 
 - download univeral dependency treebank data 
   - http://universaldependencies.org/#en)
-  ```
+  ```shell
   $ cd work
   $ mkdir corpus
   $ cd corpus
@@ -29,7 +29,7 @@ $ ./parser_trainer_test.sh
   ```
 
 - training tagger and parser with another corpus
-```
+```shell
 (for example, training UD_English)
 (detail instructions can be found 
  in https://github.com/tensorflow/models/tree/master/syntaxnet)
@@ -59,7 +59,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 ```
 
 - training parser only
-```
+```shell
 (in case you have other pos-tagger 
  and want to build parser only from the parsed corpus) 
 $ ./train_p.sh -v -v
@@ -81,7 +81,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 32.57, eval metric: 87.77%
 ```
 
 - test new model
-```
+```shell
 $ echo "this is my own tagger and parser" | ./test.sh
 ...
 Input: this is my own tagger and parser
@@ -131,7 +131,7 @@ brought VBD ROOT
 ```
 
 - training parser with korean sejong treebank corpus
-```
+```shell
 $ ./sejong/split.sh
 $ ./sejong/c2d.sh
 $ ./train_sejong.sh

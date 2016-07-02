@@ -117,7 +117,7 @@ CONTEXT=${CDIR}/sejong/context.pbtxt_p
 TMP_DIR=${CDIR}/sejong/tmp_p/syntaxnet-output
 mkdir -p ${TMP_DIR}
 cat ${CONTEXT} | sed "s=OUTPATH=${TMP_DIR}=" > ${TMP_DIR}/context
-MODEL_DIR=${CDIR}/models
+MODEL_DIR=${CDIR}/models_sejong
 
 HIDDEN_LAYER_SIZES=512,512
 HIDDEN_LAYER_PARAMS=512,512

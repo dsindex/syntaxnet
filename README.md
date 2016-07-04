@@ -130,7 +130,7 @@ brought VBD ROOT
  +-- . . punct
 ```
 
-- training parser with korean sejong treebank corpus
+- training parser from korean sejong treebank corpus
 ```shell
 $ ./sejong/split.sh
 $ ./sejong/c2d.sh
@@ -163,6 +163,33 @@ accuracy(UAS) = 0.928845
 accuracy(UAS) = 0.886139
 accuracy(UAS) = 0.887824
 ...
+```
+- test korean parser model
+```shell
+$ cat sejong/tagged_input.sample | ./test_sejong.sh -v -v
+Input: 프랑스 의 세계 적 이 ᆫ 의상 디자이너 엠마누엘 웅가로 가 실내 장식 용 직물 디자이너 로 나서 었 다 .
+Parse:
+. SF ROOT
+ +-- 다 EF MOD
+     +-- 었 EP MOD
+         +-- 나서 VV MOD
+             +-- 가 JKS NP_SBJ
+             |   +-- 웅가로 NNP MOD
+             |       +-- 디자이너 NNG NP
+             |       |   +-- 의 JKG NP_MOD
+             |       |   |   +-- 프랑스 NNP MOD
+             |       |   +-- ᆫ ETM VNP_MOD
+             |       |   |   +-- 이 VCP MOD
+             |       |   |       +-- 적 XSN MOD
+             |       |   |           +-- 세계 NNG MOD
+             |       |   +-- 의상 NNG NP
+             |       +-- 엠마누엘 NNP NP
+             +-- 로 JKB NP_AJT
+                 +-- 디자이너 NNG MOD
+                     +-- 직물 NNG NP
+                         +-- 실내 NNG NP
+                         +-- 용 XSN NP
+                             +-- 장식 NNG MOD
 ```
 
 - comparison to [BIST parser](https://github.com/dsindex/bist-parser)

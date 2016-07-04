@@ -166,6 +166,29 @@ accuracy(UAS) = 0.887824
 ```
 - test korean parser model
 ```shell
+$ cat sejong/tagged_input.sample
+1	프랑스	프랑스	NNP	NNP	_	0	_	_	_
+2	의	의	JKG	JKG	_	0	_	_	_
+3	세계	세계	NNG	NNG	_	0	_	_	_
+4	적	적	XSN	XSN	_	0	_	_	_
+5	이	이	VCP	VCP	_	0	_	_	_
+6	ᆫ	ᆫ	ETM	ETM	_	0	_	_	_
+7	의상	의상	NNG	NNG	_	0	_	_	_
+8	디자이너	디자이너	NNG	NNG	_	0	_	_	_
+9	엠마누엘	엠마누엘	NNP	NNP	_	0	_	_	_
+10	웅가로	웅가로	NNP	NNP	_	0	_	_	_
+11	가	가	JKS	JKS	_	0	_	_	_
+12	실내	실내	NNG	NNG	_	0	_	_	_
+13	장식	장식	NNG	NNG	_	0	_	_	_
+14	용	용	XSN	XSN	_	0	_	_	_
+15	직물	직물	NNG	NNG	_	0	_	_	_
+16	디자이너	디자이너	NNG	NNG	_	0	_	_	_
+17	로	로	JKB	JKB	_	0	_	_	_
+18	나서	나서	VV	VV	_	0	_	_	_
+19	었	었	EP	EP	_	0	_	_	_
+20	다	다	EF	EF	_	0	_	_	_
+21	.	.	SF	SF	_	0	_	_	_
+
 $ cat sejong/tagged_input.sample | ./test_sejong.sh -v -v
 Input: 프랑스 의 세계 적 이 ᆫ 의상 디자이너 엠마누엘 웅가로 가 실내 장식 용 직물 디자이너 로 나서 었 다 .
 Parse:

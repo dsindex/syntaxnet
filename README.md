@@ -2,7 +2,7 @@ syntaxnet
 ===
 
 ### description
-#### test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
+##### test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
 
 ### how to test
 ```shell
@@ -17,7 +17,7 @@ $ ./parser_trainer_test.sh
 ```
 
 ### download univeral dependency treebank data 
-#### http://universaldependencies.org/#en)
+##### http://universaldependencies.org/#en)
 ```shell
 $ cd work
 $ mkdir corpus

@@ -1,10 +1,10 @@
 syntaxnet
 ===
 
-- description
-  - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
+### description
+#### test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
 
-- how to test
+### how to test
 ```shell
 (after installing syntaxnet)
 $ pwd
@@ -16,19 +16,19 @@ $ echo "hello syntaxnet" | ./demo.sh
 $ ./parser_trainer_test.sh
 ```
 
-- download univeral dependency treebank data 
-  - http://universaldependencies.org/#en)
-  ```shell
-  $ cd work
-  $ mkdir corpus
-  $ cd corpus
-  (downloading ud-treebanks-v1.2.tgz)
-  $ tar -zxvf ud-treebanks-v1.2.tgz  
-  $ ls universal-dependencies-1.2 
-  $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
-  ```
+### download univeral dependency treebank data 
+#### http://universaldependencies.org/#en)
+```shell
+$ cd work
+$ mkdir corpus
+$ cd corpus
+(downloading ud-treebanks-v1.2.tgz)
+$ tar -zxvf ud-treebanks-v1.2.tgz  
+$ ls universal-dependencies-1.2 
+$ UD_Ancient_Greek  UD_Basque  UD_Czech ....
+```
 
-- training tagger and parser with another corpus
+### training tagger and parser with another corpus
 ```shell
 (for example, training UD_English)
 (detail instructions can be found 
@@ -58,7 +58,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 ...
 ```
 
-- training parser only
+### training parser only
 ```shell
 (in case you have other pos-tagger 
  and want to build parser only from the parsed corpus) 
@@ -80,7 +80,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 32.57, eval metric: 87.77%
 ...
 ```
 
-- test new model
+### test new model
 ```shell
 $ echo "this is my own tagger and parser" | ./test.sh
 ...
@@ -130,7 +130,7 @@ brought VBD ROOT
  +-- . . punct
 ```
 
-- training parser from korean sejong treebank corpus
+### training parser from korean sejong treebank corpus
 ```shell
 $ ./sejong/split.sh
 $ ./sejong/c2d.sh
@@ -164,7 +164,7 @@ accuracy(UAS) = 0.886139
 accuracy(UAS) = 0.887824
 ...
 ```
-- test korean parser model
+### test korean parser model
 ```shell
 $ cat sejong/tagged_input.sample
 1	프랑스	프랑스	NNP	NNP	_	0	_	_	_
@@ -214,7 +214,7 @@ Parse:
                          +-- 용 XSN NP
                              +-- 장식 NNG MOD
 ```
-- apply korean POS tagger(Komoran via konlpy)
+### apply korean POS tagger(Komoran via konlpy)
 ```shell
 * install konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ python sejong/tagger.py
@@ -239,4 +239,4 @@ Parse:
              +-- 학교 NNG MOD
 ```
 
-- comparison to [BIST parser](https://github.com/dsindex/bist-parser)
+### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

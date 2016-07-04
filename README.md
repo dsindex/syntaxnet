@@ -214,7 +214,7 @@ Parse:
                          +-- 용 XSN NP
                              +-- 장식 NNG MOD
 ```
-- apply korean POS tagger 
+- apply korean POS tagger(Komoran via konlpy)
 ```shell
 * install konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ python sejong/tagger.py

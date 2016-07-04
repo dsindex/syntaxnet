@@ -214,5 +214,29 @@ Parse:
                          +-- 용 XSN NP
                              +-- 장식 NNG MOD
 ```
+- apply korean POS tagger 
+```shell
+* install konlpy ( http://konlpy.org/ko/v0.4.3/ )
+$ python sejong/tagger.py
+나는 학교에 간다.
+1	나	나	NP	NP	_	0	_	_	_
+2	는	는	JX	JX	_	0	_	_	_
+3	학교	학교	NNG	NNG	_	0	_	_	_
+4	에	에	JKB	JKB	_	0	_	_	_
+5	가	가	VV	VV	_	0	_	_	_
+6	ㄴ다	ㄴ다	EF	EF	_	0	_	_	_
+7	.	.	SF	SF	_	0	_	_	_
+
+$ echo "나는 학교에 간다." | python sejong/tagger.py | ./test_sejong.sh
+Input: 나 는 학교 에 가 ㄴ다 .
+Parse:
+. SF ROOT
+ +-- ㄴ다 EF MOD
+     +-- 가 VV MOD
+         +-- 는 JX NP_SBJ
+         |   +-- 나 NP MOD
+         +-- 에 JKB NP_AJT
+             +-- 학교 NNG MOD
+```
 
 - comparison to [BIST parser](https://github.com/dsindex/bist-parser)

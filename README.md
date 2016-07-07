@@ -237,5 +237,6 @@ Parse:
          +-- 에 JKB NP_AJT
              +-- 학교 NNG MOD
 ```
+- [related thread](https://github.com/dsindex/syntaxnet/issues/4)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

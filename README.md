@@ -239,6 +239,6 @@ Parse:
 ```
 - [related thread](https://github.com/dsindex/syntaxnet/issues/4)
 - [web demo by https://github.com/xtknight](http://ec2-52-78-70-112.ap-northeast-2.compute.amazonaws.com/syntaxnet/psg_tree.htm)
-![https://github.com/dsindex/syntaxnet/blob/master/img/demo.png]
+![sample](https://github.com/dsindex/syntaxnet/blob/master/img/demo.png)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

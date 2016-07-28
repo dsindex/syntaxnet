@@ -100,6 +100,32 @@ $ ls bazel-bin/tensorflow_serving/example/parsey_client
 
 # run
 $ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
+23:52 $ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
+D0728 23:52:50.764804093   31201 ev_posix.c:101]             Using polling engine: poll
+this is a first sentence.
+result {
+  docid: "-:0"
+  text: "this is a first sentence ."
+  token {
+    word: "this"
+    start: 0
+    end: 3
+    head: 4
+    tag: "DT"
+    category: "DET"
+    label: "nsubj"
+  }
+  token {
+    word: "is"
+    start: 4
+    end: 5
+    head: 4
+    tag: "VBZ"
+    category: "VERB"
+    label: "cop"
+  }
+...
+}
 
 ```
 

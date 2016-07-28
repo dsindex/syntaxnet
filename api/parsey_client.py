@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-"""A client that talks to parsey-mcparseface-api service.
+"""A client that talks to parsey_api service.
 
 Typical usage example:
 
@@ -16,7 +16,7 @@ import tensorflow as tf
 
 from tensorflow_serving.example import parsey_api_pb2
 
-tf.app.flags.DEFINE_string('server', '', 'parsey api service host:port')
+tf.app.flags.DEFINE_string('server', '', 'parsey_api service host:port')
 FLAGS = tf.app.flags.FLAGS
 
 
@@ -25,10 +25,15 @@ def do_inference(hostport):
   channel = implementations.insecure_channel(host, int(port))
   stub = parsey_api_pb2.beta_create_ParseyService_stub(channel)
 
-  request = parsey_api_pb2.ParseyRequest()
-  request.text.append("This is a first sentence")
-  response = stub.Parse(request)
-  print response
+  while 1 :
+    try : line = sys.stdin.readline()
+    except KeyboardInterrupt : break
+    if not line : break
+    line = line.strip()
+    request = parsey_api_pb2.ParseyRequest()
+    request.text.append(line)
+    response = stub.Parse(request, 5.0) # timeout 5 seconds
+    print response
 
 def main(_):
   if not FLAGS.server:

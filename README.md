@@ -240,5 +240,6 @@ Parse:
 - [related thread](https://github.com/dsindex/syntaxnet/issues/4)
 - [web demo by https://github.com/xtknight](http://sejongpsg.ddns.net/syntaxnet/psg_tree.htm)
 ![sample](https://dl.dropboxusercontent.com/u/5061852/deptree.png)
+- [using tensorflow serving](https://github.com/dmansfield/parsey-mcparseface-api/issues/1)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

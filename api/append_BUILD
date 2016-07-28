@@ -36,6 +36,18 @@ cc_binary(
 )
 
 py_binary(
+    name = "parsey_mcparseface",
+    srcs = ["parsey_mcparseface.py"],
+    deps = [
+        "@syntaxnet//syntaxnet:graph_builder",
+        "@syntaxnet//syntaxnet:sentence_py_pb2",
+        "@syntaxnet//syntaxnet:structured_graph_builder",
+	    "@syntaxnet//syntaxnet:parser_eval",
+        "@org_tensorflow//tensorflow/contrib/session_bundle:exporter",
+    ],
+)
+
+py_binary(
     name = "parsey_client",
     srcs = [
         "parsey_client.py",
@@ -43,5 +55,6 @@ py_binary(
     ],
     deps = [
         "@org_tensorflow//tensorflow:tensorflow_py",
+        "@syntaxnet//syntaxnet:sentence_py_pb2",
     ],
 )

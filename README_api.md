@@ -83,7 +83,7 @@ $ node index.js
 ```
 
 - python client
-```
+```bash
 # how to generate 'parsey_api_pb2.py'?
 $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
@@ -95,7 +95,7 @@ $ cd ..
 # build it
 $ cp api/parsey_client.py serving/tensorflow_serving/example
 $ cd serving
-$ bazel build //tensorflow_serving/example:parsey_client
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_client --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_client
 
 # run
@@ -109,5 +109,20 @@ Traceback (most recent call last):
 ImportError: No module named syntaxnet
 
 # i got some error... try to solve it
+
+```
+
+- export model
+```bash
+# copy parsey_mcparseface.py to serving/tensorflow_serving/example
+# buid it
+$ cd ../
+$ cp api/parsey_mcparseface.py serving/tensorflow_serving/example
+$ cd serving
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
+
+# run
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --export_path=exported
 
 ```

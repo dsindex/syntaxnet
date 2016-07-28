@@ -1,0 +1,2 @@
+model_checkpoint_path: "/tmp/foo2/00000001-tmp/export"
+all_model_checkpoint_paths: "/tmp/foo2/00000001-tmp/export"

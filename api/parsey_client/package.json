@@ -1,0 +1,14 @@
+{
+  "name": "parsey_client",
+  "version": "0.0.1",
+  "description": "parsey api test client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Mansfield <dmansfield@gmail.com>",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "grpc": "^0.14.1"
+  }
+}

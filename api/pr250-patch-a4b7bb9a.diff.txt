@@ -1,0 +1,721 @@
+diff --git a/syntaxnet/syntaxnet/beam_reader_ops.cc b/syntaxnet/syntaxnet/beam_reader_ops.cc
+--- ./syntaxnet/syntaxnet/beam_reader_ops.cc	2016-07-26 22:24:32.287680386 -0400
++++ b/syntaxnet/syntaxnet/beam_reader_ops.cc	2016-07-26 22:14:22.891688551 -0400
+@@ -110,6 +110,9 @@
+   // Whether to skip to a new sentence after each training step.
+   bool always_start_new_sentences;
+ 
++  // Whether to use the sentences fed through the input Tensor
++  bool use_document_feed;
++
+   // Parameter for deciding which tokens to score.
+   string scoring_type;
+ };
+@@ -374,7 +377,7 @@
+   void Init(TaskContext *task_context) {
+     // Create sentence batch.
+     sentence_batch_.reset(
+-        new SentenceBatch(BatchSize(), options_.corpus_name));
++	new SentenceBatch(BatchSize(), options_.corpus_name, options_.use_document_feed));
+     sentence_batch_->Init(task_context);
+ 
+     // Create transition system.
+@@ -423,6 +426,23 @@
+       VLOG(2) << "Starting epoch " << epoch_;
+       sentence_batch_->Rewind();
+     }
++
++  }
++
++  // The strings are serialized sentence protos, such as those output by DocumentSource
++  void FeedDocuments(TTypes< string >::ConstFlat sentences) {
++    std::vector<std::unique_ptr<Sentence>> sentence_vec;
++    //LOG(INFO) << "Going to feed " << sentences.size() << "parsed documents";
++    for (int i = 0; i < sentences.size(); i++) {
++      std::unique_ptr<Sentence> sentence(new Sentence());
++      if (!sentence->ParseFromString(sentences(i))) {
++        LOG(ERROR) << "FeedDocuments unable to parse serialized sentence protobuf [" << sentences(i) << "] at index " << i;
++        continue;
++      }
++      //LOG(INFO) << "Got parsed sentence from tensor: " << sentence->DebugString();
++      sentence_vec.push_back(std::move(sentence));
++    }
++    sentence_batch_->FeedSentences(sentence_vec);
+   }
+ 
+   // Resets the offset vectors required for a single run because we're
+@@ -573,6 +593,9 @@
+     OP_REQUIRES_OK(context,
+                    context->GetAttr("always_start_new_sentences",
+                                     &options.always_start_new_sentences));
++    OP_REQUIRES_OK(context,
++                   context->GetAttr("documents_from_input",
++				    &options.use_document_feed));
+ 
+     // Reads task context from file.
+     string data;
+@@ -602,13 +625,19 @@
+     std::vector<DataType> output_types(feature_size, DT_STRING);
+     output_types.push_back(DT_INT64);
+     output_types.push_back(DT_INT32);
+-    OP_REQUIRES_OK(context, context->MatchSignature({}, output_types));
++    OP_REQUIRES_OK(context, context->MatchSignature({DT_STRING}, output_types));
+   }
+ 
+   void Compute(OpKernelContext *context) override {
+     mutex_lock lock(mu_);
+ 
++    const Tensor &input = context->input(0);
++    OP_REQUIRES(context, IsLegacyVector(input.shape()),
++                InvalidArgument("input should be a vector."));
++
+     // Write features.
++    TTypes< string >::ConstFlat input_vec = input.flat<string>();
++    batch_state_->FeedDocuments(input_vec);
+     batch_state_->ResetBeams();
+     batch_state_->ResetOffsets();
+     batch_state_->PopulateFeatureOutputs(context);
+diff --git a/syntaxnet/syntaxnet/BUILD b/syntaxnet/syntaxnet/BUILD
+--- ./syntaxnet/syntaxnet/BUILD	2016-07-26 22:24:32.287680386 -0400
++++ b/syntaxnet/syntaxnet/BUILD	2016-07-26 22:14:22.887688551 -0400
+@@ -395,6 +395,7 @@
+ cc_library(
+     name = "parser_ops_cc",
+     srcs = ["ops/parser_ops.cc"],
++    visibility = ["//visibility:public"],
+     deps = [
+         ":base",
+         ":document_filters",
+@@ -554,6 +555,17 @@
+     ],
+ )
+ 
++py_binary(
++    name = "parsey_mcparseface",
++    srcs = ["parsey_mcparseface.py"],
++    deps = [
++        ":graph_builder",
++        ":sentence_py_pb2",
++        ":structured_graph_builder",
++	":parser_eval",
++    ],
++)
++
+ py_binary(
+     name = "conll2tree",
+     srcs = ["conll2tree.py"],
+diff --git a/syntaxnet/syntaxnet/conll2tree.py b/syntaxnet/syntaxnet/conll2tree.py
+--- ./syntaxnet/syntaxnet/conll2tree.py	2016-07-26 22:24:32.287680386 -0400
++++ b/syntaxnet/syntaxnet/conll2tree.py	2016-07-26 22:14:22.891688551 -0400
+@@ -70,7 +70,10 @@
+ def main(unused_argv):
+   logging.set_verbosity(logging.INFO)
+   with tf.Session() as sess:
+-    src = gen_parser_ops.document_source(batch_size=32,
++    # DocumentSource can take input from tensor or corpus...
++    unused_text_input = tf.constant([], tf.string)
++    src = gen_parser_ops.document_source(text=unused_text_input,
++                                         batch_size=32,
+                                          corpus_name=FLAGS.corpus_name,
+                                          task_context=FLAGS.task_context)
+     sentence = sentence_pb2.Sentence()
+diff --git a/syntaxnet/syntaxnet/document_filters.cc b/syntaxnet/syntaxnet/document_filters.cc
+--- ./syntaxnet/syntaxnet/document_filters.cc	2016-07-26 22:24:32.287680386 -0400
++++ b/syntaxnet/syntaxnet/document_filters.cc	2016-07-26 22:17:53.671685727 -0400
+@@ -38,6 +38,7 @@
+ using tensorflow::Tensor;
+ using tensorflow::TensorShape;
+ using tensorflow::errors::InvalidArgument;
++using tensorflow::TTypes;
+ 
+ namespace syntaxnet {
+ 
+@@ -72,19 +73,49 @@
+  public:
+   explicit DocumentSource(OpKernelConstruction *context) : OpKernel(context) {
+     GetTaskContext(context, &task_context_);
+-    string corpus_name;
+-    OP_REQUIRES_OK(context, context->GetAttr("corpus_name", &corpus_name));
++    OP_REQUIRES_OK(context, context->GetAttr("corpus_name", &corpus_name_));
+     OP_REQUIRES_OK(context, context->GetAttr("batch_size", &batch_size_));
++    OP_REQUIRES_OK(context, context->GetAttr("documents_from_input",
++				    &documents_from_input_));
+     OP_REQUIRES(context, batch_size_ > 0,
+                 InvalidArgument("invalid batch_size provided"));
+-    corpus_.reset(new TextReader(*task_context_.GetInput(corpus_name)));
++    corpus_.reset(documents_from_input_ ? nullptr
++	: new TextReader(*task_context_.GetInput(corpus_name_)));
+   }
+ 
+   void Compute(OpKernelContext *context) override {
+     mutex_lock lock(mu_);
+     Sentence *document;
+     vector<Sentence *> document_batch;
+-    while ((document = corpus_->Read()) != NULL) {
++
++    const Tensor &input = context->input(0);
++
++    std::unique_ptr<TextReader> vec_reader;
++
++    if (documents_from_input_) {
++      OP_REQUIRES(context, IsLegacyVector(input.shape()),
++		  InvalidArgument("input should be a vector."));
++
++      std::unique_ptr<std::vector<std::string>>
++	strings(new std::vector<std::string>);
++
++      TTypes< string >::ConstFlat input_vec = input.flat<string>();
++      const int64 n = input.NumElements();
++
++      for (int64 i = 0; i < n; i++) {
++	strings->push_back(input_vec(i));
++        LOG(INFO) << "text: " << input_vec(i);
++      }
++
++      vec_reader.reset(new TextReader(*task_context_.GetInput(corpus_name_),
++				      std::move(strings)));
++    }
++
++    TextReader *reader = (documents_from_input_) ?
++      vec_reader.get() :
++      corpus_.get();
++
++    while ((document = reader->Read()) != nullptr) {
+       document_batch.push_back(document);
+       if (static_cast<int>(document_batch.size()) == batch_size_) {
+         OutputDocuments(context, &document_batch);
+@@ -110,9 +141,11 @@
+   // mutex to synchronize access to Compute.
+   mutex mu_;
+ 
++  string corpus_name_;
+   std::unique_ptr<TextReader> corpus_;
+   string documents_path_;
+   int batch_size_;
++  bool documents_from_input_;
+ };
+ 
+ REGISTER_KERNEL_BUILDER(Name("DocumentSource").Device(DEVICE_CPU),
+diff --git a/syntaxnet/syntaxnet/lexicon_builder_test.py b/syntaxnet/syntaxnet/lexicon_builder_test.py
+--- ./syntaxnet/syntaxnet/lexicon_builder_test.py	2016-07-26 22:24:32.287680386 -0400
++++ b/syntaxnet/syntaxnet/lexicon_builder_test.py	2016-07-26 22:14:22.891688551 -0400
+@@ -109,7 +109,10 @@
+     return doc, last
+ 
+   def ValidateDocuments(self):
+-    doc_source = gen_parser_ops.document_source(self.context_file, batch_size=1)
++    unused_text_input = tf.constant([], tf.string)
++    doc_source = gen_parser_ops.document_source(text=unused_text_input,
++                                                task_context=self.context_file,
++                                                batch_size=1)
+     with self.test_session() as sess:
+       logging.info('Reading document1')
+       doc, last = self.ReadNextDocument(sess, doc_source)
+diff --git a/syntaxnet/syntaxnet/ops/parser_ops.cc b/syntaxnet/syntaxnet/ops/parser_ops.cc
+--- ./syntaxnet/syntaxnet/ops/parser_ops.cc	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/ops/parser_ops.cc	2016-07-26 22:14:22.891688551 -0400
+@@ -72,6 +72,7 @@
+ )doc");
+ 
+ REGISTER_OP("BeamParseReader")
++    .Input("documents: string")
+     .Output("features: feature_size * string")
+     .Output("beam_state: int64")
+     .Output("num_epochs: int32")
+@@ -84,10 +85,13 @@
+     .Attr("arg_prefix: string='brain_parser'")
+     .Attr("continue_until_all_final: bool=false")
+     .Attr("always_start_new_sentences: bool=false")
++    .Attr("documents_from_input: bool=false")
+     .SetIsStateful()
+     .Doc(R"doc(
+ Reads sentences and creates a beam parser.
+ 
++documents: A vector of documents (Sentence) as serialized protos.
++           If empty, the documents will be read from the corpus named below.
+ features: features firing at the initial parser state encoded as
+           dist_belief.SparseFeatures protocol buffers.
+ beam_state: beam state handle.
+@@ -102,6 +106,8 @@
+                           off the beam.
+ always_start_new_sentences: whether to skip to the beginning of a new sentence
+                             after each training step.
++documents_from_input: whether to read documents from the documents input Tensor (true)
++                      or from the corpus defined by task_context and corpus_name (false)
+ )doc");
+ 
+ REGISTER_OP("BeamParser")
+@@ -229,18 +235,23 @@
+ )doc");
+ 
+ REGISTER_OP("DocumentSource")
++    .Input("text: string")
+     .Output("documents: string")
+     .Output("last: bool")
+     .Attr("task_context: string")
+     .Attr("corpus_name: string='documents'")
+     .Attr("batch_size: int")
++    .Attr("documents_from_input: bool=false")
+     .SetIsStateful()
+     .Doc(R"doc(
+ Reads documents from documents_path and outputs them.
+ 
++text: a vector of strings (matching the DocumentFormat as per corpus definition)
+ documents: a vector of documents as serialized protos.
+ last: whether this is the last batch of documents from this document path.
+ batch_size: how many documents to read at once.
++documents_from_input: whether to read text from the next input Tensor (true)
++                      or from the corpus defined by task_context and corpus_name (false)
+ )doc");
+ 
+ REGISTER_OP("DocumentSink")
+diff --git a/syntaxnet/syntaxnet/parsey_mcparseface.py b/syntaxnet/syntaxnet/parsey_mcparseface.py
+--- ./syntaxnet/syntaxnet/parsey_mcparseface.py	1969-12-31 19:00:00.000000000 -0500
++++ b/syntaxnet/syntaxnet/parsey_mcparseface.py	2016-07-26 22:14:22.891688551 -0400
+@@ -0,0 +1,187 @@
++import os
++import shutil
++
++import tensorflow as tf
++
++from tensorflow.python.platform import tf_logging as logging
++from syntaxnet import parser_eval
++from syntaxnet.ops import gen_parser_ops
++from syntaxnet import structured_graph_builder
++from tensorflow_serving.session_bundle import exporter
++
++flags = tf.app.flags
++FLAGS = flags.FLAGS
++
++flags.DEFINE_string('export_path', None, 'Path to export to intstead of running the model.')
++
++def Build(sess, document_source, FLAGS):
++  """Builds a sub-network, which will be either the tagger or the parser
++
++  Args:
++    sess: tensorflow session to use
++    document_source: the input of serialized document objects to process
++
++  Flags: (taken from FLAGS argument)
++    num_actions: number of possible golden actions
++    feature_sizes: size of each feature vector
++    domain_sizes: number of possible feature ids in each feature vector
++    embedding_dims: embedding dimension for each feature group
++
++    hidden_layer_sizes: Comma separated list of hidden layer sizes.
++    arg_prefix: Prefix for context parameters.
++    beam_size: Number of slots for beam parsing.
++    max_steps: Max number of steps to take.
++    task_context: Path to a task context with inputs and parameters for feature extractors.
++    input: Name of the context input to read data from.
++    graph_builder: 'greedy' or 'structured'
++    batch_size: Number of sentences to process in parallel.
++    slim_model: Whether to expect only averaged variables.
++    model_path: Path to model parameters.
++
++  Return:
++    returns the tensor which will contain the serialized document objects.
++
++  """
++  task_context = FLAGS["task_context"]
++  arg_prefix = FLAGS["arg_prefix"]
++  num_actions = FLAGS["num_actions"]
++  feature_sizes = FLAGS["feature_sizes"]
++  domain_sizes = FLAGS["domain_sizes"]
++  embedding_dims = FLAGS["embedding_dims"]
++  hidden_layer_sizes = map(int, FLAGS["hidden_layer_sizes"].split(','))
++  beam_size = FLAGS["beam_size"]
++  max_steps = FLAGS["max_steps"]
++  batch_size = FLAGS["batch_size"]
++  corpus_name = FLAGS["input"]
++  slim_model = FLAGS["slim_model"]
++  model_path = FLAGS["model_path"]
++
++  parser = structured_graph_builder.StructuredGraphBuilder(
++        num_actions,
++        feature_sizes,
++        domain_sizes,
++        embedding_dims,
++        hidden_layer_sizes,
++        gate_gradients=True,
++        arg_prefix=arg_prefix,
++        beam_size=beam_size,
++        max_steps=max_steps)
++
++  parser.AddEvaluation(task_context,
++                       batch_size,
++                       corpus_name=corpus_name,
++                       evaluation_max_steps=max_steps,
++   		       document_source=document_source)
++
++  parser.AddSaver(slim_model)
++  sess.run(parser.inits.values())
++  parser.saver.restore(sess, model_path)
++
++  return parser.evaluation['documents']
++
++def GetFeatureSize(task_context, arg_prefix):
++  with tf.variable_scope("fs_"+arg_prefix):
++    with tf.Session() as sess:
++      return sess.run(gen_parser_ops.feature_size(task_context=task_context,
++                      arg_prefix=arg_prefix))
++
++# export the model in various ways. this erases any previously saved model
++def ExportModel(sess, model_dir, input, output, assets):
++  if os.path.isdir(model_dir):
++    shutil.rmtree(model_dir);
++
++  # using TF Serving exporter to load into a TF Serving session bundle
++  logging.info('Exporting trained model to %s', model_dir)
++  saver = tf.train.Saver()
++  model_exporter = exporter.Exporter(saver)
++  signature = exporter.regression_signature(input_tensor=input,output_tensor=output)
++  model_exporter.init(sess.graph.as_graph_def(),
++                      default_graph_signature=signature,
++                      assets_collection=assets)
++  model_exporter.export(model_dir, tf.constant(1), sess)
++
++  # using a SummaryWriter so graph can be loaded in TensorBoard
++  writer = tf.train.SummaryWriter(model_dir, sess.graph)
++  writer.flush()
++
++  # exporting the graph as a text protobuf, to view graph manualy
++  f1 = open(model_dir + '/graph.pbtxt', 'w+');
++  print >>f1, str(tf.get_default_graph().as_graph_def())
++
++def main(unused_argv):
++  logging.set_verbosity(logging.INFO)
++
++  model_dir="syntaxnet/models/parsey_mcparseface"
++  task_context="%s/context.pbtxt" % model_dir
++
++  common_params = {
++      "task_context":  task_context,
++      "beam_size":     8,
++      "max_steps":     1000,
++      "graph_builder": "structured",
++      "batch_size":    1024,
++      "slim_model":    True,
++      }
++
++  model = {
++      	"brain_tagger": {
++            "arg_prefix":         "brain_tagger",
++            "hidden_layer_sizes": "64",
++            # input is taken from input tensor, not from corpus
++            "input":              None,
++            "model_path":         "%s/tagger-params" % model_dir,
++
++            },
++        "brain_parser": {
++            "arg_prefix":         "brain_parser",
++            "hidden_layer_sizes": "512,512",
++            # input is taken from input tensor, not from corpus
++            "input":              None,
++            "model_path":         "%s/parser-params" % model_dir,
++            },
++      }
++
++  for prefix in ["brain_tagger","brain_parser"]:
++      model[prefix].update(common_params)
++      feature_sizes, domain_sizes, embedding_dims, num_actions = GetFeatureSize(task_context, prefix)
++      model[prefix].update({'feature_sizes': feature_sizes,
++                               'domain_sizes': domain_sizes,
++                               'embedding_dims': embedding_dims,
++                               'num_actions': num_actions })
++
++  with tf.Session() as sess:
++      if FLAGS.export_path is not None:
++          text_input = tf.placeholder(tf.string, [None])
++      else:
++          text_input = tf.constant(["parsey is the greatest"], tf.string)
++
++      # corpus_name must be specified and valid because it indirectly informs
++      # the document format ("english-text" vs "conll-sentence") used to parse
++      # the input text
++      document_source = gen_parser_ops.document_source(text=text_input,
++                                                       task_context=task_context,
++                                                       corpus_name="stdin",
++                                                       batch_size=common_params['batch_size'],
++					                                             documents_from_input=True)
++
++      for prefix in ["brain_tagger","brain_parser"]:
++          with tf.variable_scope(prefix):
++              if True or prefix == "brain_tagger":
++                  source = document_source.documents if prefix == "brain_tagger" else model["brain_tagger"]["documents"]
++                  model[prefix]["documents"] = Build(sess, source, model[prefix])
++
++      if FLAGS.export_path is None:
++          sink = gen_parser_ops.document_sink(model["brain_parser"]["documents"],
++                                      task_context=task_context,
++                                      corpus_name="stdout-conll")
++          sess.run(sink)
++      else:
++          assets = []
++          for model_file in os.listdir(model_dir):
++              path = os.path.join(model_dir, model_file)
++              if not os.path.isdir(path):
++                assets.append(tf.constant(path))
++          ExportModel(sess, FLAGS.export_path, text_input, model["brain_parser"]["documents"], assets)
++
++if __name__ == '__main__':
++  tf.app.run()
+diff --git a/syntaxnet/syntaxnet/proto_io.h b/syntaxnet/syntaxnet/proto_io.h
+--- ./syntaxnet/syntaxnet/proto_io.h	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/proto_io.h	2016-07-26 22:14:22.891688551 -0400
+@@ -141,10 +141,70 @@
+   TF_DISALLOW_COPY_AND_ASSIGN(StdIn);
+ };
+ 
++// A file implementation to read from string vector
++class VectorIn : public tensorflow::RandomAccessFile {
++ public:
++  VectorIn(std::unique_ptr<std::vector<std::string>> vec)
++    : vec_(std::move(vec)), index_(0) {  }
++  ~VectorIn() override {}
++
++  // Reads up to n bytes from standard input.  Returns `OUT_OF_RANGE` if fewer
++  // than n bytes were stored in `*result` because of EOF.
++  tensorflow::Status Read(uint64 offset, size_t n,
++                          tensorflow::StringPiece *result,
++                          char *scratch) const override {
++    CHECK_EQ(expected_offset_, offset);
++    if (!eof_) {
++      string line;
++      eof_ = !getline(line);
++      LOG(INFO) << "VectorIn: " << line;
++      buffer_.append(line);
++      buffer_.append("\n");
++    }
++    CopyFromBuffer(std::min(buffer_.size(), n), result, scratch);
++    if (eof_) {
++      return tensorflow::errors::OutOfRange("End of file reached");
++    } else {
++      return tensorflow::Status::OK();
++    }
++  }
++
++ private:
++  void CopyFromBuffer(size_t n, tensorflow::StringPiece *result,
++                      char *scratch) const {
++    memcpy(scratch, buffer_.data(), buffer_.size());
++    buffer_ = buffer_.substr(n);
++    result->set(scratch, n);
++    expected_offset_ += n;
++  }
++
++  bool getline(string &line) const {
++    if (index_ < vec_->size()) {
++      LOG(INFO) << "VectorIn::getline index=" << index_ << " value=" << (*vec_)[index_];
++      line = (*vec_)[index_++];
++      return true;
++    }
++    return false;
++  }
++
++  mutable bool eof_ = false;
++  mutable int64 expected_offset_ = 0;
++  mutable string buffer_;
++  mutable std::unique_ptr<std::vector<std::string>> vec_;
++  mutable int index_;
++
++  TF_DISALLOW_COPY_AND_ASSIGN(VectorIn);
++};
++
+ // Reads sentence protos from a text file.
+ class TextReader {
+  public:
+-  explicit TextReader(const TaskInput &input) {
++
++  explicit TextReader(const TaskInput &input) : TextReader(input, nullptr) { }
++
++  explicit TextReader(const TaskInput &input,
++		      std::unique_ptr<std::vector<std::string>> feed_text)
++    : feed_text_(std::move(feed_text)) {
+     CHECK_EQ(input.record_format_size(), 1)
+         << "TextReader only supports inputs with one record format: "
+         << input.DebugString();
+@@ -177,7 +237,11 @@
+ 
+   void Reset() {
+     sentence_count_ = 0;
+-    if (filename_ == "-") {
++    if (feed_text_ != nullptr) {
++      static const int kInputBufferSize = 8 * 1024; /* bytes */
++      file_.reset(new VectorIn(std::move(feed_text_)));
++      buffer_.reset(new tensorflow::io::InputBuffer(file_.get(), kInputBufferSize));
++    } else if (filename_ == "-") {
+       static const int kInputBufferSize = 8 * 1024; /* bytes */
+       file_.reset(new StdIn());
+       buffer_.reset(
+@@ -197,6 +261,7 @@
+   std::unique_ptr<tensorflow::RandomAccessFile> file_;
+   std::unique_ptr<tensorflow::io::InputBuffer> buffer_;
+   std::unique_ptr<DocumentFormat> format_;
++  std::unique_ptr<std::vector<std::string>> feed_text_;
+ };
+ 
+ // Writes sentence protos to a text conll file.
+diff --git a/syntaxnet/syntaxnet/sentence_batch.cc b/syntaxnet/syntaxnet/sentence_batch.cc
+--- ./syntaxnet/syntaxnet/sentence_batch.cc	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/sentence_batch.cc	2016-07-26 22:14:22.891688551 -0400
+@@ -24,14 +24,34 @@
+ namespace syntaxnet {
+ 
+ void SentenceBatch::Init(TaskContext *context) {
+-  reader_.reset(new TextReader(*context->GetInput(input_name_)));
++  if (!use_sentence_feed_) {
++    reader_.reset(new TextReader(*context->GetInput(input_name_)));
++  }
+   size_ = 0;
+ }
+ 
++void SentenceBatch::FeedSentences(std::vector<std::unique_ptr<Sentence>> &sentences) {
++  for (size_t i = 0; i < sentences.size(); i++) {
++    feed_sentences_.push_back(std::move(sentences[i]));
++  }
++  sentences.clear();
++}
++
+ bool SentenceBatch::AdvanceSentence(int index) {
++  //LOG(INFO) << "SentenceBatch advancing to " << index;
+   if (sentences_[index] == nullptr) ++size_;
+   sentences_[index].reset();
+-  std::unique_ptr<Sentence> sentence(reader_->Read());
++  Sentence *sentenceptr = nullptr;
++  //LOG(INFO) << "use_sentence_feed:" <<index<<": "<< use_sentence_feed_
++  //  << " sentence_feed_index:" << sentence_feed_index_ << " size:"
++  //  << (use_sentence_feed_ ? feed_sentences_.size() : -1);
++  if (!use_sentence_feed_) {
++    sentenceptr = reader_->Read();
++  } else if (sentence_feed_index_ < feed_sentences_.size()) {
++    sentenceptr = new Sentence();
++    sentenceptr->CopyFrom(*feed_sentences_[sentence_feed_index_++]);
++  }
++  std::unique_ptr<Sentence> sentence(sentenceptr);
+   if (sentence == nullptr) {
+     --size_;
+     return false;
+diff --git a/syntaxnet/syntaxnet/sentence_batch.h b/syntaxnet/syntaxnet/sentence_batch.h
+--- ./syntaxnet/syntaxnet/sentence_batch.h	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/sentence_batch.h	2016-07-26 22:14:22.891688551 -0400
+@@ -36,10 +36,15 @@
+ // by reading in multiple sentences in parallel.
+ class SentenceBatch {
+  public:
+-  SentenceBatch(int batch_size, string input_name)
++   SentenceBatch(int batch_size, string input_name)
++       : SentenceBatch(batch_size, input_name, false) {}
++
++   SentenceBatch(int batch_size, string input_name, bool use_sentence_feed)
+       : batch_size_(batch_size),
+         input_name_(input_name),
+-        sentences_(batch_size) {}
++        sentences_(batch_size),
++        use_sentence_feed_(use_sentence_feed),
++        sentence_feed_index_(0) {}
+ 
+   // Initializes all resources and opens the corpus file.
+   void Init(TaskContext *context);
+@@ -50,12 +55,17 @@
+   bool AdvanceSentence(int index);
+ 
+   // Rewinds the corpus reader.
+-  void Rewind() { reader_->Reset(); }
++  void Rewind() {
++    if (reader_ != nullptr) reader_->Reset();
++    sentence_feed_index_ = 0;
++  }
+ 
+   int size() const { return size_; }
+ 
+   Sentence *sentence(int index) { return sentences_[index].get(); }
+ 
++  void FeedSentences(std::vector<std::unique_ptr<Sentence>> &sentences);
++
+  private:
+   // Running tally of non-nullptr states in the batch.
+   int size_;
+@@ -71,6 +81,14 @@
+ 
+   // Batch: Sentence objects.
+   std::vector<std::unique_ptr<Sentence>> sentences_;
++
++  // Sentence objects fed in, superceding the reader_ while non-empty
++  std::vector<std::unique_ptr<Sentence>> feed_sentences_;
++
++  bool use_sentence_feed_;
++
++  int sentence_feed_index_;
++
+ };
+ 
+ }  // namespace syntaxnet
+diff --git a/syntaxnet/syntaxnet/structured_graph_builder.py b/syntaxnet/syntaxnet/structured_graph_builder.py
+--- ./syntaxnet/syntaxnet/structured_graph_builder.py	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/structured_graph_builder.py	2016-07-26 22:14:22.891688551 -0400
+@@ -78,9 +78,16 @@
+                      batch_size,
+                      corpus_name,
+                      until_all_final=False,
+-                     always_start_new_sentences=False):
++                     always_start_new_sentences=False,
++		     document_source=None):
+     """Adds an op capable of reading sentences and parsing them with a beam."""
++    documents_from_input=True
++    if document_source is None:
++      empty_documents_list = tf.constant([], tf.string)
++      document_source = tf.placeholder_with_default(empty_documents_list, [None], "documents_in_placeholder")
++      documents_from_input=False
+     features, state, epochs = gen_parser_ops.beam_parse_reader(
++        documents=document_source,
+         task_context=task_context,
+         feature_size=self._feature_size,
+         beam_size=self._beam_size,
+@@ -89,8 +96,9 @@
+         allow_feature_weights=self._allow_feature_weights,
+         arg_prefix=self._arg_prefix,
+         continue_until_all_final=until_all_final,
+-        always_start_new_sentences=always_start_new_sentences)
+-    return {'state': state, 'features': features, 'epochs': epochs}
++        always_start_new_sentences=always_start_new_sentences,
++	documents_from_input=documents_from_input)
++    return {'state': state, 'features': features, 'epochs': epochs }
+ 
+   def _BuildSequence(self,
+                      batch_size,
+@@ -222,14 +230,16 @@
+                     task_context,
+                     batch_size,
+                     evaluation_max_steps=300,
+-                    corpus_name=None):
++                    corpus_name=None,
++		    document_source=None):
+     with tf.name_scope('evaluation'):
+       n = self.evaluation
+       n.update(self._AddBeamReader(task_context,
+                                    batch_size,
+                                    corpus_name,
+                                    until_all_final=True,
+-                                   always_start_new_sentences=True))
++                                   always_start_new_sentences=True,
++				   document_source=document_source))
+       self._BuildNetwork(
+           list(n['features']),
+           return_average=self._use_averaging)
+diff --git a/syntaxnet/syntaxnet/text_formats_test.py b/syntaxnet/syntaxnet/text_formats_test.py
+--- ./syntaxnet/syntaxnet/text_formats_test.py	2016-07-26 22:24:32.535680383 -0400
++++ b/syntaxnet/syntaxnet/text_formats_test.py	2016-07-26 22:14:22.891688551 -0400
+@@ -76,8 +76,11 @@
+     logging.info('Writing text file to: %s', self.corpus_file)
+     with open(self.corpus_file, 'w') as f:
+       f.write(sentence)
++    unused_text_input = tf.constant([], tf.string)
+     sentence, _ = gen_parser_ops.document_source(
+-        self.context_file, batch_size=1)
++        text=unused_text_input,
++        task_context=self.context_file,
++        batch_size=1)
+     with self.test_session() as sess:
+       sentence_doc = self.ReadNextDocument(sess, sentence)
+       self.assertEqual(' '.join([t.word for t in sentence_doc.token]),

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package cali.nlp;
+
+import "syntaxnet/sentence.proto";
+
+message ParseyRequest {
+  repeated string text = 1;
+};
+
+message ParseyResponse {
+  repeated syntaxnet.Sentence result = 1;
+};
+
+service ParseyService {
+  rpc Parse(ParseyRequest) returns (ParseyResponse);
+}

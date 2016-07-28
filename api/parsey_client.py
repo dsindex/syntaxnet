@@ -16,7 +16,7 @@ import tensorflow as tf
 
 from tensorflow_serving.example import parsey_api_pb2
 
-tf.app.flags.DEFINE_string('server', '', 'mlp_mnist_inference service host:port')
+tf.app.flags.DEFINE_string('server', '', 'parsey api service host:port')
 FLAGS = tf.app.flags.FLAGS
 
 

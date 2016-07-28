@@ -99,16 +99,7 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //ten
 $ ls bazel-bin/tensorflow_serving/example/parsey_client
 
 # run
-$ bazel-bin/tensorflow_serving/example/parsey_client
-D0728 18:40:02.420131558   18589 ev_posix.c:101]             Using polling engine: poll
-Traceback (most recent call last):
-  File "/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tensorflow_serving/example/parsey_client.py", line 17, in <module>
-    from tensorflow_serving.example import parsey_api_pb2
-  File "/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tensorflow_serving/example/parsey_api_pb2.py", line 16, in <module>
-    from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2
-ImportError: No module named syntaxnet
-
-# i got some error... try to solve it
+$ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
 
 ```
 
@@ -123,6 +114,7 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //ten
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 
 # run
-$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --export_path=exported
+# this will read model from --model_dir and export to --export_path directory
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported
 
 ```

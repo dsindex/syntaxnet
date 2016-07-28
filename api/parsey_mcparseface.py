@@ -12,6 +12,7 @@ from tensorflow.contrib.session_bundle import exporter
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 
+flags.DEFINE_string('model_dir', None, 'Path to the model directory')
 flags.DEFINE_string('export_path', None, 'Path to export to intstead of running the model.')
 
 def Build(sess, document_source, FLAGS):
@@ -111,7 +112,7 @@ def ExportModel(sess, model_dir, input, output, assets):
 def main(unused_argv):
   logging.set_verbosity(logging.INFO)
 
-  model_dir="syntaxnet/models/parsey_mcparseface"
+  model_dir=FLAGS.model_dir
   task_context="%s/context.pbtxt" % model_dir
 
   common_params = {

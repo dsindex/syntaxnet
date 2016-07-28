@@ -34,3 +34,14 @@ cc_binary(
         "@org_tensorflow//tensorflow/contrib/session_bundle:signature",
     ],
 )
+
+py_binary(
+    name = "parsey_client",
+    srcs = [
+        "parsey_client.py",
+        "parsey_api_pb2.py",
+    ],
+    deps = [
+        "@org_tensorflow//tensorflow:tensorflow_py",
+    ],
+)

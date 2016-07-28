@@ -83,4 +83,31 @@ $ node index.js
 ```
 
 - python client
-  - i have a plan to create python client for parsey_api. but.....
+```
+# how to generate 'parsey_api_pb2.py'?
+$ which grpc_python_plugin
+# if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
+$ cd serving
+$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
+$ cd ..
+
+# copy parsey_client.py to serving/tensorflow_serving/example
+# build it
+$ cp api/parsey_client.py serving/tensorflow_serving/example
+$ cd serving
+$ bazel build //tensorflow_serving/example:parsey_client
+$ ls bazel-bin/tensorflow_serving/example/parsey_client
+
+# run
+$ bazel-bin/tensorflow_serving/example/parsey_client
+D0728 18:40:02.420131558   18589 ev_posix.c:101]             Using polling engine: poll
+Traceback (most recent call last):
+  File "/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tensorflow_serving/example/parsey_client.py", line 17, in <module>
+    from tensorflow_serving.example import parsey_api_pb2
+  File "/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tensorflow_serving/example/parsey_api_pb2.py", line 16, in <module>
+    from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2
+ImportError: No module named syntaxnet
+
+# i got some error... try to solve it
+
+```

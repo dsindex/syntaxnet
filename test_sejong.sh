@@ -29,9 +29,9 @@ ${PARSER_EVAL} \
   --beam_size=${BEAM_SIZE} \
   --arg_prefix=brain_parser \
   --graph_builder=structured \
-  --task_context=${MODEL_DIR}/context.pbtxt_p \
+  --task_context=${MODEL_DIR}/context.pbtxt \
   --model_path=${MODEL_DIR}/parser-params \
   | \
 ${CONLL2TREE} \
-  --task_context=${MODEL_DIR}/context.pbtxt_p \
+  --task_context=${MODEL_DIR}/context.pbtxt \
   --alsologtostderr

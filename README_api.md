@@ -45,7 +45,7 @@ $ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 
 # run parsey_api with exported model
-$ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 api/parsey_model
+$ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 ../api/parsey_model
 ```
 
 - node client
@@ -142,5 +142,30 @@ $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 # run
 # this will read model from --model_dir and export to --export_path directory
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported
+
+```
+
+- what about parsing only case? 
+```bash
+# the parsey_api server can handle colnn format.
+# so, just export model and use it
+
+# export parsing model only
+# replace serving/tensorflow_serving/example/parsey_mcparseface.py with parsey_sejong.py
+# build it
+$ cd ../
+$ cp api/parsey_sejong.py serving/tensorflow_serving/example/parsey_mcparseface.py
+$ cd serving
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
+
+# run
+# this will read model from --model_dir and export to --export_path directory
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models_sejong --export_path=exported_sejong
+
+# run parsey_api with exported model
+$ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported_sejong/00000001
+
+
 
 ```

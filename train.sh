@@ -242,13 +242,13 @@ function copy_model {
 	cat ${MODEL_DIR}/context.pbtxt.in | sed "s=OUTPATH=${MODEL_DIR}=" > ${MODEL_DIR}/context.pbtxt
 }
 
-convert_corpus ${CORPUS_DIR}
-train_pos_tagger
-preprocess_with_tagger
-pretrain_parser
-evaluate_pretrained_parser
-train_parser
-evaluate_parser
+#convert_corpus ${CORPUS_DIR}
+#train_pos_tagger
+#preprocess_with_tagger
+#pretrain_parser
+#evaluate_pretrained_parser
+#train_parser
+#evaluate_parser
 copy_model
 
 close_fd

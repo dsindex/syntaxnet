@@ -53,10 +53,6 @@ using tensorflow::TensorShape;
 using syntaxnet::Sentence;
 
 namespace {
-const int kImageSize = 28;
-const int kNumChannels = 1;
-const int kImageDataSize = kImageSize * kImageSize * kNumChannels;
-const int kNumLabels = 10;
 
 // Creates a gRPC Status from a TensorFlow Status.
 Status ToGRPCStatus(const tensorflow::Status& status) {
@@ -159,10 +155,14 @@ int main(int argc, char** argv) {
   //
   // (If you prefer to disable batching, simply omit the following lines of code
   // such that session_bundle_config.batching_parameters remains unset.)
-  //  BatchingParameters* batching_parameters =
-  //    session_bundle_config.mutable_batching_parameters();
-  //batching_parameters->mutable_thread_pool_name()->set_value(
-  //    "parsey_service_batch_threads");
+  BatchingParameters* batching_parameters =
+      session_bundle_config.mutable_batching_parameters();
+  batching_parameters->mutable_thread_pool_name()->set_value(
+      "parsey_service_batch_threads");
+  // Use a very large queue, to avoid rejecting requests. (Note: a production
+  // server with load balancing may want to use the default, much smaller,
+  // value.)
+  batching_parameters->mutable_max_enqueued_batches()->set_value(1000);
   //////
 
   std::unique_ptr<SessionBundleFactory> bundle_factory;

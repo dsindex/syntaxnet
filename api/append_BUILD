@@ -52,6 +52,7 @@ py_binary(
     srcs = [
         "parsey_client.py",
         "parsey_api_pb2.py",
+		"protobuf_json.py",
     ],
     deps = [
         "@org_tensorflow//tensorflow:tensorflow_py",

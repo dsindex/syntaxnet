@@ -92,9 +92,14 @@ $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
 $ cd ..
 
+# download protobuf_json.py for converting protobuf to json
+$ git clone https://github.com/dpp-name/protobuf-json.git
+$ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
+
 # copy parsey_client.py to serving/tensorflow_serving/example
-# build it
 $ cp api/parsey_client.py serving/tensorflow_serving/example
+
+# build it
 $ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_client --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_client
@@ -146,9 +151,9 @@ $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/
 
 ```
 
-- what about parsing only case? 
+- what about parsing only case? especially when you trained Korean parser.
 ```bash
-# the parsey_api server can handle colnn format.
+# the parsey_api server can handle conll format.
 # so, just export model and use it
 
 # export parsing model only
@@ -167,11 +172,61 @@ $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models_
 # run parsey_api with exported model
 $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported_sejong/00000001
 
+# node client
 # send conll format to parsey_api server
 $ cd ../api/parsey_client
 $ cp index_sejong.js index.js
-$ node index.js
+$ node index.js | more
+{
+  "result": [
+    {
+      "docid": "-:0",
+      "text": "내 가 집 에 가 ㄴ다 .",
+      "token": [
+        {
+          "word": "내",
+          "start": 0,
+          "end": 2,
+          "head": 1,
+          "tag": "NP",
+          "category": "NP",
+          "label": "MOD",
+          "break_level": "SPACE_BREAK"
+        },
+        {
+          "word": "가",
+          "start": 4,
+          "end": 6,
+          "head": 4,
+          "tag": "JKS",
+          "category": "JKS",
+          "label": "NP_SBJ",
+          "break_level": "SPACE_BREAK"
+        },
+...
+}
 
+# python client
+# replace serving/tensorflow_serving/example/parsey_client.py with parsey_sejong_client.py
+$ cp api/parsey_sejong_client.py serving/tensorflow_serving/example/parsey_client.py
 
+# parsey_sejong_client.py import konlpy, protobuf_json
+# so, you need to install konlpy( http://konlpy.org/ko/v0.4.3/install/ )
+
+# download protobuf_json.py for converting protobuf to json
+$ git clone https://github.com/dpp-name/protobuf-json.git
+$ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
+
+# build it
+$ cd serving
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_client --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ ls bazel-bin/tensorflow_serving/example/parsey_client
+
+# run
+$ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
+나는 학교에 간다
+nput :  나는 학교에 간다
+Parsing :
+{"result": [{"text": "나 는 학교 에 가 ㄴ다", "token": [{"category": "NP", "head": 1, "end": 2, "label": "MOD", "start": 0, "tag": "NP", "word": "나"}, {"category": "JX", "head": 4, "end": 6, "label": "NP_SBJ", "start": 4, "tag": "JX", "word": "는"}, {"category": "NNG", "head": 3, "end": 13, "label": "MOD", "start": 8, "tag": "NNG", "word": "학교"}, {"category": "JKB", "head": 4, "end": 17, "label": "NP_AJT", "start": 15, "tag": "JKB", "word": "에"}, {"category": "VV", "head": 5, "end": 21, "label": "MOD", "start": 19, "tag": "VV", "word": "가"}, {"category": "EC", "end": 28, "label": "ROOT", "start": 23, "tag": "EC", "word": "ㄴ다"}], "docid": "-:0"}]}
 
 ```

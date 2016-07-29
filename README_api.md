@@ -51,6 +51,7 @@ $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 ../api/parsey_mo
 - node client
 ```bash
 $ cd api/parsey_client
+$ cp index_org.js index.js
 $ npm install
 
 # if you have a trouble, check your version of node,npm
@@ -165,6 +166,11 @@ $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models_
 
 # run parsey_api with exported model
 $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported_sejong/00000001
+
+# send conll format to parsey_api server
+$ cd ../api/parsey_client
+$ cp index_sejong.js index.js
+$ node index.js
 
 
 

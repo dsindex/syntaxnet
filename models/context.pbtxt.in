@@ -39,49 +39,49 @@ Parameter {
 input {
   name: "tag-map"
   Part {
-    file_pattern: "work/models/tag-map"
+    file_pattern: "OUTPATH/tag-map"
   }
 }
 input {
   name: "word-map"
   Part {
-    file_pattern: "work/models/word-map"
+    file_pattern: "OUTPATH/word-map"
   }
 }
 input {
   name: "label-map"
   Part {
-    file_pattern: "work/models/label-map"
+    file_pattern: "OUTPATH/label-map"
   }
 }
 input {
   name: "lcword-map"
   Part {
-    file_pattern: "work/models/lcword-map"
+    file_pattern: "OUTPATH/lcword-map"
   }
 }
 input {
   name: "category-map"
   Part {
-    file_pattern: "work/models/category-map"
+    file_pattern: "OUTPATH/category-map"
   }
 }
 input {
   name: "prefix-table"
   Part {
-    file_pattern: "work/models/prefix-table"
+    file_pattern: "OUTPATH/prefix-table"
   }
 }
 input {
   name: "suffix-table"
   Part {
-    file_pattern: "work/models/suffix-table"
+    file_pattern: "OUTPATH/suffix-table"
   }
 }
 input {
   name: "tag-to-category"
   Part {
-    file_pattern: "work/models/tag-to-category"
+    file_pattern: "OUTPATH/tag-to-category"
   }
 }
 input {

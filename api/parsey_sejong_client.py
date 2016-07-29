@@ -50,7 +50,6 @@ def do_inference(hostport):
     conll_in = do_tagging(komoran, line)
     request.text.append(conll_in)
     response = stub.Parse(request, 5.0) # timeout 5 seconds
-    print response
     json_obj=protobuf_json.pb2json(response)
     ret = json.dumps(json_obj,ensure_ascii=False,encoding='utf-8')
     print "Input : ", line

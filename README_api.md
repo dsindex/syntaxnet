@@ -229,7 +229,7 @@ nput :  나는 학교에 간다
 Parsing :
 {"result": [{"text": "나 는 학교 에 가 ㄴ다", "token": [{"category": "NP", "head": 1, "end": 2, "label": "MOD", "start": 0, "tag": "NP", "word": "나"}, {"category": "JX", "head": 4, "end": 6, "label": "NP_SBJ", "start": 4, "tag": "JX", "word": "는"}, {"category": "NNG", "head": 3, "end": 13, "label": "MOD", "start": 8, "tag": "NNG", "word": "학교"}, {"category": "JKB", "head": 4, "end": 17, "label": "NP_AJT", "start": 15, "tag": "JKB", "word": "에"}, {"category": "VV", "head": 5, "end": 21, "label": "MOD", "start": 19, "tag": "VV", "word": "가"}, {"category": "EC", "end": 28, "label": "ROOT", "start": 23, "tag": "EC", "word": "ㄴ다"}], "docid": "-:0"}]}
 
-# how to run parsey_client in different place?
+# how to run parsey_client.py(or parsey_client_sejong.py) in other place?
 # find out PYTHONPATH
 $ vi bazel-bin/tensorflow_serving/example/parsey_client
 # add 'print python_path'
@@ -240,10 +240,15 @@ $ vi bazel-bin/tensorflow_serving/example/parsey_client
 # export PYTHONPATH
 $ export PYTHONPATH='yours'
 
-# copy parsey_client.runfiles to other place, say, www
 $ mkdir www
-$ cp -rf serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles www/
+$ cp api/parsey_client_sejong.py www/
+$ cp api/protobuf-json/protobuf_json.py www
 $ cd www
-$ ./parsey_client.runfiles/tensorflow_serving/example/parsey_client --server=localhost:9000
+$ python parsey_sejong_client.py --server=localhost:9000
+D0729 16:23:20.180068734    5920 ev_posix.c:101]             Using polling engine: poll
+비가 내리는 여름날에
+Input :  비가 내리는 여름날에
+Parsing :
+{"result": [{"text": "비 가 내리 는 여름날 에", "token": [{"category": "NNG", "head": 1, "end": 2, "label": "MOD", "start": 0, "tag": "NNG", "word": "비"}, {"category": "JKS", "head": 2, "end": 6, "label": "NP_SBJ", "start": 4, "tag": "JKS", "word": "가"}, {"category": "VV", "head": 3, "end": 13, "label": "MOD", "start": 8, "tag": "VV", "word": "내리"}, {"category": "ETM", "head": 4, "end": 17, "label": "VP_MOD", "start": 15, "tag": "ETM", "word": "는"}, {"category": "NNG", "head": 5, "end": 27, "label": "MOD", "start": 19, "tag": "NNG", "word": "여름날"}, {"category": "JKB", "end": 31, "label": "ROOT", "start": 29, "tag": "JKB", "word": "에"}], "docid": "-:0"}]}
 
 ```

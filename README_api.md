@@ -45,6 +45,9 @@ $ cp api/parsey_api* serving/tensorflow_serving/example/
 $ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 
+# make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'
+$ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
+
 # run parsey_api with exported model
 $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 ../api/parsey_model
 ```

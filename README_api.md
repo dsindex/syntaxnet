@@ -5,34 +5,35 @@
 
 - server
 ```bash
-$ pwd
-/path/to/models/syntaxnet/work
+# you can create a shell script with content below!
 
+$ git clone https://github.com/dsindex/syntaxnet.git work
+$ cd work
 $ git clone --recurse-submodules https://github.com/tensorflow/serving
 
 # you need to install gRPC properly
 # https://tensorflow.github.io/serving/setup
-# https://github.com/dsindex/tensorflow#tensorflow-serving
+# if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
 
 # apply patch by dmansfield to serving/tf_models/syntaxnet 
 $ cd serving/tf_models
 $ patch -p1 < ../../api/pr250-patch-a4b7bb9a.diff.txt
-$ cd -
+$ cd ../../
 
 # configure serving/tensorflow
 $ cd serving/tensorflow
 $ ./configure
-$ cd -
+$ cd ../../
 
 # modify serving/tensorflow_serving/workspace.bzl for referencing syntaxnet
 $ cp api/modified_workspace.bzl serving/tensorflow_serving/workspace.bzl
 $ cat api/modified_workspace.bzl
-  ... 
-  native.local_repository(
-    name = "syntaxnet",
-    path = workspace_dir + "/tf_models/syntaxnet",
-  )
-  ...
+#  ... 
+#  native.local_repository(
+#    name = "syntaxnet",
+#    path = workspace_dir + "/tf_models/syntaxnet",
+#  )
+#  ...
 
 # append build instructions to serving/tensorflow_serving/example/BUILD
 $ cat api/append_BUILD >> serving/tensorflow_serving/example/BUILD
@@ -59,6 +60,7 @@ $ node --version
 v4.4.7
 $ npm --version
 2.15.8
+# you need to install grpc for node
 $ npm install grpc
 
 # send sentences to parsey_api server

@@ -249,7 +249,6 @@ function copy_model {
 convert_corpus ${CORPUS_DIR}
 train_pos_tagger
 preprocess_with_tagger
-exit
 pretrain_parser
 evaluate_pretrained_parser
 train_parser

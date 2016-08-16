@@ -1,7 +1,25 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [syntaxnet](#syntaxnet)
+    - [description](#description)
+    - [how to test](#how-to-test)
+    - [download univeral dependency treebank data( http://universaldependencies.org/#en )](#download-univeral-dependency-treebank-data-httpuniversaldependenciesorgen-)
+    - [training tagger and parser with another corpus](#training-tagger-and-parser-with-another-corpus)
+    - [training parser only](#training-parser-only)
+    - [test new model](#test-new-model)
+    - [training parser from korean sejong treebank corpus](#training-parser-from-korean-sejong-treebank-corpus)
+    - [test korean parser model](#test-korean-parser-model)
+    - [apply korean POS tagger(Komoran via konlpy)](#apply-korean-pos-taggerkomoran-via-konlpy)
+    - [tensorflow serving and syntaxnet](#tensorflow-serving-and-syntaxnet)
+    - [parsey's cousins](#parseys-cousins)
+    - [comparison to BIST parser](#comparison-to-bist-parser)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 syntaxnet
 ===
-
-[TOC]
 
 ### description
 - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet) 

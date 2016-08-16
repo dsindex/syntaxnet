@@ -1,0 +1,2 @@
+model_checkpoint_path: "/usr/local/google/home/chrisalberti/local_exps/20160727_export_ud/models_unzipped/parsey_universal/English/tokenizer-params"
+all_model_checkpoint_paths: "/usr/local/google/home/chrisalberti/local_exps/20160727_export_ud/models_unzipped/parsey_universal/English/tokenizer-params"

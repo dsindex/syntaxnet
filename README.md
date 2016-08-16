@@ -253,4 +253,54 @@ Parsing :
 ...
 ```
 
+### parsey's cousins
+- [a collection of pretrained syntactic models](https://github.com/tensorflow/models/blob/master/syntaxnet/universal.md)
+- how to test
+```bash
+# download models from http://download.tensorflow.org/models/parsey_universal/<language>.zip
+
+$ echo "Bob brought the pizza to Alice." | ./parse.sh
+
+# tokenizing
+Bob brought the pizza to Alice .
+
+# morphological analysis
+1	Bob	_	_	_	Number=Sing|fPOS=PROPN++NNP	0	_	_	_
+2	brought	_	_	_	Mood=Ind|Tense=Past|VerbForm=Fin|fPOS=VERB++VBD	0	_	_	_
+3	the	_	_	_	Definite=Def|PronType=Art|fPOS=DET++DT	0	_	_	_
+4	pizza	_	_	_	Number=Sing|fPOS=NOUN++NN	0	_	_	_
+5	to	_	_	_	fPOS=ADP++IN	0	_	_	_
+6	Alice	_	_	_	Number=Sing|fPOS=PROPN++NNP	0	_	_	_
+7	.	_	_	_	fPOS=PUNCT++.	0	_	_	_
+
+# tagging
+1	Bob	_	PROPN	NNP	Number=Sing|fPOS=PROPN++NNP	0	_	_	_
+2	brought	_	VERB	VBD	Mood=Ind|Tense=Past|VerbForm=Fin|fPOS=VERB++VBD	0	_	_	_
+3	the	_	DET	DT	Definite=Def|PronType=Art|fPOS=DET++DT	0	_	_	_
+4	pizza	_	NOUN	NN	Number=Sing|fPOS=NOUN++NN	0	_	_	_
+5	to	_	ADP	IN	fPOS=ADP++IN	0	_	_	_
+6	Alice	_	PROPN	NNP	Number=Sing|fPOS=PROPN++NNP	0	_	_	_
+7	.	_	PUNCT	.	fPOS=PUNCT++.	0	_	_	_
+
+# parsing
+1	Bob	_	PROPN	NNP	Number=Sing|fPOS=PROPN++NNP	2	nsubj	_	_
+2	brought	_	VERB	VBD	Mood=Ind|Tense=Past|VerbForm=Fin|fPOS=VERB++VBD	0	ROOT	_	_
+3	the	_	DET	DT	Definite=Def|PronType=Art|fPOS=DET++DT	4	det	_	_
+4	pizza	_	NOUN	NN	Number=Sing|fPOS=NOUN++NN	2	dobj	_	_
+5	to	_	ADP	IN	fPOS=ADP++IN	6	case	_	_
+6	Alice	_	PROPN	NNP	Number=Sing|fPOS=PROPN++NNP	2	nmod	_	_
+7	.	_	PUNCT	.	fPOS=PUNCT++.	2	punct	_	_
+
+# conll2tree 
+Input: Bob brought the pizza to Alice .
+Parse:
+brought VERB++VBD ROOT
+ +-- Bob PROPN++NNP nsubj
+ +-- pizza NOUN++NN dobj
+ |   +-- the DET++DT det
+ +-- Alice PROPN++NNP nmod
+ |   +-- to ADP++IN case
+ +-- . PUNCT++. punct
+```
+
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

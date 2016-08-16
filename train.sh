@@ -114,8 +114,6 @@ SYNTAXNET_HOME=${PDIR}
 BINDIR=$SYNTAXNET_HOME/bazel-bin/syntaxnet
 
 CORPUS_DIR=${CDIR}/UD_English
-#CORPUS_DIR=${CDIR}/UD_French
-#CORPUS_DIR=${CDIR}/UD_Norwegian
 
 CONTEXT=${CORPUS_DIR}/context.pbtxt
 TMP_DIR=${CORPUS_DIR}/tmp/syntaxnet-output

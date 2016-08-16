@@ -36,6 +36,11 @@ input {
     file_pattern: 'work/UD_English/en-ud-test.conllu.conv'
   }
 }
+
+input {
+  name: 'char-map'
+  creator: 'brain_pos/greedy'
+}
 input {
   name: 'label-map'
   file_format: 'text'

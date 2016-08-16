@@ -88,6 +88,14 @@ input {
     file_pattern: 'work/sejong/wdir/deptree.txt.v3.test'
   }
 }
+
+input {
+  name: 'char-map'
+  file_format: 'text'
+  Part {
+    file_pattern: 'OUTPATH/char-map'
+  }
+}
 input {
   name: 'label-map'
   file_format: 'text'

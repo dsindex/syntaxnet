@@ -23,6 +23,8 @@ syntaxnet
 
 ### description
 - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet) 
+- last update : 2016. 8. 16
+  - [after syntaxnet last commit](https://github.com/tensorflow/models/commit/a5d45f2ed20effaabc213a2eb9def291354af1ec)
 
 ### how to test
 ```shell

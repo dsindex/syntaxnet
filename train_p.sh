@@ -211,8 +211,6 @@ function copy_model {
 	cp -rf ${TMP_DIR}/*-map ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/*-table ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
-	# set OUTPATH
-	cat ${MODEL_DIR}/context.pbtxt.in | sed "s=OUTPATH=${MODEL_DIR}=" > ${MODEL_DIR}/context.pbtxt
 }
 
 convert_corpus ${CORPUS_DIR}

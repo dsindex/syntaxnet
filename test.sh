@@ -23,6 +23,7 @@ ${PARSER_EVAL} \
   --arg_prefix=brain_pos \
   --graph_builder=greedy \
   --task_context=${MODEL_DIR}/context.pbtxt \
+  --resource_dir=${MODEL_DIR} \
   --model_path=${MODEL_DIR}/tagger-params \
   --slim_model \
   --batch_size=1024 \
@@ -35,6 +36,7 @@ ${PARSER_EVAL} \
   --arg_prefix=brain_parser \
   --graph_builder=structured \
   --task_context=${MODEL_DIR}/context.pbtxt \
+  --resource_dir=${MODEL_DIR} \
   --model_path=${MODEL_DIR}/parser-params \
   --slim_model \
   --batch_size=1024 \

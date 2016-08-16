@@ -76,49 +76,49 @@ input {
   name: 'label-map'
   file_format: 'text'
   Part {
-    file_pattern: 'OUTPATH/label-map'
+    file_pattern: 'label-map'
   }
 }
 input {
   name: 'word-map'
   Part {
-    file_pattern: 'OUTPATH/word-map'
+    file_pattern: 'word-map'
   }
 }
 input {
   name: 'lcword-map'
   Part {
-    file_pattern: 'OUTPATH/lcword-map'
+    file_pattern: 'lcword-map'
   }
 }
 input {
   name: 'tag-map'
   Part {
-    file_pattern: 'OUTPATH/tag-map'
+    file_pattern: 'tag-map'
   }
 }
 input {
   name: 'category-map'
   Part {
-    file_pattern: 'OUTPATH/category-map'
+    file_pattern: 'category-map'
   }
 }
 input {
   name: 'prefix-table'
   Part {
-    file_pattern: 'OUTPATH/prefix-table'
+    file_pattern: 'prefix-table'
   }
 }
 input {
   name: 'suffix-table'
   Part {
-    file_pattern: 'OUTPATH/suffix-table'
+    file_pattern: 'suffix-table'
   }
 }
 input {
   name: 'tag-to-category'
   Part {
-    file_pattern: 'OUTPATH/tag-to-category'
+    file_pattern: 'tag-to-category'
   }
 }
 input {

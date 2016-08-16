@@ -30,6 +30,7 @@ ${PARSER_EVAL} \
   --arg_prefix=brain_parser \
   --graph_builder=structured \
   --task_context=${MODEL_DIR}/context.pbtxt \
+  --resource_dir=${MODEL_DIR} \
   --model_path=${MODEL_DIR}/parser-params \
   | \
 ${CONLL2TREE} \

@@ -269,7 +269,7 @@ Parse:
 ### tensorflow serving and syntaxnet
 - [using tensorflow serving](https://github.com/dmansfield/parsey-mcparseface-api/issues/1)
 - [my summary](https://github.com/dsindex/syntaxnet/blob/master/README_api.md)
-```bash
+```shell
 $ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
 나는 학교에 간다
 nput :  나는 학교에 간다
@@ -281,7 +281,7 @@ Parsing :
 ### parsey's cousins
 - [a collection of pretrained syntactic models](https://github.com/tensorflow/models/blob/master/syntaxnet/universal.md)
 - how to test
-```bash
+```shell
 # download models from http://download.tensorflow.org/models/parsey_universal/<language>.zip
 
 $ echo "Bob brought the pizza to Alice." | ./parse.sh
@@ -326,6 +326,30 @@ brought VERB++VBD ROOT
  +-- Alice PROPN++NNP nmod
  |   +-- to ADP++IN case
  +-- . PUNCT++. punct
+```
+- downloaded model vs trained model
+```shell
+1. downloaded model
+Language	No. tokens	POS	fPOS	Morph	UAS	LAS
+-------------------------------------------------------
+English	25096	90.48%	89.71%	91.30%	84.79%	80.38%
+
+2. trained model
+INFO:tensorflow:Total processed documents: 2077
+INFO:tensorflow:num correct tokens: 18634
+INFO:tensorflow:total tokens: 22395
+INFO:tensorflow:Seconds elapsed in evaluation: 19.85, eval metric: 83.21%
+
+3. where does the difference(84.79% - 83.21%) come from?
+as mentioned https://research.googleblog.com/2016/08/meet-parseys-cousins-syntax-for-40.html
+syntaxnet team try to find good hyperparameters by using MapReduce.
+for example, 
+the hyperparameters for POS tagger may include :
+  - POS_PARAMS=128-0.08-3600-0.9-0
+  - decay_steps=3600
+  - hidden_layer_sizes=128
+  - learning_rate=0.08
+  - momentum=0.9
 ```
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

@@ -216,7 +216,11 @@ function train_parser {
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${GP_PARAMS} \
 	  --pretrained_params=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/model \
-	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1
+	  --pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
+	  --num_epochs=20 \
+	  --report_every=25 \
+	  --checkpoint_every=200 \
+	  --logtostderr
 }
 
 function evaluate_parser {

@@ -342,9 +342,9 @@ INFO:tensorflow:Seconds elapsed in evaluation: 19.85, eval metric: 83.21%
 
 3. where does the difference(84.79% - 83.21%) come from?
 as mentioned https://research.googleblog.com/2016/08/meet-parseys-cousins-syntax-for-40.html
-syntaxnet team try to find good hyperparameters by using MapReduce.
+they found good hyperparameters by using MapReduce.
 for example, 
-the hyperparameters for POS tagger may include :
+the hyperparameters for POS tagger :
   - POS_PARAMS=128-0.08-3600-0.9-0
   - decay_steps=3600
   - hidden_layer_sizes=128

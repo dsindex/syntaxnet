@@ -10,6 +10,9 @@
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ git clone --recurse-submodules https://github.com/tensorflow/serving
+# checkout proper version of tf_models
+$ cd serving/tf_models
+$ git checkout a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0
 
 # you need to install gRPC properly
 # https://tensorflow.github.io/serving/setup
@@ -169,6 +172,8 @@ $ cp api/parsey_sejong.py serving/tensorflow_serving/example/parsey_mcparseface.
 $ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
+# set proper path in ../models_sejong/context.pbtxt
+# ex) file_pattern: 'label-map' -> file_pattern: '/path/to/label-map'
 
 # run
 # this will read model from --model_dir and export to --export_path directory

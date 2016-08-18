@@ -172,6 +172,7 @@ $ cp api/parsey_sejong.py serving/tensorflow_serving/example/parsey_mcparseface.
 $ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
+
 # set proper path in ../models_sejong/context.pbtxt
 # ex) file_pattern: 'label-map' -> file_pattern: '/path/to/label-map'
 

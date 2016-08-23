@@ -27,7 +27,8 @@ syntaxnet
   - [after syntaxnet last commit](https://github.com/tensorflow/models/commit/a5d45f2ed20effaabc213a2eb9def291354af1ec)
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test
-    - remove 'path' to map,table,category files
+    - remove path to each files in 'context.pbtxt'
+    - if you installed old syntaxnet version(ex, a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0 ), you should specify path to each files in 'context.pbtxt'
 
 ### how to test
 ```shell

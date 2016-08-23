@@ -163,6 +163,7 @@ function preprocess_with_tagger {
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
 		--hidden_layer_sizes=${POS_HIDDEN_LAYER_SIZES} \
+	    --batch_size=${BATCH_SIZE} \
 		--input=${SET}-corpus \
 		--output=tagged-${SET}-corpus \
 		--arg_prefix=brain_pos \
@@ -200,6 +201,7 @@ function evaluate_pretrained_parser {
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 		--hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
+	    --batch_size=${BATCH_SIZE} \
 		--beam_size=1 \
 		--input=tagged-$SET-corpus \
 		--output=parsed-$SET-corpus \

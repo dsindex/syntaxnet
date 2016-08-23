@@ -121,6 +121,11 @@ mkdir -p ${TMP_DIR}
 cat ${CONTEXT} | sed "s=OUTPATH=${TMP_DIR}=" > ${TMP_DIR}/context
 MODEL_DIR=${CDIR}/models
 
+PARSER_HIDDEN_LAYER_SIZES=200,200
+PARSER_HIDDEN_LAYER_PARAMS='200x200'
+BATCH_SIZE=256
+BEAM_SIZE=16
+
 function convert_corpus {
 	corpus_dir=$1
 	for corpus in $(ls ${corpus_dir}/*.conllu); do
@@ -128,15 +133,15 @@ function convert_corpus {
 	done
 }
 
-LP_PARAMS=200x200-0.08-4400-0.85-4
+LP_PARAMS=${PARSER_HIDDEN_LAYER_PARAMS}-0.08-4400-0.85-4
 function pretrain_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
-	  --batch_size=32 \
+	  --batch_size=${BATCH_SIZE} \
 	  --compute_lexicon \
 	  --decay_steps=4400 \
 	  --graph_builder=greedy \
-	  --hidden_layer_sizes=200,200 \
+	  --hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
 	  --output_path=${TMP_DIR} \
@@ -147,6 +152,7 @@ function pretrain_parser {
 	  --tuning_corpus=tagged-tuning-corpus \
 	  --params=${LP_PARAMS} \
 	  --num_epochs=12 \
+	  --beam_size=1 \
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
 	  --logtostderr
@@ -156,7 +162,9 @@ function evaluate_pretrained_parser {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
-		--hidden_layer_sizes=200,200 \
+		--hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
+		--beam_size=1 \
+		--batch_size=${BATCH_SIZE} \
 		--input=tagged-$SET-corpus \
 		--output=parsed-$SET-corpus \
 		--arg_prefix=brain_parser \
@@ -165,18 +173,18 @@ function evaluate_pretrained_parser {
 	done
 }
 
-GP_PARAMS=200x200-0.02-100-0.9-0
+GP_PARAMS=${PARSER_HIDDEN_LAYER_PARAMS}-0.02-100-0.9-0
 function train_parser {
 	${BINDIR}/parser_trainer \
 	  --arg_prefix=brain_parser \
-	  --batch_size=8 \
+	  --batch_size=${BATCH_SIZE} \
 	  --compute_lexicon \
 	  --decay_steps=100 \
 	  --graph_builder=structured \
-	  --hidden_layer_sizes=200,200 \
+	  --hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.02 \
 	  --momentum=0.9 \
-	  --beam_size=8 \
+	  --beam_size=${BEAM_SIZE} \
 	  --output_path=${TMP_DIR} \
 	  --task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 	  --seed=0 \
@@ -195,8 +203,9 @@ function evaluate_parser {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/context \
-		--hidden_layer_sizes=200,200 \
-		--beam_size=8 \
+		--hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
+		--beam_size=${BEAM_SIZE} \
+		--batch_size=${BATCH_SIZE} \
 		--input=tagged-$SET-corpus \
 		--output=beam-parsed-$SET-corpus \
 		--arg_prefix=brain_parser \

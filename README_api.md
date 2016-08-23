@@ -157,6 +157,12 @@ $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 # this will read model from --model_dir and export to --export_path directory
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported
 
+# if you want to export a trained model, 
+# set proper path in ../models/context.pbtxt
+# ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
+$ cat ../models/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models/context.pbtxt
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models --export_path=exported
+
 ```
 
 - what about parsing only case? especially when you trained Korean parser.
@@ -174,7 +180,8 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //ten
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 
 # set proper path in ../models_sejong/context.pbtxt
-# ex) file_pattern: 'label-map' -> file_pattern: '/path/to/label-map'
+# ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
+$ cat ../models_sejong/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models_sejong/context.pbtxt
 
 # run
 # this will read model from --model_dir and export to --export_path directory

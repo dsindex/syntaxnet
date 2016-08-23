@@ -126,7 +126,7 @@ function convert_corpus {
 	done
 }
 
-POS_PARAMS=128-0.08-3600-0.9-0
+POS_PARAMS=64-0.08-3600-0.9-0
 function train_pos_tagger {
 	${BINDIR}/parser_trainer \
 	  --task_context=${CONTEXT} \
@@ -138,9 +138,10 @@ function train_pos_tagger {
 	  --output_path=${TMP_DIR} \
 	  --batch_size=32 \
 	  --decay_steps=3600 \
-	  --hidden_layer_sizes=128 \
+	  --hidden_layer_sizes=64 \
 	  --learning_rate=0.08 \
 	  --momentum=0.9 \
+	  --beam_size=1 \
 	  --seed=0 \
 	  --params=${POS_PARAMS} \
 	  --num_epochs=12 \
@@ -153,7 +154,8 @@ function preprocess_with_tagger {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
-		--hidden_layer_sizes=128 \
+		--hidden_layer_sizes=64 \
+	    --beam_size=1 \
 		--input=$SET-corpus \
 		--output=tagged-$SET-corpus \
 		--arg_prefix=brain_pos \
@@ -173,6 +175,7 @@ function pretrain_parser {
 	  --hidden_layer_sizes=200,200 \
 	  --learning_rate=0.08 \
 	  --momentum=0.85 \
+	  --beam_size=1 \
 	  --output_path=${TMP_DIR} \
 	  --task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
 	  --seed=4 \
@@ -190,6 +193,7 @@ function evaluate_pretrained_parser {
 		${BINDIR}/parser_eval \
 		--task_context=${TMP_DIR}/brain_parser/greedy/${LP_PARAMS}/context \
 		--hidden_layer_sizes=200,200 \
+		--beam_size=1 \
 		--input=tagged-$SET-corpus \
 		--output=parsed-$SET-corpus \
 		--arg_prefix=brain_parser \

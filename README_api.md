@@ -10,6 +10,8 @@
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ git clone --recurse-submodules https://github.com/tensorflow/serving
+# checkout proper version of serving
+$ git checkout 89e9dfbea055027bc31878ee8da66b54a701a746
 # checkout proper version of tf_models
 $ cd serving/tf_models
 $ git checkout a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0

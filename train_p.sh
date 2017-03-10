@@ -233,8 +233,8 @@ function evaluate_parser {
 }
 
 function copy_model {
-	# needs : category-map  label-map	lcword-map  prefix-table  suffix-table	tag-map  tag-to-category  word-map
-	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
+	mkdir -p ${MODEL_DIR}/parser-params
+	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model.* ${MODEL_DIR}/parser-params
 	cp -rf ${TMP_DIR}/*-map ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/*-table ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/

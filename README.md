@@ -4,6 +4,7 @@
 
 - [syntaxnet](#syntaxnet)
     - [description](#description)
+    - [history](#history)
     - [how to test](#how-to-test)
     - [download univeral dependency treebank data( http://universaldependencies.org/#en )](#download-univeral-dependency-treebank-data-httpuniversaldependenciesorgen-)
     - [training tagger and parser with another corpus](#training-tagger-and-parser-with-another-corpus)
@@ -26,16 +27,22 @@ syntaxnet
 
 ### history
 - 2017. 3. 10
-  - modification ( on-going )
-    - for recent version of syntaxnet
-    - bash script for OS X
-    - for treebank v2.0
+  - modify for recent version of syntaxnet(tf 1.0), OS X(bash script), universal treebank v2.0
+  - version
+  ```
+  python : 2.7
+  bazel  : 0.4.3
+  protobuf : 3.0.0b2
+  syntaxnet : bc70271a51fe2e051b5d06edc6b9fd94880761d5
+  ```
 - 2016. 8. 16
-  - [after syntaxnet last commit](https://github.com/tensorflow/models/commit/a5d45f2ed20effaabc213a2eb9def291354af1ec)
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test
-    - remove path to each files in 'context.pbtxt'
     - if you installed old syntaxnet version(ex, a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0 ), you should specify path to each files in 'context.pbtxt'
+  - version
+  ```
+  syntaxnet : a5d45f2ed20effaabc213a2eb9def291354af1ec
+  ```
 
 ### how to test
 ```shell

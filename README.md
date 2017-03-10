@@ -23,7 +23,14 @@ syntaxnet
 
 ### description
 - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet) 
-- last update : 2016. 8. 16
+
+### history
+- 2017. 3. 10
+  - modification ( on-going )
+    - for tf 1.0
+    - bash script for OS X
+    - treebank v2.0
+- 2016. 8. 16
   - [after syntaxnet last commit](https://github.com/tensorflow/models/commit/a5d45f2ed20effaabc213a2eb9def291354af1ec)
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test
@@ -56,8 +63,7 @@ $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
 ### training tagger and parser with another corpus
 ```shell
 (for example, training UD_English)
-(detail instructions can be found 
- in https://github.com/tensorflow/models/tree/master/syntaxnet)
+(detail instructions can be found in https://github.com/tensorflow/models/tree/master/syntaxnet)
 $ ./train.sh -v -v
 ...
 #preprocessing with tagger

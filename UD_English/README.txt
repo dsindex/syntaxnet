@@ -1,5 +1,5 @@
 Universal Dependencies - English Dependency Treebank
-Universal Dependencies English Web Treebank v1.2 -- 2015-10-30
+Universal Dependencies English Web Treebank v2.0 -- 2017-02-15
 https://github.com/UniversalDependencies/UD_English
 
 A Gold Standard Universal Dependencies Corpus for English,
@@ -9,8 +9,8 @@ LDC2012T13 (https://catalog.ldc.upenn.edu/LDC2012T13).
 
 LICENSE/COPYRIGHT
 
-Universal Dependencies English Web Treebank (c) 2013, 2014, 2015 by
-The Board of Trustees of The Leland Stanford Junior University.
+Universal Dependencies English Web Treebank © 2013-2017
+by The Board of Trustees of The Leland Stanford Junior University.
 All Rights Reserved.
 
 The annotations and database rights of the Universal Dependencies
@@ -37,25 +37,48 @@ Dependencies and then hand-corrected to Universal Dependencies.  All the depende
 have been single-annotated, and a limited portion of them have been double-annotated with
 interannotator agreement at approximately 96%.
 
-This file is compatible with the CoNLL-U format defined for Universal Dependencies. See:
+This corpus is compatible with the CoNLL-U format defined for Universal Dependencies. See:
 http://universaldependencies.github.io/docs/format.html
 
 The dependency taxonomy can be found on the Universal Dependencies web site:
 
     http://universaldependencies.github.io/docs/
 
+For the conversion to v2, we performed an automatic conversion with extensive spot-checking,
+and manual adjudication of ambiguous cases.
 
 DEVIATIONS FROM UD
 
-Version 1.2 of the English UD treebank conforms to the UD guidelines in
-almost all respects, but there are a couple of remaining deviations:
- * The UD dependency 'name' is only used for person names.
+Version 2.0 of the English UD treebank conforms to the UD guidelines in
+almost all respects, but there remains the following deviation:
+ * The UD dependency 'flat' is only used for person names.
 
 CHANGELOG
+
+2017-02-15 v2.0
+-- Updated treebank to conform to v2 guidelines
+-- Fixed some wrong lemmata
+-- Fixed miscellaneous syntactic issues
+-- Added empty nodes for gapped constructions in enhanced representation
+
+2016-11-15 v1.4
+-- Changed POS tag of fused det-noun pronouns (e.g., "somebody", "nothing") to PRON
+-- Added original, untokenized sentences to CoNLL-U files
+-- Fixed some POS errors, features and wrong lemmata
+-- Fixed miscellaneous syntactic issues in a few sentences
+
+2016-05-15 v1.3
+-- Improved mapping of WDT to UPOS
+-- Corrected lemma of "n't" to "not"
+-- Fixed some errors between advcl, ccomp and parataxis
+-- Fixed inconsistent analyses of sentences repeated between dev and train sets
+-- Fixed miscellaneous syntactic issues in a few sentences
+
 
 2015-11-15 v1.2
 -- Bugfix: removed _NFP suffix from some lemmas
 -- Fixed date annotations to adopt UD standard
+-- Remove escaping of ( and ) from word tokens (XPOSTAGs are still -LRB- and -RRB-)
 -- Improved precision of xcomp relation
 -- Improved recall of name relation
 -- Corrected lemmas for reduced auxiliaries
@@ -69,6 +92,9 @@ To help improve the corpus, please alert us to any errors you find in it.
 The best way to do this is to file a github issue at:
 https://github.com/UniversalDependencies/UD_English/issues
 
+We also welcome pull requests. If you want to make edits, please modify the trees
+in the idividual files in the sources directory instead of making direct changes
+to en-ud-{dev,test,train}.conllu.
 
 CONTRIBUTORS
 
@@ -77,6 +103,7 @@ Annotation of the Universal Dependencies English Web Treebank was carried out by
 
 Natalia Silveira
 Timothy Dozat
+Sebastian Schuster
 Miriam Connor
 Marie-Catherine de Marneffe
 Samuel Bowman
@@ -114,5 +141,6 @@ Documentation status: complete
 Data source: manual
 Data available since: UD v1.0
 License: CC BY-SA 4.0
-Genre: blog social
-Contributors: Silveira, Natalia; Dozat, Timothy; Manning, Christopher; Bauer, John; Schuster, Sebastian; Connor, Miriam; de Marneffe, Marie-Catherine; Bowman, Sam; Zhu, Hanzhi; Galbraith, Daniel
+Genre: blog social reviews
+Contributors: Silveira, Natalia; Dozat, Timothy; Manning, Christopher; Schuster, Sebastian; Bauer, John; Connor, Miriam; de Marneffe, Marie-Catherine; Bowman, Sam; Zhu, Hanzhi; Galbraith, Daniel
+Contact: syntacticdependencies@lists.stanford.edu

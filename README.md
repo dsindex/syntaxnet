@@ -30,7 +30,6 @@ syntaxnet
     - for recent version of syntaxnet
     - bash script for OS X
     - for treebank v2.0
-	  - re-numbering dependency target
 - 2016. 8. 16
   - [after syntaxnet last commit](https://github.com/tensorflow/models/commit/a5d45f2ed20effaabc213a2eb9def291354af1ec)
   - add 'char-map' to context.pbtxt' for train

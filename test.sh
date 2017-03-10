@@ -52,7 +52,7 @@ ${PARSER_EVAL} \
   --graph_builder=greedy \
   --task_context=${MODEL_DIR}/context.pbtxt \
   --resource_dir=${MODEL_DIR} \
-  --model_path=${MODEL_DIR}/tagger-params \
+  --model_path=${MODEL_DIR}/tagger-params/model \
   --slim_model \
   --batch_size=${BATCH_SIZE} \
   --alsologtostderr \
@@ -65,7 +65,7 @@ ${PARSER_EVAL} \
   --graph_builder=structured \
   --task_context=${MODEL_DIR}/context.pbtxt \
   --resource_dir=${MODEL_DIR} \
-  --model_path=${MODEL_DIR}/parser-params \
+  --model_path=${MODEL_DIR}/parser-params/model \
   --slim_model \
   --beam_size=${BEAM_SIZE} \
   --batch_size=${BATCH_SIZE} \

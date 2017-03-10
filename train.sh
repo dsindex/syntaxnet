@@ -270,8 +270,10 @@ function evaluate_parser {
 }
 
 function copy_model {
-	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model ${MODEL_DIR}/tagger-params
+	mkdir -p ${MODEL_DIR}/parser-params
+	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model.* ${MODEL_DIR}/parser-params
+	mkdir -p ${MODEL_DIR}/tagger-params
+	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model.* ${MODEL_DIR}/tagger-params
 	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-map ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-table ${MODEL_DIR}/
 	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/tag-to-category ${MODEL_DIR}/

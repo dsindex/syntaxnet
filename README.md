@@ -278,7 +278,7 @@ Parse:
 ```
 - [related thread](https://github.com/dsindex/syntaxnet/issues/4)
 - [web demo created by https://github.com/xtknight](http://sejongpsg.ddns.net/syntaxnet/psg_tree.htm)
-![sample](https://dl.dropboxusercontent.com/u/5061852/deptree.png)
+![sample](https://raw.githubusercontent.com/dsindex/blog/master/images/deptree.png)
 
 ### tensorflow serving and syntaxnet
 - [using tensorflow serving](https://github.com/dmansfield/parsey-mcparseface-api/issues/1)

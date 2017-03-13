@@ -7,7 +7,7 @@
 ```bash
 # you can create a shell script with content below!
 
-# bazel version 0.3.2 ( see : https://github.com/dsindex/syntaxnet/issues/17 )
+# bazel versions : 0.3.2 ( see : https://github.com/dsindex/syntaxnet/issues/17 )
 
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
@@ -49,7 +49,7 @@ $ cp api/parsey_api* serving/tensorflow_serving/example/
 
 # build parsey_api 
 $ cd serving
-# bazel version 0.3.2
+# please check bazel version == 0.3.2
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 
 # if you have a trouble on downloading zlib ( https://github.com/tensorflow/tensorflow/issues/6668 )
@@ -113,11 +113,10 @@ $ node index.js
 
 - python client
 ```bash
-# you need to install gRPC properly
-# https://tensorflow.github.io/serving/setup
+# you need to install gRPC properly( https://tensorflow.github.io/serving/setup )
 # if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
 
-# how to generate 'parsey_api_pb2.py'?
+# generate 'parsey_api_pb2.py'
 $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
 $ cd serving

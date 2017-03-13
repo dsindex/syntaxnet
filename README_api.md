@@ -52,6 +52,9 @@ $ cp api/parsey_api* serving/tensorflow_serving/example/
 $ cd serving
 # bazel version 0.3.2
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+# if you have a trouble like this : https://github.com/tensorflow/tensorflow/issues/6668
+# open ./tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl and change zlib url 
+# to http://bazel-mirror.storage.googleapis.com/zlib.net/zlib-1.2.8.tar.gz
 
 # make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'
 $ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet

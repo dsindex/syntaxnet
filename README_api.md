@@ -7,9 +7,7 @@
 ```bash
 # you can create a shell script with content below!
 
-# you need to install gRPC properly
-# https://tensorflow.github.io/serving/setup
-# if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
+# bazel version 0.3.2 ( see : https://github.com/dsindex/syntaxnet/issues/17 )
 
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
@@ -115,6 +113,10 @@ $ node index.js
 
 - python client
 ```bash
+# you need to install gRPC properly
+# https://tensorflow.github.io/serving/setup
+# if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
+
 # how to generate 'parsey_api_pb2.py'?
 $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42

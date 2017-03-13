@@ -7,6 +7,10 @@
 ```bash
 # you can create a shell script with content below!
 
+# you need to install gRPC properly
+# https://tensorflow.github.io/serving/setup
+# if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
+
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ git clone --recurse-submodules https://github.com/tensorflow/serving
@@ -17,10 +21,7 @@ $ git submodule update --init --recursive
 # checkout proper version of tf_models
 $ cd tf_models
 $ git checkout a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0
-
-# you need to install gRPC properly
-# https://tensorflow.github.io/serving/setup
-# if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
+$ cd ../..
 
 # apply patch by dmansfield to serving/tf_models/syntaxnet 
 $ cd serving/tf_models
@@ -52,9 +53,22 @@ $ cp api/parsey_api* serving/tensorflow_serving/example/
 $ cd serving
 # bazel version 0.3.2
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
-# if you have a trouble like this : https://github.com/tensorflow/tensorflow/issues/6668
-# open ./tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl and change zlib url 
-# to http://bazel-mirror.storage.googleapis.com/zlib.net/zlib-1.2.8.tar.gz
+
+# if you have a trouble on downloading zlib ( https://github.com/tensorflow/tensorflow/issues/6668 )
+# modify bellow files :
+# ./tf_models/syntaxnet/WORKSPACE
+# ./tensorflow/tensorflow/workspace.bzl
+# ./tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl
+# see : https://github.com/tensorflow/tensorflow/issues/6594
+# for example) 
+# native.new_http_archive(
+#      name = "zlib_archive",
+#      url = "http://zlib.net/fossils/zlib-1.2.8.tar.gz",
+#      sha256 = "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d",
+#      strip_prefix = "zlib-1.2.8",
+#      build_file = str(Label("//third_party:zlib.BUILD")),
+#      )
+#
 
 # make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'
 $ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet

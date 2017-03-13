@@ -50,6 +50,7 @@ $ cp api/parsey_api* serving/tensorflow_serving/example/
 
 # build parsey_api 
 $ cd serving
+# bazel version 0.3.2
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_api --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 
 # make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'

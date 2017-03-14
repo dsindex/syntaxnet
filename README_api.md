@@ -121,9 +121,6 @@ $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
 $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
-# generate 'sentence_pb2.py'
-$ cp -rf ../api/sentence.proto tensorflow_serving/example/
-$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
 $ cd ..
 
 # download protobuf_json.py for converting protobuf to json
@@ -166,6 +163,15 @@ result {
   }
 ...
 }
+
+# if you got an error related to 'sentence_pb2'
+# generate 'sentence_pb2.py' and copy to run-env
+$ cp -rf ../api/sentence.proto tensorflow_serving/example/
+$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
+$ cp -rf tensorflow_serving/example/sentence_pb2* bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tf_serving/tensorflow_serving/example/
+# modify bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tf_serving/tensorflow_serving/example/parsey_api_pb2.py
+# from "from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
+# to   "import sentence_pb2 as syntaxnet_dot_sentence__pb2"
 
 ```
 

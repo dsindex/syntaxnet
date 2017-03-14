@@ -121,6 +121,9 @@ $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
 $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
+# generate 'sentence_pb2.py'
+$ cp -rf ../api/sentence.proto tensorflow_serving/example/
+$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
 $ cd ..
 
 # download protobuf_json.py for converting protobuf to json

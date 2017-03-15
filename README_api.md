@@ -80,9 +80,6 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //ten
 #      build_file = path_prefix + "zlib.BUILD",
 # )
 
-# make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'
-$ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
-
 # run parsey_api with exported model
 $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 ../api/parsey_model
 ```
@@ -135,10 +132,12 @@ $ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
 
 $ cd serving
 
+# make softlink for `parsey_api.proto`
+$ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
+
 # generate 'parsey_api_pb2.py'
 $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
-$ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
 
 # modify tensorflow_serving/example/parsey_api_pb2.py

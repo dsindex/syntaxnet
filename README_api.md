@@ -144,8 +144,7 @@ $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
 
 # modify tensorflow_serving/example/parsey_api_pb2.py
-# from "from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
-# to   "from syntaxnet.syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
+# from syntaxnet -> from syntaxnet.syntaxnet
 
 # copy parsey_client.py to serving/tensorflow_serving/example
 $ cp ../api/parsey_client.py tensorflow_serving/example
@@ -192,6 +191,9 @@ $ cp ../api/parsey_mcparseface.py tensorflow_serving/example
 # build it
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
+
+# modify tensorflow_serving/example/parsey_mcparseface.py
+# from syntaxnet -> from syntaxnet.syntaxnet
 
 # run
 # this will read model from --model_dir and export to --export_path directory

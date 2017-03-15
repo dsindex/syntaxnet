@@ -91,7 +91,7 @@ $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 ../api/parsey_mo
 
 - node client
 ```bash
-$ cd api/parsey_client
+$ cd ../api/parsey_client
 $ cp index_org.js index.js
 $ npm install
 
@@ -131,6 +131,7 @@ $ node index.js
 # if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
 
 # download protobuf_json.py for converting protobuf to json
+$ cd ../..
 $ git clone https://github.com/dpp-name/protobuf-json.git
 $ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
 

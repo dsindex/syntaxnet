@@ -208,10 +208,8 @@ $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models 
 
 # export parsing model only
 # replace serving/tensorflow_serving/example/parsey_mcparseface.py with parsey_sejong.py
+$ cp ../api/parsey_sejong.py tensorflow_serving/example/parsey_mcparseface.py
 # build it
-$ cd ../
-$ cp api/parsey_sejong.py serving/tensorflow_serving/example/parsey_mcparseface.py
-$ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 
@@ -260,19 +258,17 @@ $ node index.js | more
 ...
 }
 
+cd ../..
+cd serving
+
 # python client
 # replace serving/tensorflow_serving/example/parsey_client.py with parsey_sejong_client.py
-$ cp api/parsey_sejong_client.py serving/tensorflow_serving/example/parsey_client.py
+$ cp ../api/parsey_sejong_client.py tensorflow_serving/example/parsey_client.py
 
-# parsey_sejong_client.py import konlpy, protobuf_json
+# parsey_sejong_client.py import konlpy
 # so, you need to install konlpy( http://konlpy.org/ko/v0.4.3/install/ )
 
-# download protobuf_json.py for converting protobuf to json
-$ git clone https://github.com/dpp-name/protobuf-json.git
-$ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
-
 # build it
-$ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_client --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_client
 
@@ -282,27 +278,5 @@ $ bazel-bin/tensorflow_serving/example/parsey_client --server=localhost:9000
 nput :  나는 학교에 간다
 Parsing :
 {"result": [{"text": "나 는 학교 에 가 ㄴ다", "token": [{"category": "NP", "head": 1, "end": 2, "label": "MOD", "start": 0, "tag": "NP", "word": "나"}, {"category": "JX", "head": 4, "end": 6, "label": "NP_SBJ", "start": 4, "tag": "JX", "word": "는"}, {"category": "NNG", "head": 3, "end": 13, "label": "MOD", "start": 8, "tag": "NNG", "word": "학교"}, {"category": "JKB", "head": 4, "end": 17, "label": "NP_AJT", "start": 15, "tag": "JKB", "word": "에"}, {"category": "VV", "head": 5, "end": 21, "label": "MOD", "start": 19, "tag": "VV", "word": "가"}, {"category": "EC", "end": 28, "label": "ROOT", "start": 23, "tag": "EC", "word": "ㄴ다"}], "docid": "-:0"}]}
-
-# how to run parsey_client.py(or parsey_client_sejong.py) in other place?
-# find out PYTHONPATH
-$ vi bazel-bin/tensorflow_serving/example/parsey_client
-# add 'print python_path'
-# and run parsey_client to get PYTHONPATH
-# ex)
-# /path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles:/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/external/protobuf/python:/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/external/protobuf:/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/external/six_archive:/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/external/org_tensorflow:/path/to/serving/bazel-bin/tensorflow_serving/example/parsey_client.runfiles/external/syntaxnet
-
-# export PYTHONPATH
-$ export PYTHONPATH='yours'
-
-$ mkdir www
-$ cp api/parsey_client_sejong.py www/
-$ cp api/protobuf-json/protobuf_json.py www
-$ cd www
-$ python parsey_sejong_client.py --server=localhost:9000
-D0729 16:23:20.180068734    5920 ev_posix.c:101]             Using polling engine: poll
-비가 내리는 여름날에
-Input :  비가 내리는 여름날에
-Parsing :
-{"result": [{"text": "비 가 내리 는 여름날 에", "token": [{"category": "NNG", "head": 1, "end": 2, "label": "MOD", "start": 0, "tag": "NNG", "word": "비"}, {"category": "JKS", "head": 2, "end": 6, "label": "NP_SBJ", "start": 4, "tag": "JKS", "word": "가"}, {"category": "VV", "head": 3, "end": 13, "label": "MOD", "start": 8, "tag": "VV", "word": "내리"}, {"category": "ETM", "head": 4, "end": 17, "label": "VP_MOD", "start": 15, "tag": "ETM", "word": "는"}, {"category": "NNG", "head": 5, "end": 27, "label": "MOD", "start": 19, "tag": "NNG", "word": "여름날"}, {"category": "JKB", "end": 31, "label": "ROOT", "start": 29, "tag": "JKB", "word": "에"}], "docid": "-:0"}]}
 
 ```

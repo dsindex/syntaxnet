@@ -140,9 +140,6 @@ $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
 
-# modify tensorflow_serving/example/parsey_api_pb2.py
-# from syntaxnet -> from syntaxnet.syntaxnet
-
 # copy parsey_client.py to serving/tensorflow_serving/example
 $ cp ../api/parsey_client.py tensorflow_serving/example
 

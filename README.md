@@ -28,7 +28,7 @@ syntaxnet
 
 ### history
 
-- 2017. 3. 10
+- `2017. 3. 10`
   - modify for recent version of syntaxnet(tf 1.0), OS X(bash script), universal treebank v2.0
   - version
   ```
@@ -38,7 +38,7 @@ syntaxnet
   syntaxnet : bc70271a51fe2e051b5d06edc6b9fd94880761d5
   ```
 
-- 2016. 8. 16
+- `2016. 8. 16`
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test
     - if you installed old syntaxnet version(ex, a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0 ), you should specify path to each files in 'context.pbtxt'

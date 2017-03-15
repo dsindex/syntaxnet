@@ -58,15 +58,29 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //ten
 # ./tensorflow/tensorflow/workspace.bzl
 # ./tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl
 # see : https://github.com/tensorflow/tensorflow/issues/6594
-# for example) 
+# 1. ./tf_models/syntaxnet/WORKSPACE
+# new_http_archive(
+#      name = "ts_zlib_archive",
+#      url = "http://zlib.net/fossils/zlib-1.2.8.tar.gz",
+#      sha256 = "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d",
+#      strip_prefix = "zlib-1.2.8",
+#      build_file = "zlib.BUILD",
+# )
+# 2. ./tensorflow/tensorflow/workspace.bzl
+# native.new_http_archive(
+#    name = "zlib_archive",
+#    url = "http://zlib.net/fossils/zlib-1.2.8.tar.gz",
+#    sha256 = "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d",
+#    build_file = path_prefix + "zlib.BUILD",
+#  )
+# 3. ./tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl
 # native.new_http_archive(
 #      name = "zlib_archive",
 #      url = "http://zlib.net/fossils/zlib-1.2.8.tar.gz",
 #      sha256 = "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d",
 #      strip_prefix = "zlib-1.2.8",
-#      build_file = str(Label("//third_party:zlib.BUILD")),
-#      )
-#
+#      build_file = path_prefix + "zlib.BUILD",
+# )
 
 # make softlink for referencing 'syntaxnet/models/parsey_mcparseface/context.pbtxt'
 $ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet

@@ -130,22 +130,30 @@ $ node index.js
 # you need to install gRPC properly( https://tensorflow.github.io/serving/setup )
 # if you have a trouble, see https://github.com/dsindex/tensorflow#tensorflow-serving
 
+# download protobuf_json.py for converting protobuf to json
+$ git clone https://github.com/dpp-name/protobuf-json.git
+$ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
+
+$ cd serving
+
 # generate 'parsey_api_pb2.py'
 $ which grpc_python_plugin
 # if this returns nothing, gRPC was not properly installed. see https://github.com/tensorflow/serving/issues/42
 $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
-$ cd ..
 
-# download protobuf_json.py for converting protobuf to json
-$ git clone https://github.com/dpp-name/protobuf-json.git
-$ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
+# generate 'sentence_pb2.py'
+$ cp -rf ../api/sentence.proto tensorflow_serving/example/
+$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
+
+# modify tensorflow_serving/example/parsey_api_pb2.py
+# from "from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
+# to   "import sentence_pb2 as syntaxnet_dot_sentence__pb2"
 
 # copy parsey_client.py to serving/tensorflow_serving/example
-$ cp api/parsey_client.py serving/tensorflow_serving/example
+$ cp ../api/parsey_client.py tensorflow_serving/example
 
 # build it
-$ cd serving
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_client --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_client
 
@@ -178,24 +186,13 @@ result {
 ...
 }
 
-# if you got an error related to 'sentence_pb2'
-# generate 'sentence_pb2.py' and copy to run-env
-$ cp -rf ../api/sentence.proto tensorflow_serving/example/
-$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
-$ cp -rf tensorflow_serving/example/sentence_pb2* bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tf_serving/tensorflow_serving/example/
-# modify bazel-bin/tensorflow_serving/example/parsey_client.runfiles/tf_serving/tensorflow_serving/example/parsey_api_pb2.py
-# from "from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
-# to   "import sentence_pb2 as syntaxnet_dot_sentence__pb2"
-
 ```
 
 - export model
 ```bash
 # copy parsey_mcparseface.py to serving/tensorflow_serving/example
-# buid it
-$ cd ../
-$ cp api/parsey_mcparseface.py serving/tensorflow_serving/example
-$ cd serving
+$ cp ../api/parsey_mcparseface.py tensorflow_serving/example
+# build it
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 

@@ -193,7 +193,7 @@ $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 # this will read model from --model_dir and export to --export_path directory
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported
 
-# if you want to export a trained model, 
+# if you want to export a model trained by the same version of syntaxnet(==tf_model/syntaxnet), 
 # set proper path in ../models/context.pbtxt
 # ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
 $ cat ../models/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models/context.pbtxt

@@ -143,13 +143,9 @@ $ which grpc_python_plugin
 $ cd serving
 $ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/parsey_api.proto
 
-# generate 'sentence_pb2.py'
-$ cp -rf ../api/sentence.proto tensorflow_serving/example/
-$ protoc -I ./  --python_out=. --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_python_plugin` ./tensorflow_serving/example/sentence.proto
-
 # modify tensorflow_serving/example/parsey_api_pb2.py
 # from "from syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
-# to   "import sentence_pb2 as syntaxnet_dot_sentence__pb2"
+# to   "from syntaxnet.syntaxnet import sentence_pb2 as syntaxnet_dot_sentence__pb2"
 
 # copy parsey_client.py to serving/tensorflow_serving/example
 $ cp ../api/parsey_client.py tensorflow_serving/example

@@ -7,7 +7,7 @@
 ```bash
 # you can create a shell script with content below!
 
-# bazel versions : 0.3.2 ( see : https://github.com/dsindex/syntaxnet/issues/17 )
+# bazel versions : 0.2.2b ( see : https://github.com/dsindex/syntaxnet/issues/17 )
 
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work

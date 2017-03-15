@@ -19,15 +19,13 @@ $ git submodule update --init --recursive
 # checkout proper version of tf_models
 $ cd tf_models
 $ git checkout a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0
-$ cd ../..
 
 # apply patch by dmansfield to serving/tf_models/syntaxnet 
-$ cd serving/tf_models
 $ patch -p1 < ../../api/pr250-patch-a4b7bb9a.diff.txt
-$ cd ../../
+$ cd ../
 
 # configure serving/tensorflow
-$ cd serving/tensorflow
+$ cd tensorflow
 $ ./configure
 $ cd ../../
 

@@ -23,9 +23,11 @@ syntaxnet
 ===
 
 ### description
+
 - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet) 
 
 ### history
+
 - 2017. 3. 10
   - modify for recent version of syntaxnet(tf 1.0), OS X(bash script), universal treebank v2.0
   - version
@@ -35,6 +37,7 @@ syntaxnet
   protobuf : 3.0.0b2
   syntaxnet : bc70271a51fe2e051b5d06edc6b9fd94880761d5
   ```
+
 - 2016. 8. 16
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test

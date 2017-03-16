@@ -186,9 +186,6 @@ $ cp ../api/parsey_mcparseface.py tensorflow_serving/example
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 
-# modify tensorflow_serving/example/parsey_mcparseface.py
-# from syntaxnet -> from syntaxnet.syntaxnet
-
 # run
 # this will read model from --model_dir and export to --export_path directory
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported

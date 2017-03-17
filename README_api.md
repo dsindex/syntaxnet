@@ -5,8 +5,6 @@
 
 - server
 ```bash
-# you can create a shell script with content below!
-
 # bazel versions : 0.2.2b ( see : https://github.com/dsindex/syntaxnet/issues/17 )
 
 $ git clone https://github.com/dsindex/syntaxnet.git work
@@ -41,9 +39,6 @@ $ cat api/modified_workspace.bzl
 
 # append build instructions to serving/tensorflow_serving/example/BUILD
 $ cat api/append_BUILD >> serving/tensorflow_serving/example/BUILD
-
-# create softlink
-$ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
 
 # copy parsey_api.cc, parsey_api.proto to example directory to build
 $ cp api/parsey_api* serving/tensorflow_serving/example/
@@ -135,7 +130,7 @@ $ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
 
 $ cd serving
 
-# create softlink for `parsey_api.proto` if not exists
+# create softlink for `parsey_api.proto`
 $ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
 
 # generate 'parsey_api_pb2.py'
@@ -193,11 +188,52 @@ $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 # this will read model from --model_dir and export to --export_path directory
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=syntaxnet/models/parsey_mcparseface --export_path=exported
 
+# modify all path in exported/00000001/assets/context.pbtxt
+# for example, 
+# from
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "syntaxnet/models/parsey_mcparseface/tag-map"
+#  }
+# }
+# to
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "tag-map"
+#  }
+# }
+
+# run parsey_api with exported model
+$ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported/00000001
+
+
 # if you want to export a model trained by the same version of syntaxnet(==tf_model/syntaxnet), 
 # set proper path in ../models/context.pbtxt
 # ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
 $ cat ../models/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models/context.pbtxt
 $ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models --export_path=exported
+
+# modify all path in exported/00000001/assets/context.pbtxt
+# for example, 
+# from
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "syntaxnet/models/parsey_mcparseface/tag-map"
+#  }
+# }
+# to
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "tag-map"
+#  }
+# }
+
+# run parsey_api with exported model
+$ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported/00000001
 
 ```
 

@@ -88,11 +88,9 @@ $ cd ../api/parsey_client
 $ cp index_org.js index.js
 $ npm install
 
-# if you have a trouble, check your version of node,npm
+# if you have a trouble, check node / npm / grpc
 $ node --version
-v4.4.7
 $ npm --version
-2.15.8
 # you need to install grpc for node
 $ npm install grpc
 

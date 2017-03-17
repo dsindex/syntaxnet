@@ -42,6 +42,9 @@ $ cat api/modified_workspace.bzl
 # append build instructions to serving/tensorflow_serving/example/BUILD
 $ cat api/append_BUILD >> serving/tensorflow_serving/example/BUILD
 
+# create softlink
+$ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
+
 # copy parsey_api.cc, parsey_api.proto to example directory to build
 $ cp api/parsey_api* serving/tensorflow_serving/example/
 
@@ -132,7 +135,7 @@ $ cp protobuf-json/protobuf_json.py serving/tensorflow_serving/example/
 
 $ cd serving
 
-# make softlink for `parsey_api.proto`
+# create softlink for `parsey_api.proto` if not exists
 $ ln -s ./tf_models/syntaxnet/syntaxnet syntaxnet
 
 # generate 'parsey_api_pb2.py'

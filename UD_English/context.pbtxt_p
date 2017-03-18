@@ -39,11 +39,12 @@ input {
 
 input {
   name: 'char-map'
-  creator: 'brain_pos/greedy'
+  Part {
+    file_pattern: 'OUTPATH/char-map'
+  }
 }
 input {
   name: 'label-map'
-  file_format: 'text'
   Part {
     file_pattern: 'OUTPATH/label-map'
   }

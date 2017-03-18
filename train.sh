@@ -137,8 +137,8 @@ CONTEXT=${CORPUS_DIR}/context.pbtxt
 TMP_DIR=${CORPUS_DIR}/tmp/syntaxnet-output
 MODEL_DIR=${CDIR}/models
 
-POS_HIDDEN_LAYER_SIZES=64
-POS_HIDDEN_LAYER_PARAMS=64
+TAGGER_HIDDEN_LAYER_SIZES=64
+TAGGER_HIDDEN_LAYER_PARAMS=64
 
 PARSER_HIDDEN_LAYER_SIZES=512,512
 PARSER_HIDDEN_LAYER_PARAMS='512x512'
@@ -152,11 +152,11 @@ function convert_corpus {
 	done
 }
 
-POS_PARAMS=${POS_HIDDEN_LAYER_PARAMS}-0.08-3600-0.9-0
-function train_pos_tagger {
+TAGGER_PARAMS=${TAGGER_HIDDEN_LAYER_PARAMS}-0.08-3600-0.9-0
+function train_tagger {
 	${BINDIR}/parser_trainer \
 	  --task_context=${CONTEXT} \
-	  --arg_prefix=brain_pos \
+	  --arg_prefix=brain_tagger \
 	  --compute_lexicon \
 	  --graph_builder=greedy \
 	  --training_corpus=training-corpus \
@@ -164,12 +164,12 @@ function train_pos_tagger {
 	  --output_path=${TMP_DIR} \
 	  --batch_size=${BATCH_SIZE} \
 	  --decay_steps=3600 \
-	  --hidden_layer_sizes=${POS_HIDDEN_LAYER_SIZES} \
+	  --hidden_layer_sizes=${TAGGER_HIDDEN_LAYER_SIZES} \
 	  --learning_rate=0.08 \
 	  --momentum=0.9 \
 	  --beam_size=1 \
 	  --seed=0 \
-	  --params=${POS_PARAMS} \
+	  --params=${TAGGER_PARAMS} \
 	  --num_epochs=12 \
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
@@ -179,14 +179,14 @@ function train_pos_tagger {
 function preprocess_with_tagger {
 	for SET in training tuning test; do
 		${BINDIR}/parser_eval \
-		--task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
-		--hidden_layer_sizes=${POS_HIDDEN_LAYER_SIZES} \
+		--task_context=${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/context \
+		--hidden_layer_sizes=${TAGGER_HIDDEN_LAYER_SIZES} \
 	    --batch_size=${BATCH_SIZE} \
 		--input=${SET}-corpus \
 		--output=tagged-${SET}-corpus \
-		--arg_prefix=brain_pos \
+		--arg_prefix=brain_tagger \
 		--graph_builder=greedy \
-		--model_path=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model
+		--model_path=${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model
 	done
 }
 
@@ -203,7 +203,7 @@ function pretrain_parser {
 	  --momentum=0.85 \
 	  --beam_size=1 \
 	  --output_path=${TMP_DIR} \
-	  --task_context=${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/context \
+	  --task_context=${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/context \
 	  --seed=4 \
 	  --training_corpus=tagged-training-corpus \
 	  --tuning_corpus=tagged-tuning-corpus \
@@ -272,25 +272,25 @@ function evaluate_parser {
 function xcopy_model {
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model.meta ${MODEL_DIR}/parser-params.meta
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model ${MODEL_DIR}/tagger-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model.meta ${MODEL_DIR}/tagger-params.meta
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-map ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-table ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/tag-to-category ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model ${MODEL_DIR}/tagger-params
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model.meta ${MODEL_DIR}/tagger-params.meta
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/*-map ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/*-table ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/tag-to-category ${MODEL_DIR}/
 }
 
 function copy_model {
 	mkdir -p ${MODEL_DIR}/parser-params
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model.* ${MODEL_DIR}/parser-params
 	mkdir -p ${MODEL_DIR}/tagger-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/model.* ${MODEL_DIR}/tagger-params
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-map ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/*-table ${MODEL_DIR}/
-	cp -rf ${TMP_DIR}/brain_pos/greedy/${POS_PARAMS}/tag-to-category ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model.* ${MODEL_DIR}/tagger-params
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/*-map ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/*-table ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/tag-to-category ${MODEL_DIR}/
 }
 
 convert_corpus ${CORPUS_DIR}
-train_pos_tagger
+train_tagger
 preprocess_with_tagger
 pretrain_parser
 evaluate_pretrained_parser

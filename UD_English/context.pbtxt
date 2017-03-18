@@ -16,19 +16,19 @@ Parameter {
 }
 
 Parameter {
-  name: 'brain_pos_embedding_dims'
+  name: 'brain_tagger_embedding_dims'
   value: '64;4;8;8'
 }
 Parameter {
-  name: 'brain_pos_embedding_names'
+  name: 'brain_tagger_embedding_names'
   value: 'words;other;suffix;prefix'
 }
 Parameter {
-  name: 'brain_pos_features'
+  name: 'brain_tagger_features'
   value: 'stack(3).word stack(2).word stack(1).word stack.word input.word input(1).word input(2).word input(3).word;input.digit input.hyphen;stack.suffix(length=2) input.suffix(length=2) input(1).suffix(length=2);stack.prefix(length=2) input.prefix(length=2) input(1).prefix(length=2)'
 }
 Parameter {
-  name: 'brain_pos_transition_system'
+  name: 'brain_tagger_transition_system'
   value: 'tagger'
 }
 
@@ -55,55 +55,55 @@ input {
 }
 input {
   name: 'tagged-training-corpus'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
   record_format: 'conll-sentence'
 }
 input {
   name: 'tagged-tuning-corpus'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
   record_format: 'conll-sentence'
 }
 input {
   name: 'tagged-test-corpus'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
   record_format: 'conll-sentence'
 }
 
 input {
   name: 'char-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'label-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'word-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'lcword-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'tag-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'category-map'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'prefix-table'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'suffix-table'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'tag-to-category'
-  creator: 'brain_pos/greedy'
+  creator: 'brain_tagger/greedy'
 }
 input {
   name: 'projectivized-training-corpus'

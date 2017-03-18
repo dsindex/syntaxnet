@@ -43,10 +43,10 @@ TAGGER_MODEL_PATH=${MODEL_DIR}/tagger-params/model
 PARSER_MODEL_PATH=${MODEL_DIR}/parser-params/model
 XTAGGER_MODEL_PATH=${MODEL_DIR}/tagger-params
 XPARSER_MODEL_PATH=${MODEL_DIR}/parser-params
-TAGGER_MODEL_PATH=${TAGGER_MODEL_PATH}
-PARSER_MODEL_PATH=${PARSER_MODEL_PATH}
+TAGGER_MODEL_PATH=${XTAGGER_MODEL_PATH}
+PARSER_MODEL_PATH=${XPARSER_MODEL_PATH}
 
-POS_HIDDEN_LAYER_SIZES=64
+TAGGER_HIDDEN_LAYER_SIZES=64
 
 PARSER_HIDDEN_LAYER_SIZES=512,512
 BATCH_SIZE=256
@@ -57,8 +57,8 @@ BEAM_SIZE=16
 ${PARSER_EVAL} \
   --input=${INPUT_FORMAT} \
   --output=stdout-conll \
-  --hidden_layer_sizes=${POS_HIDDEN_LAYER_SIZES} \
-  --arg_prefix=brain_pos \
+  --hidden_layer_sizes=${TAGGER_HIDDEN_LAYER_SIZES} \
+  --arg_prefix=brain_tagger \
   --graph_builder=greedy \
   --task_context=${CONTEXT} \
   --resource_dir=${MODEL_DIR} \

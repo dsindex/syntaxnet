@@ -36,6 +36,16 @@ CONLL2TREE=${BINDIR}/conll2tree
 
 MODEL_DIR=${CDIR}/models
 
+CONTEXT=${MODEL_DIR}/context.pbtxt
+cat ${CONTEXT}.template | sed "s=OUTPATH=${MODEL_DIR}=" > ${MODEL_DIR}/context
+CONTEXT=${MODEL_DIR}/context
+TAGGER_MODEL_PATH=${MODEL_DIR}/tagger-params/model
+PARSER_MODEL_PATH=${MODEL_DIR}/parser-params/model
+XTAGGER_MODEL_PATH=${MODEL_DIR}/tagger-params
+XPARSER_MODEL_PATH=${MODEL_DIR}/parser-params
+TAGGER_MODEL_PATH=${TAGGER_MODEL_PATH}
+PARSER_MODEL_PATH=${PARSER_MODEL_PATH}
+
 POS_HIDDEN_LAYER_SIZES=64
 
 PARSER_HIDDEN_LAYER_SIZES=512,512
@@ -50,9 +60,9 @@ ${PARSER_EVAL} \
   --hidden_layer_sizes=${POS_HIDDEN_LAYER_SIZES} \
   --arg_prefix=brain_pos \
   --graph_builder=greedy \
-  --task_context=${MODEL_DIR}/context.pbtxt \
+  --task_context=${CONTEXT} \
   --resource_dir=${MODEL_DIR} \
-  --model_path=${MODEL_DIR}/tagger-params/model \
+  --model_path=${TAGGER_MODEL_PATH} \
   --slim_model \
   --batch_size=${BATCH_SIZE} \
   --alsologtostderr \
@@ -63,9 +73,9 @@ ${PARSER_EVAL} \
   --hidden_layer_sizes=${PARSER_HIDDEN_LAYER_SIZES} \
   --arg_prefix=brain_parser \
   --graph_builder=structured \
-  --task_context=${MODEL_DIR}/context.pbtxt \
+  --task_context=${CONTEXT} \
   --resource_dir=${MODEL_DIR} \
-  --model_path=${MODEL_DIR}/parser-params/model \
+  --model_path=${PARSER_MODEL_PATH} \
   --slim_model \
   --beam_size=${BEAM_SIZE} \
   --batch_size=${BATCH_SIZE} \

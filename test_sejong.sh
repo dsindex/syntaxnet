@@ -36,6 +36,13 @@ CONLL2TREE=${BINDIR}/conll2tree
 
 MODEL_DIR=${CDIR}/models_sejong
 
+CONTEXT=${MODEL_DIR}/context.pbtxt
+cat ${CONTEXT}.template | sed "s=OUTPATH=${MODEL_DIR}=" > ${MODEL_DIR}/context
+CONTEXT=${MODEL_DIR}/context
+PARSER_MODEL_PATH=${MODEL_DIR}/parser-params/model
+XPARSER_MODEL_PATH=${MODEL_DIR}/parser-params
+PARSER_MODEL_PATH=${PARSER_MODEL_PATH}
+
 HIDDEN_LAYER_SIZES=512,512
 BATCH_SIZE=256
 BEAM_SIZE=16
@@ -51,10 +58,10 @@ ${PARSER_EVAL} \
   --beam_size=${BEAM_SIZE} \
   --arg_prefix=brain_parser \
   --graph_builder=structured \
-  --task_context=${MODEL_DIR}/context.pbtxt \
+  --task_context=${CONTEXT} \
   --resource_dir=${MODEL_DIR} \
-  --model_path=${MODEL_DIR}/parser-params/model \
+  --model_path=${PARSER_MODEL_PATH} \
   | \
 ${CONLL2TREE} \
-  --task_context=${MODEL_DIR}/context.pbtxt \
+  --task_context=${CONTEXT} \
   --alsologtostderr

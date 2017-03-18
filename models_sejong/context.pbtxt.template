@@ -73,8 +73,13 @@ Parameter {
 }
 
 input {
+  name: 'char-map'
+  Part {
+    file_pattern: 'OUTPATH/char-map'
+  }
+}
+input {
   name: 'label-map'
-  file_format: 'text'
   Part {
     file_pattern: 'OUTPATH/label-map'
   }

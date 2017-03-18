@@ -37,6 +37,12 @@ Parameter {
 }
 
 input {
+  name: "char-map"
+  Part {
+    file_pattern: "OUTPATH/char-map"
+  }
+}
+input {
   name: "tag-map"
   Part {
     file_pattern: "OUTPATH/tag-map"

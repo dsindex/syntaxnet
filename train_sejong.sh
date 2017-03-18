@@ -241,6 +241,13 @@ function evaluate_parser_by_eoj {
 	done
 }
 
+function xcopy_model {
+	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model ${MODEL_DIR}/parser-params
+	cp -rf ${TMP_DIR}/*-map ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/*-table ${MODEL_DIR}/
+	cp -rf ${TMP_DIR}/tag-to-category ${MODEL_DIR}/
+}
+
 function copy_model {
 	mkdir -p ${MODEL_DIR}/parser-params
 	cp -rf ${TMP_DIR}/brain_parser/structured/${GP_PARAMS}/model.* ${MODEL_DIR}/parser-params

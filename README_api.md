@@ -217,12 +217,12 @@ $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported/0000000
 
 
 # if you want to export a model trained by the same version of syntaxnet(==tf_model/syntaxnet), 
-# set proper path in ../models/context.pbtxt
+# copy trained models to current directory and set proper path in models/context.pbtxt
 # ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
-$ cat ../models/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models/context.pbtxt
-$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models --export_path=exported
+$ cat models/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > models/context.pbtxt
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=models --export_path=exported
 
-# modify all path in exported/00000001/assets/context.pbtxt
+# modify all path in exported/00000001/assets/context.pbtxt since those paths are not neccessary.
 # for example, 
 # from
 # input {
@@ -256,13 +256,30 @@ $ cp ../api/parsey_sejong.py tensorflow_serving/example/parsey_mcparseface.py
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //tensorflow_serving/example:parsey_mcparseface --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 $ ls bazel-bin/tensorflow_serving/example/parsey_mcparseface
 
-# set proper path in ../models_sejong/context.pbtxt
+# copy trained models_sejong to current directory and set proper path in models_sejong/context.pbtxt
 # ex) file_pattern: 'OUTPATH/label-map' -> file_pattern: '/path/to/label-map'
-$ cat ../models_sejong/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > ../models_sejong/context.pbtxt
+$ cat models_sejong/context.pbtxt.template | sed "s=OUTPATH=/path/to=" > models_sejong/context.pbtxt
 
 # run
 # this will read model from --model_dir and export to --export_path directory
-$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=../models_sejong --export_path=exported_sejong
+$ bazel-bin/tensorflow_serving/example/parsey_mcparseface --model_dir=models_sejong --export_path=exported_sejong
+
+# modify all path in exported_sejong/00000001/assets/context.pbtxt since those paths are not neccessary.
+# for example, 
+# from
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "syntaxnet/models/parsey_mcparseface/tag-map"
+#  }
+# }
+# to
+# input {
+#  name: "tag-map"
+#  Part {
+#    file_pattern: "tag-map"
+#  }
+# }
 
 # run parsey_api with exported model
 $ ./bazel-bin/tensorflow_serving/example/parsey_api --port=9000 exported_sejong/00000001

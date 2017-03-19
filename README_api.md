@@ -18,6 +18,15 @@ $ git submodule update --init --recursive
 $ cd tf_models
 $ git checkout a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0
 
+# you can use the tf_models/syntaxnet to build your own model and serve it.
+# note that if you have an error(-fno-canonical-system-headers) while compiling syntaxnet on OS X Sierra, 
+# modify tf_models/syntaxnet/tensorflow/tensorflow/workspace.bzl file :
+# native.git_repository(
+#    name = "re2",
+#    remote = "https://github.com/google/re2.git",
+#    commit = "ae9cb49",
+#  )
+
 # apply patch by dmansfield to serving/tf_models/syntaxnet 
 $ patch -p1 < ../../api/pr250-patch-a4b7bb9a.diff.txt
 $ cd ../

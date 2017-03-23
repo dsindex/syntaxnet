@@ -108,7 +108,7 @@ if __name__ == '__main__':
 	if len(a_data) != len(b_data) :
 		sys.stderr.write("len(a_data) = %s\n" % len(a_data))
 		sys.stderr.write("len(b_data) = %s\n" % len(b_data))
-		sys.stderr.write("can't compare\n")
+		sys.stderr.write("please check the difference b/w %s and %s files\n" % (a_path, b_path))
 		sys.exit(1)
 
 	total_sentences = len(a_data)

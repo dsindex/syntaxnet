@@ -54,18 +54,22 @@ def spill(bucket) :
 		seq, out = n_spill(n_bucket, seq, mseq2seq)
 		result.append(out)
 
+	out_list = []
 	for seq, mseq_list, analyzed, mgov_list, ptst in result :
 		if VERBOSE : 
-			print str(seq) + '\t' +  ','.join([str(e) for e in mseq_list]) + '\t' + \
-				' + '.join(analyzed) + '\t' + ','.join([str(e) for e in mgov_list]) + \
-				'\t' + ptst
+			print str(seq) + '\t' +  \
+				  ','.join([str(e) for e in mseq_list]) + '\t' + \
+				  ' + '.join(analyzed) + '\t' + \
+				  ','.join([str(e) for e in mgov_list]) + '\t' + \
+				  ptst
 		gov = mseq2seq[mgov_list[-1]] 
 		if seq == gov :
 			sys.stderr.write('[SELF EDGE]' + '\t' + line + '\n')
 			return False
-		p = str(seq) + '\t' + ' + '.join(analyzed) + '\t' + ptst + '\t' + str(gov)
-		print p
+		out = str(seq) + '\t' + ' + '.join(analyzed) + '\t' + ptst + '\t' + str(gov)
+		out_list.append(out)
 
+	print '\n'.join(out_list)
 	print '\n',
 	return True
 

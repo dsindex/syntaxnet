@@ -36,7 +36,7 @@ def spill(bucket) :
 	for line in bucket :
 		try : mseq,morph,_,tag,_,_,mgov,mptst,_,_,deprel = line.split('\t',10)
 		except :
-			sys.stderr.write(['[FORMAT ERROR]' + '\t' + line + '\n')
+			sys.stderr.write('[FORMAT ERROR]' + '\t' + line + '\n')
 			return False
 		mseq = int(mseq)
 		mgov = int(mgov)

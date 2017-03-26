@@ -41,7 +41,7 @@ syntaxnet
 - `2016. 8. 16`
   - add 'char-map' to context.pbtxt' for train
   - add '--resource_dir' for test
-    - if you installed old syntaxnet version(ex, a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0 ), you should specify path to each files in 'context.pbtxt'
+    - if you installed old version of syntaxnet(ex, a4b7bb9a5dd2c021edcd3d68d326255c734d0ef0 ), you should specify path to each files in 'context.pbtxt'
   - version
   ```
   syntaxnet : a5d45f2ed20effaabc213a2eb9def291354af1ec

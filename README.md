@@ -64,13 +64,13 @@ syntaxnet
 
 ### how to test
 ```shell
-(after installing syntaxnet)
+# after installing syntaxnet
 $ pwd
 /path/to/models/syntaxnet
 $ git clone https://github.com/dsindex/syntaxnet.git work
 $ cd work
 $ echo "hello syntaxnet" | ./demo.sh
-(training parser only with parsed corpus)
+# training parser only with parsed corpus
 $ ./parser_trainer_test.sh
 ```
 
@@ -79,7 +79,7 @@ $ ./parser_trainer_test.sh
 $ cd work
 $ mkdir corpus
 $ cd corpus
-(downloading ud-treebanks-v2.0.tgz)
+# downloading ud-treebanks-v2.0.tgz
 $ tar -zxvf ud-treebanks-v2.0.tgz  
 $ ls universal-dependencies-2.0 
 $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
@@ -87,8 +87,8 @@ $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
 
 ### training tagger and parser with another corpus
 ```shell
-(for example, training UD_English)
-(detail instructions can be found in https://github.com/tensorflow/models/tree/master/syntaxnet)
+# for example, training UD_English
+# detail instructions can be found in https://github.com/tensorflow/models/tree/master/syntaxnet
 $ ./train.sh -v -v
 ...
 #preprocessing with tagger
@@ -116,8 +116,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 
 ### training parser only
 ```shell
-(in case you have other pos-tagger 
- and want to build parser only from the parsed corpus) 
+# in case you have other pos-tagger and want to build parser only from the parsed corpus
 $ ./train_p.sh -v -v
 ...
 #pretrain parser
@@ -150,7 +149,7 @@ tagger NN ROOT
  +-- and CC cc
  +-- parser NN conj
 
-* original model
+# original model
 $ echo "this is my own tagger and parser" | ./demo.sh
 Input: this is my own tagger and parser
 Parse:
@@ -173,7 +172,7 @@ brought VBD ROOT
  |   +-- to IN case
  +-- . . punct
 
-* original model
+# original model
 $ echo "Bob brought the pizza to Alice ." | ./demo.sh
 Input: Bob brought the pizza to Alice .
 Parse:
@@ -272,7 +271,7 @@ Parse:
 ```
 ### apply korean POS tagger(Komoran via konlpy)
 ```shell
-* install konlpy ( http://konlpy.org/ko/v0.4.3/ )
+# after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ python sejong/tagger.py
 나는 학교에 간다.
 1	나	나	NP	NP	_	0	_	_	_
@@ -316,6 +315,7 @@ Parsing :
 ```shell
 # download models from http://download.tensorflow.org/models/parsey_universal/<language>.zip
 
+# for `English`
 $ echo "Bob brought the pizza to Alice." | ./parse.sh
 
 # tokenizing
@@ -390,23 +390,16 @@ the hyperparameters for POS tagger :
 $ cd ../
 $ pwd
 /path/to/models/syntaxnet
-$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:tutorial_1 --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ bazel build -c opt //examples/dragnn:tutorial_1
 ```
 - training tagger and parser with CoNLL corpus
 ```
-* prepare corpus
-$ mkdir -p work/dragnn_examples/data
-$ cp -rf work/UD_English/en-ud-train.conllu work/dragnn_examples/data
-$ cp -rf work/UD_English/en-ud-dev.conllu work/dragnn_examples/data
-$ python work/convert.py < work/dragnn_examples/data/en-ud-train.conllu > work/dragnn_examples/data/en-ud-train.conllu.conv
-$ python work/convert.py < work/dragnn_examples/data/en-ud-dev.conllu > work/dragnn_examples/data/en-ud-dev.conllu.conv
-
-$ cp -rf work/dragnn_examples/BUILD examples/dragnn/
-$ cp -rf work/dragnn_examples/test_dragnn.py examples/dragnn/
-$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:test_dragnn --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
-$ ./bazel-bin/examples/dragnn/test_dragnn --data_dir=work/dragnn_examples/data --train_file=work/dragnn_examples/data/en-ud-train.conllu.conv --dev_file=work/dragnn_examples/data/en-ud-dev.conllu.conv
-* trained model
-$ ls -al ls -al work/dragnn_examples/data
+$ pwd
+/path/to/models/syntaxnet/work
+$ ./dragnn.sh -v -v
+```
+- test CoNLL2017 baseline
+```
 ```
 - docker version
   - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)

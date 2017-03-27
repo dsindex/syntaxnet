@@ -32,14 +32,14 @@ py_library(
 )
 
 py_binary(
-    name = "tutorial_3",
-    srcs = ["tutorial_3.py"],
+    name = "test_dragnn",
+    srcs = ["test_dragnn.py"],
     data = [":data"],
-    deps = [":tutorial-deps-3"],
+    deps = [":test-dragnn-deps"],
 )
 
 py_library(
-    name = "tutorial-deps-3",
+    name = "test-dragnn-deps",
     deps = [
         "//dragnn/core:dragnn_bulk_ops",
         "//dragnn/core:dragnn_ops",

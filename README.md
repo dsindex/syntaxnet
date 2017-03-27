@@ -394,13 +394,19 @@ $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //exa
 ```
 - training tagger and parser with CoNLL corpus
 ```
-* for example, dragnn/models/syntaxnet/examples/dragnn/data/es
+* prepare corpus
+$ mkdir -p work/dragnn_examples/data
+$ cp -rf work/UD_English/en-ud-train.conllu work/dragnn_examples/data
+$ cp -rf work/UD_English/en-ud-dev.conllu work/dragnn_examples/data
+$ python work/convert.py < work/dragnn_examples/data/en-ud-train.conllu > work/dragnn_examples/data/en-ud-train.conllu.conv
+$ python work/convert.py < work/dragnn_examples/data/en-ud-dev.conllu > work/dragnn_examples/data/en-ud-dev.conllu.conv
+
 $ cp -rf work/dragnn_examples/BUILD examples/dragnn/
-$ cp -rf work/dragnn_examples/tutorial_3.py examples/dragnn/
-$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:tutorial_3 --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
-$ ./bazel-bin/examples/dragnn/tutorial_3
+$ cp -rf work/dragnn_examples/test_dragnn.py examples/dragnn/
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:test_dragnn --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ ./bazel-bin/examples/dragnn/test_dragnn --data_dir=work/dragnn_examples/data --train_file=work/dragnn_examples/data/en-ud-train.conllu.conv --dev_file=work/dragnn_examples/data/en-ud-dev.conllu.conv
 * trained model
-$ ls -al ls -al examples/dragnn/data/es/
+$ ls -al ls -al work/dragnn_examples/data
 ```
 - docker version
   - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)

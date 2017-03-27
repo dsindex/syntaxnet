@@ -398,9 +398,6 @@ $ pwd
 /path/to/models/syntaxnet/work
 $ ./dragnn.sh -v -v
 ```
-- test CoNLL2017 baseline
-```
-```
 - docker version
   - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)
 

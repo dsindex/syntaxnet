@@ -40,7 +40,7 @@ BATCH_SIZE = 64
 import sys
 from optparse import OptionParser
 
-def train() :
+def build_graph() :
 	# Constructs lexical resources for SyntaxNet in the given resource path, from
 	# the training data.
 	lexicon.build_lexicon(DATA_DIR, TRAINING_CORPUS_PATH)
@@ -110,7 +110,9 @@ def train() :
 		trainer = builder.add_training_from_config(target)
 		annotator = builder.add_annotation(enable_tracing=True)
 		builder.add_saver()
+	return graph
 
+def train(graph) :
 	# Train on data for N_STEPS steps and evaluate.
 	with tf.Session(graph=graph) as sess:
 		sess.run(tf.global_variables_initializer())
@@ -125,7 +127,7 @@ def train() :
 		tf.logging.warning('POS %.2f UAS %.2f LAS %.2f', pos, uas, las)
 		builder.saver.save(sess, CHECKPOINT_FILENAME)
 
-def test(text) :
+def test(graph, text) :
 	# Visualize the output of our mini-trained model on a test sentence.
 	tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
 	sentence = sentence_pb2.Sentence()
@@ -173,6 +175,7 @@ if __name__ == '__main__':
 
 	logging.set_verbosity(logging.WARN)
 
-	train()
+	graph = build_graph()
+	train(graph)
 	text = 'this is an example for dragnn'
-	parsed_sentence = test(text)
+	parsed_sentence = test(graph, text)

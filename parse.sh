@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# code from http://stackoverflow.com/a/1116890
 function readlink()
 {
     TARGET_FILE=$2

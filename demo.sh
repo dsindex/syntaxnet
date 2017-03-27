@@ -9,6 +9,7 @@
 # To run on a conll formatted file, add the --conll command line argument.
 #
 
+# code from http://stackoverflow.com/a/1116890
 function readlink()
 {
     TARGET_FILE=$2

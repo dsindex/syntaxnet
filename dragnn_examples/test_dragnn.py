@@ -110,9 +110,9 @@ def build_graph() :
 		trainer = builder.add_training_from_config(target)
 		annotator = builder.add_annotation(enable_tracing=True)
 		builder.add_saver()
-	return graph, trainer, annotator
+	return graph, builder, trainer, annotator
 
-def train(graph, trainer, annotator) :
+def train(graph, builder, trainer, annotator) :
 	# Train on data for N_STEPS steps and evaluate.
 	with tf.Session(graph=graph) as sess:
 		sess.run(tf.global_variables_initializer())
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
 	logging.set_verbosity(logging.WARN)
 
-	graph, trainer, annotator = build_graph()
-	train(graph, trainer, annotator)
+	graph, builder, trainer, annotator = build_graph()
+	train(graph, builder, trainer, annotator)
 	text = 'this is an example for dragnn'
 	parsed_sentence = test(graph, annotator, text)

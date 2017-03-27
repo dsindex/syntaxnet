@@ -387,8 +387,22 @@ the hyperparameters for POS tagger :
 ### dragnn
 - how to compile examples
 ```
-$ cd models/syntaxnet
+$ cd ../
+$ pwd
+/path/to/models/syntaxnet
 $ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:tutorial_1 --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 ```
+- training tagger and parser with CoNLL corpus
+```
+* for example, dragnn/models/syntaxnet/examples/dragnn/data/es
+$ cp -rf work/dragnn_examples/BUILD examples/dragnn/
+$ cp -rf work/dragnn_examples/tutorial_3.py examples/dragnn/
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:tutorial_3 --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
+$ ./bazel-bin/examples/dragnn/tutorial_3
+* trained model
+$ ls -al ls -al examples/dragnn/data/es/
+```
+- docker version
+  - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

@@ -15,6 +15,7 @@
     - [apply korean POS tagger(Komoran via konlpy)](#apply-korean-pos-taggerkomoran-via-konlpy)
     - [tensorflow serving and syntaxnet](#tensorflow-serving-and-syntaxnet)
     - [parsey's cousins](#parseys-cousins)
+	- [dragnn](#dragnn)
     - [comparison to BIST parser](#comparison-to-bist-parser)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -367,6 +368,13 @@ the hyperparameters for POS tagger :
   - hidden_layer_sizes=128
   - learning_rate=0.08
   - momentum=0.9
+```
+
+### dragnn
+- how to compile examples
+```
+$ cd models/syntaxnet
+$ bazel --output_user_root=bazel_root build --nocheck_visibility -c opt -s //examples/dragnn:tutorial_1 --genrule_strategy=standalone --spawn_strategy=standalone --verbose_failures
 ```
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

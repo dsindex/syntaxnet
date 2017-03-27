@@ -25,9 +25,23 @@ syntaxnet
 
 ### description
 
-- test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet) 
+- test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
+  - training and test a model using UD corpus.
+  - training and test a Korean parsing model using the Sejong corpus.
+  - exporting a trained model and serving(limited to the designated version of syntaxnet(old one))
+  - training and test a model using dragnn
+  - comparision to bist-parser
 
 ### history
+- `2017. 3. 27`
+  - test for dragnn
+  - version
+  ```
+  python : 2.7
+  bazel  : 0.4.3
+  protobuf : 3.2.0
+  syntaxnet : 40a5739ae26baf6bfa352d2dec85f5ca190254f8
+  ```
 
 - `2017. 3. 10`
   - modify for recent version of syntaxnet(tf 1.0), OS X(bash script), universal treebank v2.0
@@ -35,7 +49,7 @@ syntaxnet
   ```
   python : 2.7
   bazel  : 0.4.3
-  protobuf : 3.0.0b2
+  protobuf : 3.0.0b2, 3.2.0
   syntaxnet : bc70271a51fe2e051b5d06edc6b9fd94880761d5
   ```
 

@@ -110,9 +110,9 @@ def build_graph() :
 		trainer = builder.add_training_from_config(target)
 		annotator = builder.add_annotation(enable_tracing=True)
 		builder.add_saver()
-	return graph
+	return graph, trainer, annotator
 
-def train(graph) :
+def train(graph, trainer, annotator) :
 	# Train on data for N_STEPS steps and evaluate.
 	with tf.Session(graph=graph) as sess:
 		sess.run(tf.global_variables_initializer())
@@ -127,7 +127,7 @@ def train(graph) :
 		tf.logging.warning('POS %.2f UAS %.2f LAS %.2f', pos, uas, las)
 		builder.saver.save(sess, CHECKPOINT_FILENAME)
 
-def test(graph, text) :
+def test(graph, annotator, text) :
 	# Visualize the output of our mini-trained model on a test sentence.
 	tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
 	sentence = sentence_pb2.Sentence()
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
 	logging.set_verbosity(logging.WARN)
 
-	graph = build_graph()
-	train(graph)
+	graph, trainer, annotator = build_graph()
+	train(graph, trainer, annotator)
 	text = 'this is an example for dragnn'
-	parsed_sentence = test(graph, text)
+	parsed_sentence = test(graph, annotator, text)

@@ -29,8 +29,8 @@ syntaxnet
   - training and test a model using UD corpus.
   - training and test a Korean parser model using the Sejong corpus.
   - exporting a trained model and serving(limited to the designated version of syntaxnet(old one))
-  - training and test a model using dragnn
-  - comparision to bist-parser
+  - training and test a model using dragnn.
+  - comparision to bist-parser.
 
 ### history
 - `2017. 3. 27`
@@ -64,7 +64,7 @@ syntaxnet
 
 ### how to test
 ```shell
-# after installing syntaxnet
+# after installing syntaxnet.
 $ pwd
 /path/to/models/syntaxnet
 $ git clone https://github.com/dsindex/syntaxnet.git work
@@ -87,7 +87,7 @@ $ UD_Ancient_Greek  UD_Basque  UD_Czech ....
 
 ### training tagger and parser with another corpus
 ```shell
-# for example, training UD_English
+# for example, training UD_English.
 # detail instructions can be found in https://github.com/tensorflow/models/tree/master/syntaxnet
 $ ./train.sh -v -v
 ...
@@ -116,7 +116,7 @@ INFO:tensorflow:Seconds elapsed in evaluation: 34.97, eval metric: 83.49%
 
 ### training parser only
 ```shell
-# in case you have other pos-tagger and want to build parser only from the parsed corpus
+# if you have other pos-tagger and want to build parser only from the parsed corpus :
 $ ./train_p.sh -v -v
 ...
 #pretrain parser
@@ -185,8 +185,10 @@ brought VBD ROOT
  +-- . . punct
 ```
 
-### training parser from korean sejong treebank corpus
+### training parser from Sejong treebank corpus
 ```shell
+# the corpus is accessible through the path on this image : https://raw.githubusercontent.com/dsindex/blog/master/images/url_sejong.png
+# copy sejong_treebank.txt.v1 to `sejong` directory.
 $ ./sejong/split.sh
 $ ./sejong/c2d.sh
 $ ./train_sejong.sh

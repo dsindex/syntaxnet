@@ -162,14 +162,14 @@ function prepare_data {
 
 function compile {
 	cd ${PDIR}
-	bazel build -c opt //work/dragnn_examples:test_dragnn
+	bazel build -c opt //work/dragnn_examples:test_dragnn_sejong
 }
 
 function train {
 	local _n_steps=$1
 	local _batch_size=$2
 	cd ${PDIR}
-	./bazel-bin/work/dragnn_examples/test_dragnn \
+	./bazel-bin/work/dragnn_examples/test_dragnn_sejong \
 		--mode=train \
 		--resource_path=${DATA_DIR} \
 		--training_corpus_path=${TRAIN_FILE} \
@@ -181,7 +181,7 @@ function train {
 
 function test {
 	cd ${PDIR}
-	./bazel-bin/work/dragnn_examples/test_dragnn \
+	./bazel-bin/work/dragnn_examples/test_dragnn_sejong \
 		--mode=test \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE}

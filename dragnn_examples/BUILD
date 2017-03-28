@@ -5,6 +5,13 @@ py_binary(
     deps = [":test-dragnn-deps"],
 )
 
+py_binary(
+    name = "test_dragnn_sejong",
+    srcs = ["test_dragnn_sejong.py"],
+    data = [":data"],
+    deps = [":test-dragnn-deps"],
+)
+
 py_library(
     name = "test-dragnn-deps",
     deps = [

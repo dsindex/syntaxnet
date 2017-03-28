@@ -398,6 +398,12 @@ $ pwd
 /path/to/models/syntaxnet/work
 $ ./dragnn.sh -v -v
 ```
+- training parser with Sejong corpus
+```
+$ pwd
+/path/to/models/syntaxnet/work
+$ ./dragnn_sejong.sh -v -v
+```
 - running the baselines
 ```
 # https://github.com/tensorflow/models/tree/master/syntaxnet/g3doc/conll2017

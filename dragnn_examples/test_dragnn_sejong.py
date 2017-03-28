@@ -232,7 +232,7 @@ def main(unused_argv) :
     elif FLAGS.mode == 'test' :
         master_spec = build_master_spec()
         graph, builder, annotator = build_graph(master_spec)
-        text = '제주로 가는 비행기가 심한 비바람에 회항했다.'
+        text = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
         parsed_sentence = test(graph, builder, annotator, text)
         print parsed_sentence
     else :

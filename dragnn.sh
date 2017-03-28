@@ -163,7 +163,7 @@ function prepare_data {
 	local _src_corpus_dir=$1
 	local _data_dir=$2
 	mkdir -p ${_data_dir}
-	cp -rf ${src_corpus_dir}/*.conllu ${_data_dir}
+	cp -rf ${_src_corpus_dir}/*.conllu ${_data_dir}
 }
 
 function compile {

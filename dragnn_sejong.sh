@@ -189,7 +189,7 @@ function test {
 
 prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
 compile
-n_steps=10000
+n_steps=5000
 batch_size=64
 train ${n_steps} ${batch_size}
 test

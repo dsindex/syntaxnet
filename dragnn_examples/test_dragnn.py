@@ -33,25 +33,22 @@ flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_string('mode', 'train',
                     'Option for train or test')
-flags.DEFINE_string('resource_path', '', 'Path to constructed resources.')
-flags.DEFINE_string('training_corpus_path', '', 'Path to training data.')
-flags.DEFINE_string('tune_corpus_path', '', 'Path to tuning set data.')
+flags.DEFINE_string('resource_path', '',
+                    'Path to constructed resources.')
+flags.DEFINE_string('training_corpus_path', '',
+                    'Path to training data.')
+flags.DEFINE_string('tune_corpus_path', '',
+                    'Path to tuning set data.')
 flags.DEFINE_string('checkpoint_filename', '',
                     'Filename to save the best checkpoint to.')
 flags.DEFINE_string('tensorboard_dir', '',
                     'Directory for TensorBoard logs output.')
-flags.DEFINE_integer('n_steps', 20, 'Number of training steps')
-flags.DEFINE_integer('batch_size', 64, 'Batch size.')
-
-# global
-DATA_DIR = FLAGS.resource_path
-TRAINING_CORPUS_PATH = FLAGS.training_corpus_path
-DEV_CORPUS_PATH = FLAGS.tune_corpus_path
-CHECKPOINT_FILENAME = FLAGS.checkpoint_filename
-TENSORBOARD_DIR = FLAGS.tensorboard_dir
-N_STEPS = FLAGS.n_steps
-BATCH_SIZE = FLAGS.batch_size
-
+flags.DEFINE_integer('n_steps', 1000,
+                     'Number of training steps')
+flags.DEFINE_integer('batch_size', 64,
+                     'Batch size.')
+flags.DEFINE_integer('report_every', 200,
+                     'Report cost and training accuracy every this many steps.')
 
 def build_master_spec() :
     '''
@@ -63,7 +60,7 @@ def build_master_spec() :
     char2word.set_transition_system(name='char-shift-only', left_to_right='true')
     char2word.add_fixed_feature(name='chars', fml='char-input.text-char',
                                 embedding_dim=16)
-    char2word.fill_from_resources(DATA_DIR)
+    char2word.fill_from_resources(FLAGS.resource_path)
 
     # Lookahead LSTM reads right-to-left to represent the rightmost context of the
     # words. It gets word embeddings from the char model.
@@ -74,7 +71,7 @@ def build_master_spec() :
     lookahead.set_transition_system(name='shift-only', left_to_right='false')
     lookahead.add_link(source=char2word, fml='input.last-char-focus',
                        embedding_dim=64)
-    lookahead.fill_from_resources(DATA_DIR)
+    lookahead.fill_from_resources(FLAGS.resource_path)
     '''
 
     # Construct the 'lookahead' ComponentSpec. This is a simple right-to-left RNN
@@ -86,7 +83,7 @@ def build_master_spec() :
     lookahead.set_transition_system(name='shift-only', left_to_right='true')
     lookahead.add_fixed_feature(name='words', fml='input.word', embedding_dim=64)
     lookahead.add_rnn_link(embedding_dim=-1)
-    lookahead.fill_from_resources(DATA_DIR)
+    lookahead.fill_from_resources(FLAGS.resource_path)
 
     # Construct the tagger. This is a simple left-to-right LSTM sequence tagger.
     tagger = spec_builder.ComponentSpecBuilder('tagger')
@@ -95,7 +92,7 @@ def build_master_spec() :
         hidden_layer_sizes='256')
     tagger.set_transition_system(name='tagger')
     tagger.add_token_link(source=lookahead, fml='input.focus', embedding_dim=64)
-    tagger.fill_from_resources(DATA_DIR)
+    tagger.fill_from_resources(FLAGS.resource_path)
 
     # Construct the parser.
     parser = spec_builder.ComponentSpecBuilder('parser')
@@ -135,7 +132,7 @@ def build_master_spec() :
         source_translator='shift-reduce-step',  # maps token indices -> step
         embedding_dim=64)  # project down to 64 dims
 
-    parser.fill_from_resources(DATA_DIR)
+    parser.fill_from_resources(FLAGS.resource_path)
 
     master_spec = spec_pb2.MasterSpec()
     '''
@@ -182,19 +179,20 @@ def build_graph(master_spec) :
             return graph, builder, annotator
 
 def train(graph, builder, trainer, annotator) :
-    # Train on data for N_STEPS steps and evaluate.
+    # Train on data for FLAGS.n_steps steps and evaluate.
     with tf.Session(graph=graph) as sess:
         sess.run(tf.global_variables_initializer())
         training_corpus = ConllSentenceReader(
-            TRAINING_CORPUS_PATH, projectivize=True).corpus()
-        dev_corpus = ConllSentenceReader(DEV_CORPUS_PATH).corpus()
-        for step in xrange(N_STEPS):
-            trainer_lib.run_training_step(sess, trainer, training_corpus, batch_size=BATCH_SIZE)
-            tf.logging.warning('Step %d/%d', step + 1, N_STEPS)
-        parsed_dev_corpus = trainer_lib.annotate_dataset(sess, annotator, dev_corpus)
-        pos, uas, las = evaluation.calculate_parse_metrics(dev_corpus, parsed_dev_corpus)
-        tf.logging.warning('POS %.2f UAS %.2f LAS %.2f', pos, uas, las)
-        builder.saver.save(sess, CHECKPOINT_FILENAME)
+            FLAGS.training_corpus_path, projectivize=True).corpus()
+        dev_corpus = ConllSentenceReader(FLAGS.tune_corpus_path).corpus()[:2002]
+        for step in xrange(FLAGS.n_steps):
+            trainer_lib.run_training_step(sess, trainer, training_corpus, batch_size=FLAGS.batch_size)
+            tf.logging.warning('Step %d/%d', step + 1, FLAGS.n_steps)
+            if step % FLAGS.report_every == 0 :
+                parsed_dev_corpus = trainer_lib.annotate_dataset(sess, annotator, dev_corpus)
+                pos, uas, las = evaluation.calculate_parse_metrics(dev_corpus, parsed_dev_corpus)
+                tf.logging.warning('POS %.2f UAS %.2f LAS %.2f', pos, uas, las)
+                builder.saver.save(sess, FLAGS.checkpoint_filename)
 
 def test(graph, builder, annotator, text) :
     # Visualize the output of our mini-trained model on a test sentence.
@@ -204,7 +202,7 @@ def test(graph, builder, annotator, text) :
 
     with tf.Session(graph=graph) as sess:
         # Restore the model we just trained.
-        builder.saver.restore(sess, CHECKPOINT_FILENAME)
+        builder.saver.restore(sess, FLAGS.checkpoint_filename)
         annotations, traces = sess.run([annotator['annotations'], annotator['traces']],
                           feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
 
@@ -215,24 +213,30 @@ def test(graph, builder, annotator, text) :
     return parsed_sentence
 
 def main(unused_argv) :
+    import sys
+    if len(sys.argv) == 1 :
+        flags._global_parser.print_help()
+        sys.exit(0)
 
     logging.set_verbosity(logging.WARN)
 
     if FLAGS.mode == 'train' :
         # Some of the IO functions fail miserably if data is missing.
-        assert os.path.isfile(TRAINING_CORPUS_PATH), 'Could not find training corpus'
+        assert os.path.isfile(FLAGS.training_corpus_path), 'Could not find training corpus'
         # Constructs lexical resources for SyntaxNet in the given resource path, from
         # the training data.
-        lexicon.build_lexicon(DATA_DIR, TRAINING_CORPUS_PATH)
+        lexicon.build_lexicon(FLAGS.resource_path, FLAGS.training_corpus_path)
         master_spec = build_master_spec()
         graph, builder, trainer, annotator = build_graph(master_spec)
         train(graph, builder, trainer, annotator)
-    else :
+    elif FLAGS.mode == 'test' :
         master_spec = build_master_spec()
         graph, builder, annotator = build_graph(master_spec)
         text = 'this is an example for dragnn'
         parsed_sentence = test(graph, builder, annotator, text)
         print parsed_sentence
+    else :
+        flags._global_parser.print_help()
     
 if __name__ == '__main__':
     tf.app.run()

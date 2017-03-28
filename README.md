@@ -27,7 +27,7 @@ syntaxnet
 
 - test code for [syntaxnet](https://github.com/tensorflow/models/tree/master/syntaxnet)
   - training and test a model using UD corpus.
-  - training and test a Korean parsing model using the Sejong corpus.
+  - training and test a Korean parser model using the Sejong corpus.
   - exporting a trained model and serving(limited to the designated version of syntaxnet(old one))
   - training and test a model using dragnn
   - comparision to bist-parser

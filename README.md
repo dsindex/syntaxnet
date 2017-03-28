@@ -398,11 +398,10 @@ $ pwd
 /path/to/models/syntaxnet/work
 $ ./dragnn.sh -v -v
 ```
-- CoNLL parser trainer
+- running the baselines
 ```
-$ pwd
-/path/to/models/syntaxnet
-$ ./dragnn/conll2017/conll_parser_trainer.sh <train_corpus_path> <dev_corpus_path>
+# https://github.com/tensorflow/models/tree/master/syntaxnet/g3doc/conll2017
+# download conll2017.tar.gz
 ```
 - docker version
   - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)

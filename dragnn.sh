@@ -146,57 +146,84 @@ fi
 
 python=/usr/bin/python
 
-SRC_CORPUS_DIR=${CDIR}/UD_English
+# UD_English
+#SRC_CORPUS_DIR=${CDIR}/UD_English
+#DATA_DIR=${CDIR}/dragnn_examples/data
+#TRAIN_FILE=${DATA_DIR}/en-ud-train.conllu.conv
+#DEV_FILE=${DATA_DIR}/en-ud-dev.conllu.conv
+#CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
+
+# Sejong
+SRC_CORPUS_DIR=${CDIR}/sejong/wdir
 DATA_DIR=${CDIR}/dragnn_examples/data
-TRAIN_FILE=${DATA_DIR}/en-ud-train.conllu.conv
-DEV_FILE=${DATA_DIR}/en-ud-dev.conllu.conv
+TRAIN_FILE=${DATA_DIR}/deptree.txt.v3.training
+DEV_FILE=${DATA_DIR}/deptree.txt.v3.tuning
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
 function convert_corpus {
-	corpus_dir=$1
-	for corpus in $(ls ${corpus_dir}/*.conllu); do
+	local _corpus_dir=$1
+	for corpus in $(ls ${_corpus_dir}/*.conllu); do
 		${python} ${CDIR}/convert.py < ${corpus} > ${corpus}.conv
 	done
 }
 
 function prepare_data {
-	mkdir -p ${DATA_DIR}
-	cp -rf ${SRC_CORPUS_DIR}/*.conllu ${DATA_DIR}
-	convert_corpus ${DATA_DIR}
+	local _src_corpus_dir=$1
+	local _data_dir=$2
+	mkdir -p ${_data_dir}
+	cp -rf ${src_corpus_dir}/*.conllu ${_data_dir}
+}
+
+function prepare_sejong_data {
+	local _src_corpus_dir=$1
+	local _data_dir=$2
+	mkdir -p ${_data_dir}
+	cp -rf ${_src_corpus_dir}/deptree.txt.v3.training ${_data_dir}
+	cp -rf ${_src_corpus_dir}/deptree.txt.v3.tuning ${_data_dir}
 }
 
 function compile {
-	cp -rf ${CDIR}/dragnn_examples/BUILD ${PDIR}/examples/dragnn
-	cp -rf ${CDIR}/dragnn_examples/test_dragnn.py ${PDIR}/examples/dragnn
 	cd ${PDIR}
-	bazel build -c opt //examples/dragnn:test_dragnn
+	bazel build -c opt //work/dragnn_examples:test_dragnn
 }
 
 function train {
 	local _n_steps=$1
+	local _batch_size=$2
 	cd ${PDIR}
-	./bazel-bin/examples/dragnn/test_dragnn \
+	./bazel-bin/work/dragnn_examples/test_dragnn \
 		--mode=train \
 		--resource_path=${DATA_DIR} \
 		--training_corpus_path=${TRAIN_FILE} \
 		--tune_corpus_path=${DEV_FILE} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 		--n_steps=${_n_steps} \
-		--batch_size=64
+		--batch_size=${_batch_size}
 }
 
 function test {
 	cd ${PDIR}
-	./bazel-bin/examples/dragnn/test_dragnn \
+	./bazel-bin/work/dragnn_examples/test_dragnn \
 		--mode=test \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE}
 }
 
-prepare_data
+# UD_English
+#prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
+#convert_corpus ${DATA_DIR}
+#compile
+#n_steps=10000
+#batch_size=64
+#train ${n_steps} ${batch_size}
+#test
+
+# Sejong
+prepare_sejong_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
 compile
-n_steps=200
-train ${n_steps}
+n_steps=10000
+batch_size=64
+train ${n_steps} ${batch_size}
 test
 
 close_fd

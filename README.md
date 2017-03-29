@@ -398,16 +398,13 @@ $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
 $ pwd
 /path/to/models/syntaxnet/work
-$ ./dragnn.sh -v -v
+$ ./train_dragnn.sh -v -v
 ...
 WARNING:tensorflow:Step 4801/5000
 WARNING:tensorflow:POS 76.45 UAS 70.75 LAS 62.36
 ...
-
-i go to school
-2017-03-29 21:32:33.308402: I dragnn/core/ops/dragnn_op_kernels.cc:79] Creating new ComputeSessionPool in container handle: shared
-...
-2017-03-29 21:32:33.582237: I dragnn/core/compute_session_pool.cc:55] Destroying pool: total number of sessions created = 1
+$ ./test_dragnn.sh
+i love this one
 token {
   word: "i"
   start: -1
@@ -418,7 +415,7 @@ token {
   label: "nsubj"
 }
 token {
-  word: "go"
+  word: "love"
   start: -1
   end: -1
   tag: "VBP"
@@ -426,30 +423,29 @@ token {
   label: "root"
 }
 token {
-  word: "to"
+  word: "this"
   start: -1
   end: -1
   head: 3
-  tag: "TO"
-  category: "TO"
-  label: "mark"
+  tag: "DT"
+  category: "DT"
+  label: "det"
 }
 token {
-  word: "school"
+  word: "one"
   start: -1
   end: -1
   head: 1
-  tag: "VB"
-  category: "VB"
-  label: "xcomp"
+  tag: "CD"
+  category: "CD"
+  label: "obj"
 }
 ```
 - training parser with Sejong corpus
 ```
-# after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ pwd
 /path/to/models/syntaxnet/work
-$ ./dragnn_sejong.sh -v -v
+$ ./train_dragnn_sejong.sh -v -v
 ...
 WARNING:tensorflow:Step 6601/10000
 WARNING:tensorflow:POS 88.51 UAS 88.77 LAS 82.52
@@ -457,6 +453,9 @@ WARNING:tensorflow:POS 88.51 UAS 88.77 LAS 82.52
 WARNING:tensorflow:Step 7401/10000
 WARNING:tensorflow:POS 88.96 UAS 88.84 LAS 82.68
 ...
+# after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
+$ ./test_dragnn_sejong.sh
+
 ```
 - running the baselines
 ```

@@ -146,43 +146,12 @@ fi
 
 python=/usr/bin/python
 
-SRC_CORPUS_DIR=${CDIR}/UD_English
 DATA_DIR=${CDIR}/dragnn_examples/data
-TRAIN_FILE=${DATA_DIR}/en-ud-train.conllu.conv
-DEV_FILE=${DATA_DIR}/en-ud-dev.conllu.conv
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
-
-function convert_corpus {
-	local _corpus_dir=$1
-	for corpus in $(ls ${_corpus_dir}/*.conllu); do
-		${python} ${CDIR}/convert.py < ${corpus} > ${corpus}.conv
-	done
-}
-
-function prepare_data {
-	local _src_corpus_dir=$1
-	local _data_dir=$2
-	mkdir -p ${_data_dir}
-	cp -rf ${_src_corpus_dir}/*.conllu ${_data_dir}
-}
 
 function compile {
 	cd ${PDIR}
 	bazel build -c opt //work/dragnn_examples:test_dragnn
-}
-
-function train {
-	local _n_steps=$1
-	local _batch_size=$2
-	cd ${PDIR}
-	./bazel-bin/work/dragnn_examples/test_dragnn \
-		--mode=train \
-		--resource_path=${DATA_DIR} \
-		--training_corpus_path=${TRAIN_FILE} \
-		--tune_corpus_path=${DEV_FILE} \
-		--checkpoint_filename=${CHECKPOINT_FILE} \
-		--n_steps=${_n_steps} \
-		--batch_size=${_batch_size}
 }
 
 function test {
@@ -193,12 +162,7 @@ function test {
 		--checkpoint_filename=${CHECKPOINT_FILE}
 }
 
-prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
-convert_corpus ${DATA_DIR}
-compile
-n_steps=10000
-batch_size=64
-train ${n_steps} ${batch_size}
+#compile
 test
 
 close_fd

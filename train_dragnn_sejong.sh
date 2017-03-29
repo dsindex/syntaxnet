@@ -179,20 +179,11 @@ function train {
 		--batch_size=${_batch_size}
 }
 
-function test {
-	cd ${PDIR}
-	./bazel-bin/work/dragnn_examples/test_dragnn_sejong \
-		--mode=test \
-		--resource_path=${DATA_DIR} \
-		--checkpoint_filename=${CHECKPOINT_FILE}
-}
-
 prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
 compile
 n_steps=10000
 batch_size=64
 train ${n_steps} ${batch_size}
-test
 
 close_fd
 

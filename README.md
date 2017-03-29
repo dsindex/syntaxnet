@@ -409,6 +409,9 @@ $ ./dragnn_sejong.sh -v -v
 WARNING:tensorflow:Step 6601/10000
 WARNING:tensorflow:POS 88.51 UAS 88.77 LAS 82.52
 ...
+WARNING:tensorflow:Step 7401/10000
+WARNING:tensorflow:POS 88.96 UAS 88.84 LAS 82.68
+...
 ```
 - running the baselines
 ```

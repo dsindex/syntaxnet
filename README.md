@@ -405,6 +405,13 @@ $ ./dragnn.sh -v -v
 $ pwd
 /path/to/models/syntaxnet/work
 $ ./dragnn_sejong.sh -v -v
+...
+WARNING:tensorflow:Step 2801/10000
+WARNING:tensorflow:POS 82.02 UAS 87.20 LAS 80.27
+...
+WARNING:tensorflow:Step 3001/10000
+WARNING:tensorflow:POS 82.71 UAS 87.42 LAS 80.56
+...
 ```
 - running the baselines
 ```

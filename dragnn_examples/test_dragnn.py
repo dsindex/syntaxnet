@@ -226,15 +226,25 @@ def main(unused_argv) :
         # Constructs lexical resources for SyntaxNet in the given resource path, from
         # the training data.
         lexicon.build_lexicon(FLAGS.resource_path, FLAGS.training_corpus_path)
+        # build master spec and graph
         master_spec = build_master_spec()
         graph, builder, trainer, annotator = build_graph(master_spec)
         train(graph, builder, trainer, annotator)
     elif FLAGS.mode == 'test' :
+        # build master spec and graph
         master_spec = build_master_spec()
         graph, builder, annotator = build_graph(master_spec)
-        text = 'this is an example for dragnn'
-        parsed_sentence = test(graph, builder, annotator, text)
-        print parsed_sentence
+        startTime = time.time()
+        while 1 :
+            try : line = sys.stdin.readline()
+            except KeyboardInterrupt : break
+            if not line : break
+            line = line.strip()
+            if not line : continue
+            parsed_sentence = test(graph, builder, annotator, line)
+            print parsed_sentence
+        durationTime = time.time() - startTime
+        sys.stderr.write("duration time = %f\n" % durationTime)
     else :
         flags._global_parser.print_help()
     

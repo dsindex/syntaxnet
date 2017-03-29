@@ -226,15 +226,40 @@ def main(unused_argv) :
         # Constructs lexical resources for SyntaxNet in the given resource path, from
         # the training data.
         lexicon.build_lexicon(FLAGS.resource_path, FLAGS.training_corpus_path)
+        # build master spec and graph
         master_spec = build_master_spec()
         graph, builder, trainer, annotator = build_graph(master_spec)
         train(graph, builder, trainer, annotator)
     elif FLAGS.mode == 'test' :
+        # prepare korean morphological analyzer for segmentation
+        import konlpy.tag import Komoran
+        komoran = Komoran()
+        # build master spec and graph
         master_spec = build_master_spec()
         graph, builder, annotator = build_graph(master_spec)
-        text = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
-        parsed_sentence = test(graph, builder, annotator, text)
-        print parsed_sentence
+        startTime = time.time()
+        while 1 :
+            try : line = sys.stdin.readline()
+            except KeyboardInterrupt : break
+            if not line : break
+            line = line.strip()
+            if not line : continue
+            analyzed = komoran.pos(line)
+            tokenized = []
+            seq = 1
+            for morph, tag in analyzed :
+                '''
+                tp = [seq, morph, morph, tag, tag, '_', 0, '_', '_', '_']
+                print '\t'.join([str(e) for e in tp])
+                '''
+                tokenized.append(morph)
+                seq += 1
+            # ex) line = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
+            line = ' '.join(tokenized)
+            parsed_sentence = test(graph, builder, annotator, line)
+            print parsed_sentence
+        durationTime = time.time() - startTime
+        sys.stderr.write("duration time = %f\n" % durationTime)
     else :
         flags._global_parser.print_help()
     

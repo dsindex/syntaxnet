@@ -207,7 +207,6 @@ def test(graph, builder, annotator, text) :
                           feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
 
     #HTML(visualization.trace_html(traces[0]))
-
     parsed_sentence = sentence_pb2.Sentence.FromString(annotations[0])
     #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
     return parsed_sentence
@@ -241,8 +240,20 @@ def main(unused_argv) :
             if not line : break
             line = line.strip()
             if not line : continue
-            parsed_sentence = test(graph, builder, annotator, line)
-            print parsed_sentence
+            sentence = test(graph, builder, annotator, line)
+            f = sys.stdout
+            f.write('#' + line + '\n')
+            for i, token in enumerate(sentence.token) :
+                head = token.head + 1
+                f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
+                        i + 1,
+                        token.word.encode('utf-8'),
+                        token.word.encode('utf-8'),
+                        token.tag.encode('utf-8'),
+                        token.tag.encode('utf-8'),
+                        head,
+                        token.label.encode('utf-8')))
+            f.write('\n\n')
         durationTime = time.time() - startTime
         sys.stderr.write("duration time = %f\n" % durationTime)
     else :

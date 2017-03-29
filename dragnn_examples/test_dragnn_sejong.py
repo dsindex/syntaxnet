@@ -256,8 +256,20 @@ def main(unused_argv) :
                 seq += 1
             # ex) line = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
             line = ' '.join(tokenized)
-            parsed_sentence = test(graph, builder, annotator, line)
-            print parsed_sentence
+            sentence = test(graph, builder, annotator, line)
+            f = sys.stdout
+            f.write('#' + line + '\n')
+            for i, token in enumerate(sentence.token) :
+                head = token.head + 1
+                f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
+                        i + 1,
+                        token.word.encode('utf-8'),
+                        token.word.encode('utf-8'),
+                        token.tag.encode('utf-8'),
+                        token.tag.encode('utf-8'),
+                        head,
+                        token.label.encode('utf-8')))
+            f.write('\n\n')
         durationTime = time.time() - startTime
         sys.stderr.write("duration time = %f\n" % durationTime)
     else :

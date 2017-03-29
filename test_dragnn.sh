@@ -149,6 +149,8 @@ python=/usr/bin/python
 DATA_DIR=${CDIR}/dragnn_examples/data
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
+CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree
+
 function compile {
 	cd ${PDIR}
 	bazel build -c opt //work/dragnn_examples:test_dragnn
@@ -159,10 +161,12 @@ function test {
 	./bazel-bin/work/dragnn_examples/test_dragnn \
 		--mode=test \
 		--resource_path=${DATA_DIR} \
-		--checkpoint_filename=${CHECKPOINT_FILE}
+		--checkpoint_filename=${CHECKPOINT_FILE} \
+	| \
+	${CONLL2TREE} --alsologtostderr
 }
 
-#compile
+compile
 test
 
 close_fd

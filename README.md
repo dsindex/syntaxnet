@@ -398,53 +398,25 @@ $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
 $ pwd
 /path/to/models/syntaxnet/work
+
 $ ./train_dragnn.sh -v -v
 ...
 WARNING:tensorflow:Step 4801/5000
 WARNING:tensorflow:POS 76.45 UAS 70.75 LAS 62.36
 ...
-$ ./test_dragnn.sh
-i love this one
-token {
-  word: "i"
-  start: -1
-  end: -1
-  head: 1
-  tag: "PRP"
-  category: "PRP"
-  label: "nsubj"
-}
-token {
-  word: "love"
-  start: -1
-  end: -1
-  tag: "VBP"
-  category: "VBP"
-  label: "root"
-}
-token {
-  word: "this"
-  start: -1
-  end: -1
-  head: 3
-  tag: "DT"
-  category: "DT"
-  label: "det"
-}
-token {
-  word: "one"
-  start: -1
-  end: -1
-  head: 1
-  tag: "CD"
-  category: "CD"
-  label: "obj"
-}
+$ echo "i love this one" | ./test_dragnn.sh
+Input: i love this one
+Parse:
+love VBP root
+ +-- i PRP nsubj
+ +-- one CD obj
+     +-- this DT det
 ```
 - training parser with Sejong corpus
 ```
 $ pwd
 /path/to/models/syntaxnet/work
+
 $ ./train_dragnn_sejong.sh -v -v
 ...
 WARNING:tensorflow:Step 6601/10000
@@ -453,8 +425,9 @@ WARNING:tensorflow:POS 88.51 UAS 88.77 LAS 82.52
 WARNING:tensorflow:Step 7401/10000
 WARNING:tensorflow:POS 88.96 UAS 88.84 LAS 82.68
 ...
+
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
-$ ./test_dragnn_sejong.sh
+$ echo "제주로 가는 비행기가 심한 비바람에 회항했다." | ./test_dragnn_sejong.sh
 
 ```
 - running the baselines

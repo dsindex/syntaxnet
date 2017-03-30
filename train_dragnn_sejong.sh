@@ -101,7 +101,7 @@ if [ ${#} != 0 ]; then print_usage_and_exit 1; fi
 
 # current dir of this script
 CDIR=$(get_realpath $(dirname $(get_realpath ${BASH_SOURCE[0]})))
-PDIR=$(get_realpath $(dirname $(get_realpath -f ${BASH_SOURCE[0]}))/..)
+PDIR=$(get_realpath $(dirname $(get_realpath ${BASH_SOURCE[0]}))/..)
 
 # -----------------------------------------------------------------------------
 # functions

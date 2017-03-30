@@ -3,45 +3,28 @@
 set -o nounset
 set -o errexit
 
-# code from https://github.com/bazelbuild/bazel/blob/master/scripts/packages/bazel.sh
-function get_realpath() {
-    if [ "$(uname -s)" == "Darwin" ]; then
-        local queue="$1"
-        if [[ "${queue}" != /* ]] ; then
-            # Make sure we start with an absolute path.
-            queue="${PWD}/${queue}"
-        fi
-        local current=""
-        while [ -n "${queue}" ]; do
-            # Removing a trailing /.
-            queue="${queue#/}"
-            # Pull the first path segment off of queue.
-            local segment="${queue%%/*}"
-            # If this is the last segment.
-            if [[ "${queue}" != */* ]] ; then
-                segment="${queue}"
-                queue=""
-            else
-                # Remove that first segment.
-                queue="${queue#*/}"
-            fi
-            local link="${current}/${segment}"
-            if [ -h "${link}" ] ; then
-                link="$(readlink "${link}")"
-                queue="${link}/${queue}"
-                if [[ "${link}" == /* ]] ; then
-                    current=""
-                fi
-            else
-                current="${link}"
-            fi
-        done
+# code from http://stackoverflow.com/a/1116890
+function readlink()
+{
+    TARGET_FILE=$2
+    cd `dirname $TARGET_FILE`
+    TARGET_FILE=`basename $TARGET_FILE`
 
-        echo "${current}"
-    else
-        readlink -f "$1"
-    fi
+    # Iterate down a (possible) chain of symlinks
+    while [ -L "$TARGET_FILE" ]
+    do
+        TARGET_FILE=`readlink $TARGET_FILE`
+        cd `dirname $TARGET_FILE`
+        TARGET_FILE=`basename $TARGET_FILE`
+    done
+
+    # Compute the canonicalized name by finding the physical path
+    # for the directory we're in and appending the target file.
+    PHYS_DIR=`pwd -P`
+    RESULT=$PHYS_DIR/$TARGET_FILE
+    echo $RESULT
 }
+export -f readlink
 
 VERBOSE_MODE=0
 
@@ -100,8 +83,8 @@ fi
 if [ ${#} != 0 ]; then print_usage_and_exit 1; fi
 
 # current dir of this script
-CDIR=$(get_realpath $(dirname $(get_realpath ${BASH_SOURCE[0]})))
-PDIR=$(get_realpath $(dirname $(get_realpath -f ${BASH_SOURCE[0]}))/..)
+CDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]})))
+PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
 
 # -----------------------------------------------------------------------------
 # functions

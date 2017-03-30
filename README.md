@@ -427,7 +427,44 @@ WARNING:tensorflow:POS 89.05 UAS 88.87 LAS 82.72
 
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ echo "제주로 가는 비행기가 심한 비바람에 회항했다." | ./test_dragnn_sejong.sh
-
+INFO:tensorflow:Read 1 documents
+Input: 제주 로 가 는 비행기 가 심하 ㄴ 비바람 에 회항 하 았 다 .
+Parse:
+. SF VP
+ +-- 다 EF MOD
+     +-- 았 EP MOD
+         +-- 하 XSA MOD
+             +-- 회항 SN MOD
+                 +-- 가 JKS NP_SBJ
+                 |   +-- 비행기 NNG MOD
+                 |       +-- 는 ETM VP_MOD
+                 |           +-- 가 VV MOD
+                 |               +-- 로 JKB NP_AJT
+                 |                   +-- 제주 MAG MOD
+                 +-- 에 JKB NP_AJT
+                     +-- 비바람 NNG MOD
+                         +-- ㄴ SN MOD
+                             +-- 심하 VV NP
+# it seems that pos tagging results from the dragnn are somewhat incorrect.
+# so, i replace those to the results from the Komoran tagger.
+# you can modify 'test_dragnn_sejong.py' to use the tags from the dragnn.
+Input: 제주 로 가 는 비행기 가 심하 ㄴ 비바람 에 회항 하 았 다 .
+Parse:
+. SF VP
+ +-- 다 EF MOD
+     +-- 았 EP MOD
+         +-- 하 XSV MOD
+             +-- 회항 NNG MOD
+                 +-- 가 JKS NP_SBJ
+                 |   +-- 비행기 NNG MOD
+                 |       +-- 는 ETM VP_MOD
+                 |           +-- 가 VV MOD
+                 |               +-- 로 JKB NP_AJT
+                 |                   +-- 제주 NNG MOD
+                 +-- 에 JKB NP_AJT
+                     +-- 비바람 NNG MOD
+                         +-- ㄴ ETM MOD
+                             +-- 심하 VA NP
 ```
 - running the baselines
 ```

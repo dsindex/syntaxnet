@@ -167,14 +167,14 @@ function prepare_data {
 }
 
 function compile {
-	cd ${PDIR}
+	cd ..
 	bazel build -c opt //work/dragnn_examples:test_dragnn
 }
 
 function train {
 	local _n_steps=$1
 	local _batch_size=$2
-	cd ${PDIR}
+	cd ..
 	./bazel-bin/work/dragnn_examples/test_dragnn \
 		--mode=train \
 		--resource_path=${DATA_DIR} \

@@ -397,8 +397,9 @@ $ bazel build -c opt //examples/dragnn:tutorial_1
 - training tagger and parser with CoNLL corpus
 ```
 $ pwd
-/path/to/models/syntaxnet/work
-
+/path/to/models/syntaxnet
+$ bazel build -c opt //work/dragnn_examples:test_dragnn
+$ cd work
 $ ./train_dragnn.sh -v -v
 ...
 WARNING:tensorflow:Step 4801/5000
@@ -415,8 +416,9 @@ love VBP root
 - training parser with Sejong corpus
 ```
 $ pwd
-/path/to/models/syntaxnet/work
-
+/path/to/models/syntaxnet
+$ bazel build -c opt //work/dragnn_examples:test_dragnn_sejong
+$ cd work
 $ ./train_dragnn_sejong.sh -v -v
 ...
 WARNING:tensorflow:Step 7601/10000

@@ -166,16 +166,11 @@ function prepare_data {
 	cp -rf ${_src_corpus_dir}/*.conllu ${_data_dir}
 }
 
-function compile {
-	cd ..
-	bazel build -c opt //work/dragnn_examples:test_dragnn
-}
-
 function train {
 	local _n_steps=$1
 	local _batch_size=$2
-	cd ..
-	./bazel-bin/work/dragnn_examples/test_dragnn \
+	cd ${PDIR}
+	${PDIR}/bazel-bin/work/dragnn_examples/test_dragnn \
 		--mode=train \
 		--resource_path=${DATA_DIR} \
 		--training_corpus_path=${TRAIN_FILE} \
@@ -187,7 +182,6 @@ function train {
 
 prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
 convert_corpus ${DATA_DIR}
-compile
 n_steps=10000
 batch_size=64
 train ${n_steps} ${batch_size}

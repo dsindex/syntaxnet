@@ -149,16 +149,11 @@ python=/usr/bin/python
 DATA_DIR=${CDIR}/dragnn_examples/data
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
-CONLL2TREE=../bazel-bin/syntaxnet/conll2tree
-
-function compile {
-	cd ..
-	bazel build -c opt //work/dragnn_examples:test_dragnn_sejong
-}
+CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree
 
 function test {
-	cd ..
-	./bazel-bin/work/dragnn_examples/test_dragnn_sejong \
+	cd ${PDIR}
+	${PDIR}/bazel-bin/work/dragnn_examples/test_dragnn_sejong \
 		--mode=test \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE}
@@ -166,7 +161,6 @@ function test {
 	${CONLL2TREE} --alsologtostderr
 }
 
-compile
 test
 
 close_fd

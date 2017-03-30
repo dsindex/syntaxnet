@@ -232,7 +232,7 @@ def main(unused_argv) :
         train(graph, builder, trainer, annotator)
     elif FLAGS.mode == 'test' :
         # prepare korean morphological analyzer for segmentation
-        import konlpy.tag import Komoran
+        from konlpy.tag import Komoran
         komoran = Komoran()
         # build master spec and graph
         master_spec = build_master_spec()

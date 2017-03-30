@@ -267,8 +267,8 @@ def main(unused_argv) :
                         i + 1,
                         token.word.encode('utf-8'),
                         token.word.encode('utf-8'),
-                        token.tag.encode('utf-8'),
-                        token.tag.encode('utf-8'),
+                        analyzed[i][1].encode('utf-8'),
+                        analyzed[i][1].encode('utf-8'),
                         head,
                         token.label.encode('utf-8')))
             f.write('\n\n')

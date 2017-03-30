@@ -419,11 +419,8 @@ $ pwd
 
 $ ./train_dragnn_sejong.sh -v -v
 ...
-WARNING:tensorflow:Step 6601/10000
-WARNING:tensorflow:POS 88.51 UAS 88.77 LAS 82.52
-...
-WARNING:tensorflow:Step 7401/10000
-WARNING:tensorflow:POS 88.96 UAS 88.84 LAS 82.68
+WARNING:tensorflow:Step 7601/10000
+WARNING:tensorflow:POS 89.05 UAS 88.87 LAS 82.72
 ...
 
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )

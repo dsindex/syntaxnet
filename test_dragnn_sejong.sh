@@ -156,7 +156,7 @@ function test {
 	${PDIR}/bazel-bin/work/dragnn_examples/test_dragnn_sejong \
 		--mode=test \
 		--resource_path=${DATA_DIR} \
-		--checkpoint_filename=${CHECKPOINT_FILE}
+		--checkpoint_filename=${CHECKPOINT_FILE} \
 	| \
 	${CONLL2TREE} --alsologtostderr
 }

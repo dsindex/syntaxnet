@@ -246,7 +246,7 @@ def main(unused_argv) :
             if not line : break
             line = line.strip()
             if not line : continue
-            analyzed = komoran.pos(line)
+            analyzed = komoran.pos(line.decode('utf-8'))
             tokenized = []
             seq = 1
             for morph, tag in analyzed :
@@ -260,7 +260,7 @@ def main(unused_argv) :
             line = ' '.join(tokenized)
             sentence = test(graph, builder, annotator, line)
             f = sys.stdout
-            f.write('#' + line + '\n')
+            f.write('#' + line.encode('utf-8') + '\n')
             for i, token in enumerate(sentence.token) :
                 head = token.head + 1
                 f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(

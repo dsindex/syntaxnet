@@ -398,7 +398,8 @@ $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
 $ pwd
 /path/to/models/syntaxnet
-$ bazel build -c opt //work/dragnn_examples:test_dragnn
+$ bazel build -c opt //work/dragnn_examples:train_dragnn
+$ bazel build -c opt //work/dragnn_examples:inference_dragnn
 $ cd work
 $ ./train_dragnn.sh -v -v
 ...
@@ -417,7 +418,7 @@ love VBP root
 ```
 $ pwd
 /path/to/models/syntaxnet
-$ bazel build -c opt //work/dragnn_examples:train_dragnn_sejong
+$ bazel build -c opt //work/dragnn_examples:train_dragnn
 $ bazel build -c opt //work/dragnn_examples:inference_dragnn_sejong
 $ cd work
 # to prepare corpus, please refer to `training parser from Sejong treebank corpus` section.
@@ -455,7 +456,7 @@ Parse:
                              +-- 심하 VV NP
 # it seems that pos tagging results from the dragnn are somewhat incorrect.
 # so, i replace those to the results from the Komoran tagger.
-# you can modify 'test_dragnn_sejong.py' to use the tags from the dragnn.
+# you can modify 'inference_dragnn_sejong.py' to use the tags from the dragnn.
 Input: 제주 로 가 는 비행기 가 심하 ㄴ 비바람 에 회항 하 았 다 .
 Parse:
 . SF VP

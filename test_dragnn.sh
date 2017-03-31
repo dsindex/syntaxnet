@@ -134,22 +134,15 @@ CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
 CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree
 
-function compile {
-	cd ${PDIR}
-	bazel build -c opt //work/dragnn_examples:test_dragnn
-}
-
 function test {
 	cd ${PDIR}
-	${PDIR}/bazel-bin/work/dragnn_examples/test_dragnn \
-		--mode=test \
+	${PDIR}/bazel-bin/work/dragnn_examples/inference_dragnn \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 	| \
 	${CONLL2TREE} --alsologtostderr
 }
 
-#compile
 test
 
 close_fd

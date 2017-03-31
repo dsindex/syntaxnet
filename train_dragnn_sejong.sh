@@ -164,7 +164,7 @@ function train {
 	local _n_steps=$1
 	local _batch_size=$2
 	cd ${PDIR}
-	${PDIR}/bazel-bin/work/dragnn_examples/train_dragnn_sejong \
+	${PDIR}/bazel-bin/work/dragnn_examples/train_dragnn \
 		--resource_path=${DATA_DIR} \
 		--training_corpus_path=${TRAIN_FILE} \
 		--tune_corpus_path=${DEV_FILE} \

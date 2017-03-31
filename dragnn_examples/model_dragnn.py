@@ -125,6 +125,6 @@ def build_graph(master_spec) :
         trainers = [
             builder.add_training_from_config(target) for target in component_targets
         ]
-        annotator = builder.add_annotation()
+        annotator = builder.add_annotation(enable_tracing=True)
         builder.add_saver()
         return graph, builder, trainers, annotator

@@ -474,12 +474,13 @@ Parse:
                          +-- ㄴ ETM MOD
                              +-- 심하 VA NP
 ```
-- running the baselines
+- web api using tornado
 ```
-# https://github.com/tensorflow/models/tree/master/syntaxnet/g3doc/conll2017
-# download conll2017.tar.gz
+$ pwd
+/path/to/models/syntaxnet
+$ bazel build -c opt //work/dragnn_examples:dragnn_dm
+$ cd work
+$ 
 ```
-- docker version
-  - [dragnn/syntaxnet docker](https://hub.docker.com/r/tensorflow/syntaxnet/)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

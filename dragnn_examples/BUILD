@@ -1,18 +1,18 @@
 py_binary(
-    name = "test_dragnn",
-    srcs = ["test_dragnn.py"],
+    name = "train_dragnn",
+    srcs = ["train_dragnn.py", "model_dragnn.py"],
     deps = [":dragnn-deps"],
 )
 
 py_binary(
-    name = "train_dragnn_sejong",
-    srcs = ["train_dragnn_sejong.py", "model_dragnn_sejong.py"],
+    name = "inference_dragnn",
+    srcs = ["inference_dragnn.py", "model_dragnn.py"],
     deps = [":dragnn-deps"],
 )
 
 py_binary(
     name = "inference_dragnn_sejong",
-    srcs = ["inference_dragnn_sejong.py", "model_dragnn_sejong.py"],
+    srcs = ["inference_dragnn_sejong.py", "model_dragnn.py"],
     deps = [":dragnn-deps"],
 )
 

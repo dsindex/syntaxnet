@@ -10,7 +10,7 @@ import tensorflow as tf
 #from IPython.display import HTML
 from tensorflow.python.platform import tf_logging as logging
 
-import model_dragnn_sejong as model
+import model_dragnn as model
 
 # for train
 from syntaxnet import load_parser_ops  # This loads the actual op definitions

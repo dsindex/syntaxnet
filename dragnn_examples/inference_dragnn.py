@@ -51,9 +51,6 @@ def main(unused_argv) :
 
     logging.set_verbosity(logging.WARN)
 
-    # prepare korean morphological analyzer for segmentation
-    from konlpy.tag import Komoran
-    komoran = Komoran()
     # build master spec and graph
     master_spec = model.build_master_spec(FLAGS)
     graph, builder, annotator = model.build_graph(master_spec, mode='inference')
@@ -64,18 +61,6 @@ def main(unused_argv) :
         if not line : break
         line = line.strip()
         if not line : continue
-        analyzed = komoran.pos(line.decode('utf-8'))
-        tokenized = []
-        seq = 1
-        for morph, tag in analyzed :
-            '''
-            tp = [seq, morph, morph, tag, tag, '_', 0, '_', '_', '_']
-            print '\t'.join([str(e) for e in tp])
-            '''
-            tokenized.append(morph)
-            seq += 1
-        # ex) line = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
-        line = ' '.join(tokenized)
         sentence = inference(graph, builder, annotator, line)
         f = sys.stdout
         f.write('#' + line.encode('utf-8') + '\n')
@@ -85,8 +70,8 @@ def main(unused_argv) :
                     i + 1,
                     token.word.encode('utf-8'),
                     token.word.encode('utf-8'),
-                    analyzed[i][1].encode('utf-8'),
-                    analyzed[i][1].encode('utf-8'),
+                    token.tag.encode('utf-8'),
+                    token.tag.encode('utf-8'),
                     head,
                     token.label.encode('utf-8')))
         f.write('\n\n')

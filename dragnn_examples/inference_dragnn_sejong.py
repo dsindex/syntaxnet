@@ -12,9 +12,11 @@ from tensorflow.python.platform import tf_logging as logging
 import model_dragnn_sejong as model
 
 # for inference
-from syntaxnet import sentence_pb2
+from syntaxnet import load_parser_ops  # This loads the actual op definitions
+from dragnn.python import load_dragnn_cc_impl
 from dragnn.python import render_parse_tree_graphviz
 from dragnn.python import visualization
+from syntaxnet import sentence_pb2
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS

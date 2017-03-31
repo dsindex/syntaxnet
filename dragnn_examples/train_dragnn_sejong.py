@@ -12,6 +12,8 @@ from tensorflow.python.platform import tf_logging as logging
 import model_dragnn_sejong as model
 
 # for train
+from syntaxnet import load_parser_ops  # This loads the actual op definitions
+from dragnn.python import load_dragnn_cc_impl
 from dragnn.python.sentence_io import ConllSentenceReader
 from dragnn.python import evaluation
 from dragnn.python import lexicon

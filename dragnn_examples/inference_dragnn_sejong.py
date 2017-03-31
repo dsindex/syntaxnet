@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*-
+import sys
 import os
 import os.path
 import random
@@ -44,7 +45,6 @@ def inference(graph, builder, annotator, text) :
     return parsed_sentence
 
 def main(unused_argv) :
-    import sys
     if len(sys.argv) == 1 :
         flags._global_parser.print_help()
         sys.exit(0)

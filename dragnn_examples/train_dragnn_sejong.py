@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*-
+import sys
 import os
 import os.path
 import random
@@ -55,7 +56,6 @@ def train(graph, builder, trainer, annotator) :
                 builder.saver.save(sess, FLAGS.checkpoint_filename)
 
 def main(unused_argv) :
-    import sys
     if len(sys.argv) == 1 :
         flags._global_parser.print_help()
         sys.exit(0)

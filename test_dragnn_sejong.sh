@@ -146,7 +146,7 @@ fi
 
 python=/usr/bin/python
 
-DATA_DIR=${CDIR}/dragnn_examples/data
+DATA_DIR=${CDIR}/dragnn_examples/data_sejong
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
 CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree

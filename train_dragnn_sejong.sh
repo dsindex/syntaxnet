@@ -147,7 +147,7 @@ fi
 python=/usr/bin/python
 
 SRC_CORPUS_DIR=${CDIR}/sejong/wdir
-DATA_DIR=${CDIR}/dragnn_examples/data
+DATA_DIR=${CDIR}/dragnn_examples/data_sejong
 TRAIN_FILE=${DATA_DIR}/deptree.txt.v3.training
 DEV_FILE=${DATA_DIR}/deptree.txt.v3.tuning
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model

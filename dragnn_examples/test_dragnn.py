@@ -196,7 +196,7 @@ def train(graph, builder, trainer, annotator) :
                 tf.logging.warning('POS %.2f UAS %.2f LAS %.2f', pos, uas, las)
                 builder.saver.save(sess, FLAGS.checkpoint_filename)
 
-def test(graph, builder, annotator, text) :
+def inference(graph, builder, annotator, text) :
     # Visualize the output of our mini-trained model on a test sentence.
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()
@@ -242,7 +242,7 @@ def main(unused_argv) :
             if not line : break
             line = line.strip()
             if not line : continue
-            sentence = test(graph, builder, annotator, line)
+            sentence = inference(graph, builder, annotator, line)
             f = sys.stdout
             f.write('#' + line + '\n')
             for i, token in enumerate(sentence.token) :

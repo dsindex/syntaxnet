@@ -25,7 +25,7 @@ flags.DEFINE_string('resource_path', '',
 flags.DEFINE_string('checkpoint_filename', '',
                     'Filename to save the best checkpoint to.')
 
-def test(graph, builder, annotator, text) :
+def inference(graph, builder, annotator, text) :
     # Visualize the output of our mini-trained model on a test sentence.
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()
@@ -76,7 +76,7 @@ def main(unused_argv) :
             seq += 1
         # ex) line = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
         line = ' '.join(tokenized)
-        sentence = test(graph, builder, annotator, line)
+        sentence = inference(graph, builder, annotator, line)
         f = sys.stdout
         f.write('#' + line.encode('utf-8') + '\n')
         for i, token in enumerate(sentence.token) :

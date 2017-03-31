@@ -417,7 +417,8 @@ love VBP root
 ```
 $ pwd
 /path/to/models/syntaxnet
-$ bazel build -c opt //work/dragnn_examples:test_dragnn_sejong
+$ bazel build -c opt //work/dragnn_examples:train_dragnn_sejong
+$ bazel build -c opt //work/dragnn_examples:inference_dragnn_sejong
 $ cd work
 # to prepare corpus, please refer to `training parser from Sejong treebank corpus` section.
 $ ./train_dragnn_sejong.sh -v -v

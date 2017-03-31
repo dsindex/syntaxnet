@@ -9,7 +9,7 @@ import tensorflow as tf
 #from IPython.display import HTML
 from tensorflow.python.platform import tf_logging as logging
 
-import model_drgann_sejong as model
+import model_dragnn_sejong as model
 
 # for inference
 from syntaxnet import sentence_pb2

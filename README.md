@@ -425,6 +425,12 @@ $ ./train_dragnn_sejong.sh -v -v
 WARNING:tensorflow:Step 7601/10000
 WARNING:tensorflow:POS 89.05 UAS 88.87 LAS 82.72
 ...
+WARNING:tensorflow:Step 8401/10000
+WARNING:tensorflow:POS 89.35 UAS 89.06 LAS 82.90
+...
+WARNING:tensorflow:Step 9801/10000
+WARNING:tensorflow:POS 89.80 UAS 89.25 LAS 83.06
+...
 
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ echo "제주로 가는 비행기가 심한 비바람에 회항했다." | ./test_dragnn_sejong.sh

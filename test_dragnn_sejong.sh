@@ -154,6 +154,7 @@ CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree
 function test {
 	cd ${PDIR}
 	${PDIR}/bazel-bin/work/dragnn_examples/inference_dragnn_sejong \
+                --dragnn_spec=${DATA_DIR}/parser_spec.textproto \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 	| \

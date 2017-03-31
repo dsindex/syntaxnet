@@ -164,10 +164,17 @@ function train {
 	local _n_steps=$1
 	local _batch_size=$2
 	cd ${PDIR}
+	${PDIR}/bazel-bin/work/dragnn_examples/write_master_spec \
+                --spec_file=${DATA_DIR}/parser_spec.textproto
+
 	${PDIR}/bazel-bin/work/dragnn_examples/train_dragnn \
+                --logtostderr \
+                --compute_lexicon \
+                --dragnn_spec=${DATA_DIR}/parser_spec.textproto \
 		--resource_path=${DATA_DIR} \
 		--training_corpus_path=${TRAIN_FILE} \
 		--tune_corpus_path=${DEV_FILE} \
+                --tensorboard_dir=${DATA_DIR}/tensorboard \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 		--n_steps=${_n_steps} \
 		--batch_size=${_batch_size}

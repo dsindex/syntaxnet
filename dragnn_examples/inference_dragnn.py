@@ -7,20 +7,23 @@ import random
 import time
 import tensorflow as tf
 
-#from IPython.display import HTML
-from tensorflow.python.platform import tf_logging as logging
-
 import model_dragnn as model
 
 # for inference
 from syntaxnet import load_parser_ops  # This loads the actual op definitions
+from syntaxnet.util import check
 from dragnn.python import load_dragnn_cc_impl
 from dragnn.python import render_parse_tree_graphviz
 from dragnn.python import visualization
 from syntaxnet import sentence_pb2
 
+#from IPython.display import HTML
+from tensorflow.python.platform import tf_logging as logging
+
 flags = tf.app.flags
 FLAGS = flags.FLAGS
+flags.DEFINE_string('dragnn_spec', '', 
+                    'Path to the spec defining the model.')
 flags.DEFINE_string('resource_path', '',
                     'Path to constructed resources.')
 flags.DEFINE_string('checkpoint_filename', '',
@@ -50,10 +53,13 @@ def main(unused_argv) :
         sys.exit(0)
 
     logging.set_verbosity(logging.WARN)
+    check.IsTrue(FLAGS.dragnn_spec)
+    check.IsTrue(FLAGS.resource_path)
+    check.IsTrue(FLAGS.checkpoint_filename)
 
     # build master spec and graph
-    master_spec = model.build_master_spec(FLAGS)
-    graph, builder, annotator = model.build_graph(master_spec, mode='inference')
+    master_spec = model.build_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
+    graph, builder, _, annotator = model.build_graph(master_spec)
     startTime = time.time()
     while 1 :
         try : line = sys.stdin.readline()

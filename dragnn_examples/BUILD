@@ -1,4 +1,10 @@
 py_binary(
+    name = "write_master_spec",
+    srcs = ["write_master_spec.py", "model_dragnn.py"],
+    deps = [":dragnn-deps"],
+)
+
+py_binary(
     name = "train_dragnn",
     srcs = ["train_dragnn.py", "model_dragnn.py"],
     deps = [":dragnn-deps"],

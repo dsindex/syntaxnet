@@ -396,16 +396,20 @@ $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
 - training tagger and parser with CoNLL corpus
 ```
+# compile
 $ pwd
 /path/to/models/syntaxnet
+$ bazel build -c opt //work/dragnn_examples:write_master_spec
 $ bazel build -c opt //work/dragnn_examples:train_dragnn
 $ bazel build -c opt //work/dragnn_examples:inference_dragnn
+# training
 $ cd work
 $ ./train_dragnn.sh -v -v
 ...
 WARNING:tensorflow:Step 4801/5000
 WARNING:tensorflow:POS 76.45 UAS 70.75 LAS 62.36
 ...
+# test
 $ echo "i love this one" | ./test_dragnn.sh
 Input: i love this one
 Parse:
@@ -416,10 +420,12 @@ love VBP root
 ```
 - training parser with Sejong corpus
 ```
+# compile
 $ pwd
 /path/to/models/syntaxnet
 $ bazel build -c opt //work/dragnn_examples:train_dragnn
 $ bazel build -c opt //work/dragnn_examples:inference_dragnn_sejong
+# training
 $ cd work
 # to prepare corpus, please refer to `training parser from Sejong treebank corpus` section.
 $ ./train_dragnn_sejong.sh -v -v
@@ -433,7 +439,7 @@ WARNING:tensorflow:POS 89.35 UAS 89.06 LAS 82.90
 WARNING:tensorflow:Step 9801/10000
 WARNING:tensorflow:POS 89.80 UAS 89.25 LAS 83.06
 ...
-
+# test
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )
 $ echo "제주로 가는 비행기가 심한 비바람에 회항했다." | ./test_dragnn_sejong.sh
 INFO:tensorflow:Read 1 documents

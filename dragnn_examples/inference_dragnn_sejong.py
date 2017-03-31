@@ -51,13 +51,12 @@ def main(unused_argv) :
 
     logging.set_verbosity(logging.WARN)
 
-    FLAGS.mode = 'inference'
     # prepare korean morphological analyzer for segmentation
     from konlpy.tag import Komoran
     komoran = Komoran()
     # build master spec and graph
     master_spec = model.build_master_spec(FLAGS)
-    graph, builder, annotator = model.build_graph(FLAGS, master_spec)
+    graph, builder, annotator = model.build_graph(master_spec, mode='inference')
     startTime = time.time()
     while 1 :
         try : line = sys.stdin.readline()

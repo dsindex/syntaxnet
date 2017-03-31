@@ -62,7 +62,6 @@ def main(unused_argv) :
 
     logging.set_verbosity(logging.WARN)
 
-    FLAGS.model = 'train'
     # Some of the IO functions fail miserably if data is missing.
     assert os.path.isfile(FLAGS.training_corpus_path), 'Could not find training corpus'
     # Constructs lexical resources for SyntaxNet in the given resource path, from
@@ -70,7 +69,7 @@ def main(unused_argv) :
     lexicon.build_lexicon(FLAGS.resource_path, FLAGS.training_corpus_path)
     # build master spec and graph
     master_spec = model.build_master_spec(FLAGS)
-    graph, builder, trainer, annotator = model.build_graph(FLAGS, master_spec)
+    graph, builder, trainer, annotator = model.build_graph(master_spec, mode='train')
     train(graph, builder, trainer, annotator)
     
 if __name__ == '__main__':

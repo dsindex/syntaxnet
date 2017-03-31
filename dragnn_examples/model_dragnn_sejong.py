@@ -105,7 +105,7 @@ def build_master_spec(FLAGS) :
   
     return master_spec
 
-def build_graph(FLAGS, master_spec) :
+def build_graph(master_spec, mode='train') :
 
     # Build the TensorFlow graph based on the DRAGNN network spec.
     graph = tf.Graph()
@@ -118,7 +118,7 @@ def build_graph(FLAGS, master_spec) :
             use_moving_average=True,
             seed=1)
         builder = graph_builder.MasterBuilder(master_spec, hyperparam_config)
-        if FLAGS.mode == 'train' :
+        if mode == 'train' :
             '''
             target = spec_pb2.TrainTarget(
                 name='all',

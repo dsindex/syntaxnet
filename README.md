@@ -423,6 +423,7 @@ love VBP root
 # compile
 $ pwd
 /path/to/models/syntaxnet
+$ bazel build -c opt //work/dragnn_examples:write_master_spec
 $ bazel build -c opt //work/dragnn_examples:train_dragnn
 $ bazel build -c opt //work/dragnn_examples:inference_dragnn_sejong
 # training

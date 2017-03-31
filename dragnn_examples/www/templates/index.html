@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block pagetitle%}
+<div class="page-header">
+    <h1></h1>
+</div>
+{% end %}
+
+{% block content %}
+<form id="docForm" class="form-horizontal" role="form">
+	<div class="form-group">
+		<textarea class="form-control" name="content" cols="100" rows="10" placeholder="">
+		</textarea>
+  </div>
+  <div class="form-group">
+    <button id="btnSubmit" type="button" class="btn btn-primary">RUN</button>
+  </div>
+</form>
+
+<hr>
+
+<form id="notUsedForm" class="form-horizontal" role="form">
+<div class="form-group">
+  <img id="graph" src="">
+  <table id="record_table" class="table table-hover table-list"></table>
+  <textarea class="form-control" id="info" cols="100" rows="2" value="" placeholder="<debug info>"></textarea>
+</div>
+</form>
+{%end%}

@@ -58,7 +58,7 @@ def main(unused_argv) :
     check.IsTrue(FLAGS.checkpoint_filename)
 
     # build master spec and graph
-    master_spec = model.build_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
+    master_spec = model.load_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
     graph, builder, _, annotator = model.build_graph(master_spec)
     startTime = time.time()
     while 1 :

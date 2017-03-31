@@ -16,6 +16,36 @@ py_binary(
     deps = [":dragnn-deps"],
 )
 
+py_binary(
+    name = "dragnn_dm",
+    srcs = [
+        "www/dragnn_dm.py",
+        "www/handlers/base.py",
+        "www/handlers/index.py",
+    ],
+    data = [
+        ":log",
+        ":static",
+        ":templates"
+    ],
+    deps = [":dragnn-deps"],
+)
+
+filegroup(
+    name = "log",
+    data = glob(["www/log/*"]),
+)
+
+filegroup(
+    name = "static",
+    data = glob(["www/static/*/*"]),
+)
+
+filegroup(
+    name = "templates",
+    data = glob(["www/templates/*"]),
+)
+
 py_library(
     name = "dragnn-deps",
     deps = [

@@ -122,7 +122,7 @@ class DragnnHandler(BaseHandler):
 
 		self.finish()
 
-class SparserTestHandler(BaseHandler):
+class DragnnTestHandler(BaseHandler):
 	def post(self):
 		try :
 			content = self.get_argument('content', "", True)

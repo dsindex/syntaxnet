@@ -34,7 +34,6 @@ def inference(sess, graph, builder, annotator, text) :
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()
     sentence.token.extend(tokens)
-
     annotations, traces = sess.run([annotator['annotations'], annotator['traces']],
                       feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
 
@@ -59,6 +58,8 @@ def main(unused_argv) :
     graph, builder, _, annotator = model.build_graph(master_spec)
     # create session and restore model
     sess = tf.Session(graph=graph)
+    # Make sure to re-initialize all underlying state.
+    sess.run(tf.global_variables_initializer())
     builder.saver.restore(sess, FLAGS.checkpoint_filename)
     startTime = time.time()
     while 1 :

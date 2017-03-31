@@ -62,6 +62,8 @@ def main(unused_argv) :
     graph, builder, _, annotator = model.build_graph(master_spec)
     # create session and restore model
     sess = tf.Session(graph=graph)
+    # Make sure to re-initialize all underlying state.
+    sess.run(tf.global_variables_initializer())
     builder.saver.restore(sess, FLAGS.checkpoint_filename)
     startTime = time.time()
     while 1 :

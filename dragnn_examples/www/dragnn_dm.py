@@ -21,8 +21,10 @@ import tornado.autoreload as autoreload
 from tornado.options import define, options
 from handlers.index import IndexHandler, HCheckHandler, DragnnHandler, DragnnTestHandler
 
-sys.path.append(os.path.abspath('.'))
-
+# dragnn
+import tensorflow as tf
+sys.path.append(os.path.abspath('../'))
+import model_dragnn as model
 
 define('port', default=8897, help='run on the given port', type=int)
 define('debug', default=True, help='run on debug mode', type=bool)

@@ -484,16 +484,16 @@ Parse:
 ```
 - web api using tornado
   - how to run
-```
-# compile
-$ pwd
-/path/to/models/syntaxnet
-$ bazel build -c opt //work/dragnn_examples:dragnn_dm
-# start tornado web api
-$ cd work/dragnn_examples/www
-$ ./start.sh 0 0 -v -v
-# http://hostip:8897/dragnn?q=i love it
-```
+  ```
+  # compile
+  $ pwd
+  /path/to/models/syntaxnet
+  $ bazel build -c opt //work/dragnn_examples:dragnn_dm
+  # start tornado web api
+  $ cd work/dragnn_examples/www
+  $ ./start.sh 0 0 -v -v
+  # http://hostip:8897/dragnn?q=i love it
+  ```
   - [output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
   - [view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
 

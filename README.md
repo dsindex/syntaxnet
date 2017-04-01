@@ -490,7 +490,7 @@ $ pwd
 $ bazel build -c opt //work/dragnn_examples:dragnn_dm
 # start tornado web api
 $ cd work/dragnn_examples/www
-$ ./start.sh 
+$ ./start.sh 0 0 -v -v
 # http://hostip:8897/dragnn?q=hello
 ```
 

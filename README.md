@@ -483,6 +483,7 @@ Parse:
                              +-- 심하 VA NP
 ```
 - web api using tornado
+  - how to run
 ```
 # compile
 $ pwd
@@ -493,6 +494,7 @@ $ cd work/dragnn_examples/www
 $ ./start.sh 0 0 -v -v
 # http://hostip:8897/dragnn?q=i love it
 ```
-  - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
+  - [output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
+  - [view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

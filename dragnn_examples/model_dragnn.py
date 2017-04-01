@@ -16,6 +16,7 @@ from google.protobuf import text_format
 from tensorflow.python.platform import tf_logging as logging
 
 def build_master_spec() :
+    '''
     # Left-to-right, character-based LSTM.
     char2word = spec_builder.ComponentSpecBuilder('char_lstm')
     char2word.set_network_unit(
@@ -34,6 +35,16 @@ def build_master_spec() :
     lookahead.set_transition_system(name='shift-only', left_to_right='false')
     lookahead.add_link(source=char2word, fml='input.last-char-focus',
                        embedding_dim=64)
+    '''
+    # Construct the 'lookahead' ComponentSpec. This is a simple right-to-left RNN
+    # sequence model, which encodes the context to the right of each token. It has
+    # no loss except for the downstream components.
+    lookahead = spec_builder.ComponentSpecBuilder('lookahead')
+    lookahead.set_network_unit(
+        name='FeedForwardNetwork', hidden_layer_sizes='256')
+    lookahead.set_transition_system(name='shift-only', left_to_right='true')
+    lookahead.add_fixed_feature(name='words', fml='input.word', embedding_dim=64)
+    lookahead.add_rnn_link(embedding_dim=-1)
 
     # Construct the tagger. This is a simple left-to-right LSTM sequence tagger.
     tagger = spec_builder.ComponentSpecBuilder('tagger')
@@ -82,9 +93,20 @@ def build_master_spec() :
         embedding_dim=64)  # project down to 64 dims
 
     master_spec = spec_pb2.MasterSpec()
+    '''
     master_spec.component.extend(
         [char2word.spec, lookahead.spec, tagger.spec, parser.spec])
+    '''
+    master_spec.component.extend(
+        [lookahead.spec, tagger.spec, parser.spec])
     #HTML(render_spec_with_graphviz.master_spec_graph(master_spec))
+    return master_spec
+
+def build_complete_master_spec(resource_path) :
+    tf.logging.info('Building MasterSpec...')
+    master_spec = build_master_spec()
+    spec_builder.complete_master_spec(master_spec, None, resource_path)
+    logging.info('Constructed master spec: %s', str(master_spec))
     return master_spec
 
 def write_master_spec(master_spec, spec_file) :
@@ -104,14 +126,14 @@ def build_train_graph(master_spec, hyperparam_config=None) :
     # Build the TensorFlow graph based on the DRAGNN network spec.
     tf.logging.info('Building Graph...')
     if not hyperparam_config :
-		hyperparam_config = spec_pb2.GridPoint(
-			learning_method='adam',
-			learning_rate=0.0005, 
-			adam_beta1=0.9, adam_beta2=0.9, adam_eps=0.00001,
-			decay_steps=128000,
-			dropout_rate=0.8, gradient_clip_norm=1,
-			use_moving_average=True,
-			seed=1)
+        hyperparam_config = spec_pb2.GridPoint(
+            learning_method='adam',
+            learning_rate=0.0005, 
+            adam_beta1=0.9, adam_beta2=0.9, adam_eps=0.00001,
+            decay_steps=128000,
+            dropout_rate=0.8, gradient_clip_norm=1,
+            use_moving_average=True,
+            seed=1)
     graph = tf.Graph()
     with graph.as_default() :
         builder = graph_builder.MasterBuilder(master_spec, hyperparam_config)

@@ -59,11 +59,12 @@ def main(unused_argv) :
     master_spec = model.load_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
     # Build graph
     graph, builder, annotator = model.build_inference_graph(master_spec)
-    # Restore model
-    sess = tf.Session(graph=graph)
-    # Make sure to re-initialize all underlying state.
-    sess.run(tf.global_variables_initializer())
-    builder.saver.restore(sess, FLAGS.checkpoint_filename)
+    with graph.as_default() :
+        # Restore model
+        sess = tf.Session(graph=graph)
+        # Make sure to re-initialize all underlying state.
+        sess.run(tf.global_variables_initializer())
+        builder.saver.restore(sess, FLAGS.checkpoint_filename)
 
     startTime = time.time()
     while 1 :

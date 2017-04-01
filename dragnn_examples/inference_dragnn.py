@@ -57,35 +57,36 @@ def main(unused_argv) :
     # Build graph
     graph, builder, annotator = model.build_inference_graph(master_spec)
     with graph.as_default() :
-		# Restore model
-		with tf.Session(graph=graph) as sess :
-			# Make sure to re-initialize all underlying state.
-			sess.run(tf.global_variables_initializer())
-			builder.saver.restore(sess, FLAGS.checkpoint_filename)
+        # Restore model
+        sess = tf.Session(graph=graph)
+        # Make sure to re-initialize all underlying state.
+        sess.run(tf.global_variables_initializer())
+        builder.saver.restore(sess, FLAGS.checkpoint_filename)
 
-			startTime = time.time()
-			while 1 :
-				try : line = sys.stdin.readline()
-				except KeyboardInterrupt : break
-				if not line : break
-				line = line.strip()
-				if not line : continue
-				sentence = inference(sess, graph, builder, annotator, line)
-				f = sys.stdout
-				f.write('#' + line.encode('utf-8') + '\n')
-				for i, token in enumerate(sentence.token) :
-					head = token.head + 1
-					f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
-							i + 1,
-							token.word.encode('utf-8'),
-							token.word.encode('utf-8'),
-							token.tag.encode('utf-8'),
-							token.tag.encode('utf-8'),
-							head,
-							token.label.encode('utf-8')))
-				f.write('\n\n')
-			durationTime = time.time() - startTime
-			sys.stderr.write("duration time = %f\n" % durationTime)
+    startTime = time.time()
+    while 1 :
+        try : line = sys.stdin.readline()
+        except KeyboardInterrupt : break
+        if not line : break
+        line = line.strip()
+        if not line : continue
+        sentence = inference(sess, graph, builder, annotator, line)
+        f = sys.stdout
+        f.write('#' + line.encode('utf-8') + '\n')
+        for i, token in enumerate(sentence.token) :
+            head = token.head + 1
+            f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
+                i + 1,
+                token.word.encode('utf-8'),
+                token.word.encode('utf-8'),
+                token.tag.encode('utf-8'),
+                token.tag.encode('utf-8'),
+                head,
+                token.label.encode('utf-8')))
+        f.write('\n\n')
+    durationTime = time.time() - startTime
+    sys.stderr.write("duration time = %f\n" % durationTime)
+    sess.close()
     
 if __name__ == '__main__':
     tf.app.run()

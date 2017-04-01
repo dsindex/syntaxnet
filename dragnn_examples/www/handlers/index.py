@@ -88,8 +88,8 @@ class DragnnHandler(BaseHandler):
 					entry['id'] = id
 					entry['form'] = word
 					entry['lemma'] = word
-					entry['upostag'] = tag
-					entry['xpostag'] = tag
+					entry['upostag'] = tag[0]
+					entry['xpostag'] = tag[1]
 					entry['feats'] = None
 					entry['head'] = head
 					entry['deprel'] = label

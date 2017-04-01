@@ -28,6 +28,7 @@ py_binary(
         "www/dragnn_dm.py",
         "www/handlers/base.py",
         "www/handlers/index.py",
+        "model_dragnn.py",
     ],
     data = [
         ":log",

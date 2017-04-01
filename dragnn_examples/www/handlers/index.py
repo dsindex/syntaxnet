@@ -73,36 +73,15 @@ class DragnnHandler(BaseHandler):
 			try :
 				out = {}
 				sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+				out = model.parse_to_conll(sentence)
 				out['text'] = query
-				out['conll'] = []
-				for i, token in enumerate(sentence.token) :
-					id = i + 1
-					word = token.word.encode('utf-8')
-					attributed_tag = token.tag.encode('utf-8')
-					attr_dict = model.attributed_tag_to_dict(attributed_tag)
-					fPOS = attr_dict['fPOS']
-					tag = fPOS.replace('++',' ').split()
-					head = token.head + 1
-					label = token.label.encode('utf-8').split(':')[0]
-					entry = {}
-					entry['id'] = id
-					entry['form'] = word
-					entry['lemma'] = word
-					entry['upostag'] = tag[0]
-					entry['xpostag'] = tag[1]
-					entry['feats'] = None
-					entry['head'] = head
-					entry['deprel'] = label
-					entry['deps'] = None
-					entry['misc'] = None
-					out['conll'].append(entry)
 				rst['output'] = {}
 			except :
 				rst['status'] = 500
 				rst['msg'] = 'analyze() fail'
 			else :
 				rst['status'] = 200
-				rst['output'] = {'out':out}
+				rst['output'] = out
 
 			if mode == 'debug' :
 				duration_time = time.time() - start_time
@@ -140,13 +119,20 @@ class DragnnHandler(BaseHandler):
 			self.write(dict(success=True, info=ret))
 		else :
 			dragnn = self.dragnn
+			sess = dragnn['session']
+			graph = dragnn['graph']
+			builder = dragnn['builder']
+			annotator = dragnn['annotator']
+			enable_tracing = self.enable_tracing
 			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				out = {} # dragnn.analyze(line)
+				sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+				out = model.parse_to_conll(sentence)
+				out['text'] = line
 				out_list.append(out)
 				idx += 1
 			self.write(dict(success=True, record=out_list, info=None))
@@ -163,13 +149,20 @@ class DragnnTestHandler(BaseHandler):
 			self.write(dict(success=True, info=ret))
 		else :
 			dragnn = self.dragnn
+			sess = dragnn['session']
+			graph = dragnn['graph']
+			builder = dragnn['builder']
+			annotator = dragnn['annotator']
+			enable_tracing = self.enable_tracing
 			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				out = {} # dragnn.analyze(line)
+				sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+				out = model.parse_to_conll(sentence)
+				out['text'] = line
 				out_list.append(out)
 				idx += 1
 			self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))

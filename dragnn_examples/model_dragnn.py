@@ -236,3 +236,29 @@ def attributed_tag_to_dict(attributed_tag) :
                 key = None
         i += 1
     return attr_dict
+
+def parse_to_conll(sentence) :
+    out = {}
+    out['conll'] = []
+    for i, token in enumerate(sentence.token) :
+        id = i + 1
+        word = token.word.encode('utf-8')
+        attributed_tag = token.tag.encode('utf-8')
+        attr_dict = attributed_tag_to_dict(attributed_tag)
+        fPOS = attr_dict['fPOS']
+        tag = fPOS.replace('++',' ').split()
+        head = token.head + 1
+        label = token.label.encode('utf-8').split(':')[0]
+        entry = {}
+        entry['id'] = id
+        entry['form'] = word
+        entry['lemma'] = word
+        entry['upostag'] = tag[0]
+        entry['xpostag'] = tag[1]
+        entry['feats'] = None
+        entry['head'] = head
+        entry['deprel'] = label
+        entry['deps'] = None
+        entry['misc'] = None
+        out['conll'].append(entry)
+    return out

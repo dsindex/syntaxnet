@@ -11,6 +11,17 @@ from dragnn.python import spec_builder
 from tensorflow.python.platform import gfile
 from google.protobuf import text_format
 
+# for inference
+from syntaxnet.ops import gen_parser_ops
+from syntaxnet import load_parser_ops  # This loads the actual op definitions
+from syntaxnet.util import check
+from dragnn.python import load_dragnn_cc_impl
+from dragnn.python import render_parse_tree_graphviz
+from dragnn.python import visualization
+from syntaxnet import sentence_pb2
+#from IPython.display import HTML
+
+
 from tensorflow.python.platform import tf_logging as logging
 
 def build_master_spec() :
@@ -160,6 +171,40 @@ def build_inference_graph(master_spec, enable_tracing=False) :
         annotator = builder.add_annotation(enable_tracing=enable_tracing)
         builder.add_saver()
     return graph, builder, annotator
+
+def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing) :
+    logging.set_verbosity(logging.WARN)
+    # check
+    check.IsTrue(dragnn_spec)
+    check.IsTrue(resource_path)
+    check.IsTrue(checkpoint_filename)
+    # Load master spec
+    master_spec = load_master_spec(dragnn_spec, resource_path)
+    # Build graph
+    graph, builder, annotator = build_inference_graph(master_spec, enable_tracing)
+    with graph.as_default() :
+        # Restore model
+        sess = tf.Session(graph=graph)
+        # Make sure to re-initialize all underlying state.
+        sess.run(tf.global_variables_initializer())
+        builder.saver.restore(sess, checkpoint_filename)
+    return sess, graph, builder, annotator
+
+def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
+    tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
+    sentence = sentence_pb2.Sentence()
+    sentence.token.extend(tokens)
+    if enable_tracing :
+        annotations, traces = sess.run([annotator['annotations'], annotator['traces']],
+                          feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
+        #HTML(visualization.trace_html(traces[0]))
+    else :
+        annotations = sess.run(annotator['annotations'],
+                          feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
+
+    parsed_sentence = sentence_pb2.Sentence.FromString(annotations[0])
+    #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
+    return parsed_sentence
 
 def attributed_tag_to_dict(attributed_tag) :
     '''

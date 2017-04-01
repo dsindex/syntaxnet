@@ -394,7 +394,7 @@ $ pwd
 /path/to/models/syntaxnet
 $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
-- training tagger and parser with CoNLL corpus
+- training tagger and parser with CoNLL corpus ( on-going )
 ```
 # compile
 $ pwd
@@ -418,7 +418,7 @@ love VBP root
  +-- one CD obj
      +-- this DT det
 ```
-- training parser with Sejong corpus
+- training parser with Sejong corpus ( on-going )
 ```
 # compile
 $ pwd
@@ -482,7 +482,7 @@ Parse:
                          +-- ㄴ ETM MOD
                              +-- 심하 VA NP
 ```
-- web api using tornado
+- web api using tornado ( on-going )
 ```
 $ pwd
 /path/to/models/syntaxnet

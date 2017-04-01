@@ -10,6 +10,7 @@ import tensorflow as tf
 import model_dragnn as model
 
 # for train
+from syntaxnet.ops import gen_parser_ops
 from syntaxnet import load_parser_ops  # This loads the actual op definitions
 from syntaxnet.util import check
 from dragnn.python import load_dragnn_cc_impl
@@ -39,7 +40,7 @@ flags.DEFINE_string('checkpoint_filename', '',
                     'Filename to save the best checkpoint to.')
 flags.DEFINE_string('tensorboard_dir', '',
                     'Directory for TensorBoard logs output.')
-flags.DEFINE_integer('n_steps', 1000,
+flags.DEFINE_integer('n_steps', 100000,
                      'Number of training steps')
 flags.DEFINE_bool('compute_lexicon', False, '')
 flags.DEFINE_bool('projectivize_training_set', True, '')
@@ -68,8 +69,9 @@ def train(graph, builder, trainers, annotator, summary_writer, do_restore, stats
     logging.info('Training on %d sentences.', len(training_set))
     logging.info('Tuning on %d sentences.', len(tune_set))
 
+    # Set training steps
     pretrain_steps = [10000, 0]
-    tagger_steps = 100000
+    tagger_steps = FLAGS.n_steps
     train_steps = [tagger_steps, 8 * tagger_steps]
 
     with tf.Session(FLAGS.tf_master, graph=graph) as sess:
@@ -146,10 +148,10 @@ def main(unused_argv) :
         logging.info('Computing lexicon...')
         lexicon.build_lexicon(FLAGS.resource_path, training_corpus_path, morph_to_pos=True)
 
-    # Build master spec and graph
+    # Load master spec
     master_spec = model.load_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
-    graph, builder, trainers, annotator = model.build_graph(master_spec)
-
+    # Build graph
+    graph, builder, trainers, annotator = model.build_train_graph(master_spec)
     # Train
     train(graph, builder, trainers, annotator, summary_writer, do_restore, stats)
     

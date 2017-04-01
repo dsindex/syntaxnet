@@ -10,6 +10,7 @@ import tensorflow as tf
 import model_dragnn as model
 
 # for inference
+from syntaxnet.ops import gen_parser_ops
 from syntaxnet import load_parser_ops  # This loads the actual op definitions
 from syntaxnet.util import check
 from dragnn.python import load_dragnn_cc_impl
@@ -30,7 +31,6 @@ flags.DEFINE_string('checkpoint_filename', '',
                     'Filename to save the best checkpoint to.')
 
 def inference(sess, graph, builder, annotator, text) :
-    # Visualize the output of our mini-trained model on a test sentence.
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()
     sentence.token.extend(tokens)
@@ -38,7 +38,6 @@ def inference(sess, graph, builder, annotator, text) :
                       feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
 
     #HTML(visualization.trace_html(traces[0]))
-
     parsed_sentence = sentence_pb2.Sentence.FromString(annotations[0])
     #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
     return parsed_sentence
@@ -53,14 +52,16 @@ def main(unused_argv) :
     check.IsTrue(FLAGS.resource_path)
     check.IsTrue(FLAGS.checkpoint_filename)
 
-    # build master spec and graph
+    # Load master spec
     master_spec = model.load_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
-    graph, builder, _, annotator = model.build_graph(master_spec)
-    # create session and restore model
+    # Build graph
+    graph, builder, annotator = model.build_inference_graph(master_spec)
+    # Restore model
     sess = tf.Session(graph=graph)
     # Make sure to re-initialize all underlying state.
     sess.run(tf.global_variables_initializer())
     builder.saver.restore(sess, FLAGS.checkpoint_filename)
+
     startTime = time.time()
     while 1 :
         try : line = sys.stdin.readline()

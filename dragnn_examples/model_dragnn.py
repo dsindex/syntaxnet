@@ -100,17 +100,18 @@ def load_master_spec(spec_file, resource_path) :
     logging.info('Constructed master spec: %s', str(master_spec))
     return master_spec
 
-def build_graph(master_spec) :
+def build_train_graph(master_spec, hyperparam_config=None) :
     # Build the TensorFlow graph based on the DRAGNN network spec.
     tf.logging.info('Building Graph...')
-    hyperparam_config = spec_pb2.GridPoint(
-        learning_method='adam',
-        learning_rate=0.0005, 
-        adam_beta1=0.9, adam_beta2=0.9, adam_eps=0.00001,
-        decay_steps=128000,
-        dropout_rate=0.8, gradient_clip_norm=1,
-        use_moving_average=True,
-        seed=1)
+    if not hyperparam_config :
+		hyperparam_config = spec_pb2.GridPoint(
+			learning_method='adam',
+			learning_rate=0.0005, 
+			adam_beta1=0.9, adam_beta2=0.9, adam_eps=0.00001,
+			decay_steps=128000,
+			dropout_rate=0.8, gradient_clip_norm=1,
+			use_moving_average=True,
+			seed=1)
     graph = tf.Graph()
     with graph.as_default() :
         builder = graph_builder.MasterBuilder(master_spec, hyperparam_config)
@@ -128,3 +129,15 @@ def build_graph(master_spec) :
         annotator = builder.add_annotation(enable_tracing=True)
         builder.add_saver()
         return graph, builder, trainers, annotator
+
+def build_inference_graph(master_spec) :
+    # Initialize a graph
+    tf.logging.info('Building Graph...')
+    graph = tf.Graph()
+    with graph.as_default():
+        hyperparam_config = spec_pb2.GridPoint()
+        builder = graph_builder.MasterBuilder(master_spec, hyperparam_config)
+        # This is the component that will annotate test sentences.
+        annotator = builder.add_annotation(enable_tracing=True)
+        builder.add_saver()
+    return graph, builder, annotator

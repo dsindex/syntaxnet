@@ -38,8 +38,7 @@ class DragnnHandler(BaseHandler):
 		callback = self.get_argument('callback', '')
 		mode = self.get_argument('mode', 'product')
 		try :
-			# 외부 q를 utf-8로 간주하고 decode('utf-8')해서 
-			# unicode로 변환한다. 
+			# unicode
 			query = self.get_argument('q', '')
 		except :
 			query = "Invalid unicode in q"
@@ -53,8 +52,8 @@ class DragnnHandler(BaseHandler):
 		rst['query'] = query
 		if mode == 'debug' : rst['debug'] = debug
 
-		# utf-8로 변환시켜줘야 분석 가능
-		try : 
+		try :
+			# convert to utf-8 
 			query = query.encode('utf-8')
 		except :
 			rst['status'] = 500
@@ -64,7 +63,7 @@ class DragnnHandler(BaseHandler):
 			dragnn = self.dragnn
 			
 			try :
-				out = dragnn.analyze(query)
+				out = {} # dragnn.analyze(query)
 				rst['output'] = {}
 			except :
 				rst['status'] = 500
@@ -109,13 +108,13 @@ class DragnnHandler(BaseHandler):
 			self.write(dict(success=True, info=ret))
 		else :
 			dragnn = self.dragnn
-			# content를 newline 단위로 분리해서 호출
+			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				out = dragnn.analyze(line)
+				out = {} # dragnn.analyze(line)
 				out_list.append(out)
 				idx += 1
 			self.write(dict(success=True, record=out_list, info=None))
@@ -132,13 +131,13 @@ class DragnnTestHandler(BaseHandler):
 			self.write(dict(success=True, info=ret))
 		else :
 			dragnn = self.dragnn
-			# content를 newline 단위로 분리해서 호출
+			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				out = dragnn.analyze(line)
+				out = {} # dragnn.analyze(line)
 				out_list.append(out)
 				idx += 1
 			self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))

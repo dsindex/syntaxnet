@@ -24,10 +24,14 @@ def main(unused_argv) :
         sys.exit(0)
 
     # Loading model
-    sess, graph, builder, annotator = model.load_model(FLAGS.dragnn_spec,
-                                             FLAGS.resource_path,
-                                             FLAGS.checkpoint_filename,
-                                             FLAGS.enable_tracing)    
+    m = model.load_model(FLAGS.dragnn_spec,
+                         FLAGS.resource_path,
+                         FLAGS.checkpoint_filename,
+                         FLAGS.enable_tracing)
+    sess = m['session']
+    graph = m['graph']
+    builder = m['builder']
+    annotator = m['annotator']
 
     # Analyze
     startTime = time.time()

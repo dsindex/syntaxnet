@@ -188,7 +188,12 @@ def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing) 
         # Make sure to re-initialize all underlying state.
         sess.run(tf.global_variables_initializer())
         builder.saver.restore(sess, checkpoint_filename)
-    return sess, graph, builder, annotator
+    m = {}
+    m['session'] = sess
+    m['graph'] = graph
+    m['builder'] = builder
+    m['annotator'] = annotator
+    return m
 
 def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]

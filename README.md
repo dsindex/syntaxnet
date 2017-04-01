@@ -394,7 +394,7 @@ $ pwd
 /path/to/models/syntaxnet
 $ bazel build -c opt //examples/dragnn:tutorial_1
 ```
-- training tagger and parser with CoNLL corpus ( on-going )
+- training tagger and parser with CoNLL corpus
 ```
 # compile
 $ pwd
@@ -418,7 +418,7 @@ love VBP root
  +-- one CD obj
      +-- this DT det
 ```
-- training parser with Sejong corpus ( on-going )
+- training parser with Sejong corpus
 ```
 # compile
 $ pwd
@@ -484,11 +484,14 @@ Parse:
 ```
 - web api using tornado ( on-going )
 ```
+# compile
 $ pwd
 /path/to/models/syntaxnet
 $ bazel build -c opt //work/dragnn_examples:dragnn_dm
-$ cd work
-$ 
+# start tornado web api
+$ cd work/dragnn_examples/www
+$ ./start.sh 
+# http://hostip:8897/dragnn?q=hello
 ```
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

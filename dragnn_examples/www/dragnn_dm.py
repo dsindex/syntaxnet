@@ -33,8 +33,9 @@ log = logging.getLogger('tornado.application')
 def setupAppLogger():
 	fmtStr = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
 	formatter = logging.Formatter(fmt=fmtStr)
-        stub_filename = os.path.abspath(sys.argv[0])
-	logfile = 'log/application.log'
+
+        cdir = os.path.dirname(os.path.abspath(sys.argv[0]))
+	logfile = cdir + '/' + 'log/application.log'
 
 	rotatingHandler = RotatingFileHandler(logfile, 'a', options.log_file_max_size, options.log_file_num_backups)
 	rotatingHandler.setFormatter(formatter)

@@ -19,7 +19,6 @@ from dragnn.python import evaluation
 from dragnn.python import lexicon
 from dragnn.python import trainer_lib
 
-#from IPython.display import HTML
 from tensorflow.python.framework import errors
 from tensorflow.python.platform import gfile
 from tensorflow.python.platform import tf_logging as logging

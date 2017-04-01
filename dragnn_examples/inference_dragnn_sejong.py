@@ -29,15 +29,20 @@ flags.DEFINE_string('resource_path', '',
                     'Path to constructed resources.')
 flags.DEFINE_string('checkpoint_filename', '',
                     'Filename to save the best checkpoint to.')
+flags.DEFINE_bool('enable_tracing', False, 
+                    'Whether tracing annotations')
 
-def inference(sess, graph, builder, annotator, text) :
+def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()
     sentence.token.extend(tokens)
-
-    annotations, traces = sess.run([annotator['annotations'], annotator['traces']],
-                      feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
-    #HTML(visualization.trace_html(traces[0]))
+    if enable_tracing :
+        annotations, traces = sess.run([annotator['annotations'], annotator['traces']],
+                          feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
+    else :
+        annotations = sess.run(annotator['annotations'],
+                          feed_dict={annotator['input_batch']: [sentence.SerializeToString()]})
+        #HTML(visualization.trace_html(traces[0]))
     parsed_sentence = sentence_pb2.Sentence.FromString(annotations[0])
     #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
     return parsed_sentence
@@ -58,7 +63,7 @@ def main(unused_argv) :
     # Load master spec
     master_spec = model.load_master_spec(FLAGS.dragnn_spec, FLAGS.resource_path)
     # Build graph
-    graph, builder, annotator = model.build_inference_graph(master_spec)
+    graph, builder, annotator = model.build_inference_graph(master_spec, FLAGS.enable_tracing)
     with graph.as_default() :
         # Restore model
         sess = tf.Session(graph=graph)
@@ -85,11 +90,16 @@ def main(unused_argv) :
             seq += 1
         # ex) line = '제주 로 가다 는 비행기 가 심하다 는 비바람 에 회항 하 었 다 .'
         line = ' '.join(tokenized)
-        sentence = inference(sess, graph, builder, annotator, line)
+        sentence = inference(sess, graph, builder, annotator, line, FLAGS.enable_tracing)
         f = sys.stdout
-        f.write('#' + line.encode('utf-8') + '\n')
+        f.write('# text = ' + line.encode('utf-8') + '\n')
         for i, token in enumerate(sentence.token) :
             head = token.head + 1
+            attributed_tag = token.tag.encode('utf-8')
+            attr_dict = model.attributed_tag_to_dict(attributed_tag)
+            fPOS = attr_dict['fPOS']
+            tag = fPOS.replace('++',' ').split()
+            label = token.label.encode('utf-8').split(':')[0]
             f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
                     i + 1,
                     token.word.encode('utf-8'),
@@ -97,7 +107,7 @@ def main(unused_argv) :
                     analyzed[i][1].encode('utf-8'),
                     analyzed[i][1].encode('utf-8'),
                     head,
-                    token.label.encode('utf-8')))
+                    label))
         f.write('\n\n')
     durationTime = time.time() - startTime
     sys.stderr.write("duration time = %f\n" % durationTime)

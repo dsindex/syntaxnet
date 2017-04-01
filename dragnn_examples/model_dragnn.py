@@ -5,14 +5,12 @@ import tensorflow as tf
 # for master spec, graph
 from dragnn.protos import spec_pb2
 from dragnn.python import graph_builder
-from dragnn.python import render_spec_with_graphviz
 from dragnn.python import spec_builder
 
 # for writing and loading master spec
 from tensorflow.python.platform import gfile
 from google.protobuf import text_format
 
-#from IPython.display import HTML
 from tensorflow.python.platform import tf_logging as logging
 
 def build_master_spec() :
@@ -99,7 +97,6 @@ def build_master_spec() :
     '''
     master_spec.component.extend(
         [lookahead.spec, tagger.spec, parser.spec])
-    #HTML(render_spec_with_graphviz.master_spec_graph(master_spec))
     return master_spec
 
 def build_complete_master_spec(resource_path) :
@@ -152,7 +149,7 @@ def build_train_graph(master_spec, hyperparam_config=None) :
         builder.add_saver()
         return graph, builder, trainers, annotator
 
-def build_inference_graph(master_spec) :
+def build_inference_graph(master_spec, enable_tracing=False) :
     # Initialize a graph
     tf.logging.info('Building Graph...')
     graph = tf.Graph()
@@ -160,6 +157,32 @@ def build_inference_graph(master_spec) :
         hyperparam_config = spec_pb2.GridPoint()
         builder = graph_builder.MasterBuilder(master_spec, hyperparam_config)
         # This is the component that will annotate test sentences.
-        annotator = builder.add_annotation(enable_tracing=True)
+        annotator = builder.add_annotation(enable_tracing=enable_tracing)
         builder.add_saver()
     return graph, builder, annotator
+
+def attributed_tag_to_dict(attributed_tag) :
+    '''
+    ex) attribute { name: \"Case\" value: \"Nom\" }
+        attribute { name: \"Number\" value: \"Sing\" } 
+        attribute { name: \"Person\" value: \"1\" } 
+        attribute { name: \"PronType\" value: \"Prs\" } 
+        attribute { name: \"fPOS\" value: \"PRP++PRP\" }
+    => 
+        {'Case':'Nom', ..., 'fPOS':'PRP++PRP'} 
+    '''
+    attr_dict = {}
+    toks = [tok for tok in attributed_tag.split() if tok not in ['attribute', 'name:', 'value:', '{', '}']]
+    i = 0
+    key = None
+    for tok in toks :
+        tok = tok[1:-1]  # strip \"
+        if i % 2 == 0 :
+            key = tok
+        else :
+            val = tok
+            if key :
+                attr_dict[key] = val
+                key = None
+        i += 1
+    return attr_dict

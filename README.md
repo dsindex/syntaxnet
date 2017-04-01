@@ -494,7 +494,7 @@ Parse:
   $ ./start.sh 0 0 -v -v
   # http://hostip:8897/dragnn?q=i love it
   ```
-  - [output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
-  - [view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
+  - ![view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
+  - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

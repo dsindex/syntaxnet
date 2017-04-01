@@ -86,7 +86,9 @@ if [ ${#} != 2 ]; then print_usage_and_exit 1; fi
 
 # current dir of this script
 CDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]})))
-
+PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
+PPDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/../..)
+PPPDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/../../..)
 [[ -f ${CDIR}/env.sh ]] && . ${CDIR}/env.sh || exit
 
 # -----------------------------------------------------------------------------
@@ -126,17 +128,12 @@ PROCESS=$2
 
 check_running ${daemon_name}
 
-# copy resources
-function copy_resources {
-}
-copy_resources
-
-cd ${CDIR}
+cd ${PPPDIR}
 
 if (( MODE == 0 )); then
-	nohup ${python} ${CDIR}/${daemon_name} --debug=True --port=${port_devel} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
+	nohup ${python} ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} --debug=True --port=${port_devel} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
 else
-	sudo ${python}  ${CDIR}/${daemon_name} --debug=False --port=${port_service} --process=${PROCESS} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
+	sudo ${python}  ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} --debug=False --port=${port_service} --process=${PROCESS} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
 fi
 cd ${CDIR}
 

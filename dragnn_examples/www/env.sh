@@ -33,12 +33,12 @@ CDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]})))
 PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
 
 # server 
-daemon_name='dragnn_dm.py'
+daemon_name='dragnn_dm'
 port_devel=8897
 port_service=8897
 
 # resources
-DATA_DIR=${PDIR}/data_sejong
+DATA_DIR=${PDIR}/data
 
 # command setting
 python='/usr/bin/python'

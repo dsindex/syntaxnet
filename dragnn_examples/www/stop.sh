@@ -84,7 +84,8 @@ if [ ${#} != 0 ]; then print_usage_and_exit 1; fi
 
 # current dir of this script
 CDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]})))
-
+PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
+PPDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/../..)
 [[ -f ${CDIR}/env.sh ]] && . ${CDIR}/env.sh || exit
 
 # -----------------------------------------------------------------------------

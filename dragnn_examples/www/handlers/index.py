@@ -163,9 +163,10 @@ class DragnnTestHandler(BaseHandler):
 				sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
 				out = model.parse_to_conll(sentence)
 				out['text'] = line
-				out_list.append(out)
+				out_list.append(out['conll'])
 				idx += 1
-			self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))
+			#self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))
+			self.write(dict(success=True, record=out_list, info=None))
 
 		self.finish()
 

@@ -16,7 +16,6 @@ $(document).ready(function() {
 					if(data.info) {
 						$('textarea#info').text(data.info);
 					}
-					nbest = data.nbest;
 					$('#record_table').empty();
 					if(data.record) {
 						var trHTML = '';
@@ -35,7 +34,7 @@ $(document).ready(function() {
 						$.each(data.record, function (i, entry) {
 							$.each(entry, function (j, item) {
 								trHTML += '<tr><td>' + item.id;
-								if( item.head != '0' ) item.form = '<font color=Blue>' + item.form + '</font>';
+								if( item.head == '0' ) item.form = '<font color=Blue>' + item.form + '</font>';
 								trHTML += '</td><td>' + item.form;
 								trHTML += '</td><td>' + item.lemma;
 								trHTML += '</td><td>' + item.upostag;

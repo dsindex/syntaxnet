@@ -128,12 +128,29 @@ PROCESS=$2
 
 check_running ${daemon_name}
 
-cd ${PPPDIR}
+cd ${CDIR}
 
 if (( MODE == 0 )); then
-	nohup ${python} ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} --debug=True --port=${port_devel} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
+	nohup ${python} ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} \
+		--debug=True \
+		--port=${port_devel} \
+		--dragnn_spec=${DRAGNN_SPEC_FILE} \
+		--resource_path=${DATA_DIR} \
+		--checkpoint_filename=${CHECKPOINT_FILE} \
+		--enable_tracing=False \
+		--log_file_prefix=${CDIR}/log/access.log \
+		> /dev/null 2> /dev/null &
 else
-	sudo ${python}  ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} --debug=False --port=${port_service} --process=${PROCESS} --log_file_prefix=${CDIR}/log/access.log > /dev/null 2> /dev/null &
+	sudo ${python}  ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} \
+		--debug=False \
+		--port=${port_service} \
+		--process=${PROCESS} \
+		--dragnn_spec=${DRAGNN_SPEC_FILE} \
+		--resource_path=${DATA_DIR} \
+		--checkpoint_filename=${CHECKPOINT_FILE} \
+		--enable_tracing=False \
+		--log_file_prefix=${CDIR}/log/access.log \
+		> /dev/null 2> /dev/null &
 fi
 cd ${CDIR}
 

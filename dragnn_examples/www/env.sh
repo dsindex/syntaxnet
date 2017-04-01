@@ -39,6 +39,8 @@ port_service=8897
 
 # resources
 DATA_DIR=${PDIR}/data
+DRAGNN_SPEC_FILE=${DATA_DIR}/parser_spec.textproto
+CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
 # command setting
 python='/usr/bin/python'

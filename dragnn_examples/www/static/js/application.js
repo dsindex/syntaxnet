@@ -21,10 +21,34 @@ $(document).ready(function() {
 					if(data.record) {
 						var trHTML = '';
 						trHTML += "<tr class=\"success\">";
-						trHTML += "<th>A</th>";
-						trHTML += "<th>B</th>";
-						trHTML += "<th>C</th>";
+						trHTML += "<th>id</th>";
+						trHTML += "<th>form</th>";
+						trHTML += "<th>lemma</th>";
+						trHTML += "<th>upostag</th>";
+						trHTML += "<th>xpostag</th>";
+						trHTML += "<th>feats</th>";
+						trHTML += "<th>head</th>";
+						trHTML += "<th>deprel</th>";
+						trHTML += "<th>deps</th>";
+						trHTML += "<th>misc</th>";
 						trHTML += "</tr>";
+						$.each(data.record, function (i, entry) {
+							$.each(entry, function (j, item) {
+								trHTML += '<tr><td>' + item.id;
+								if( item.head != '0' ) item.form = '<font color=Blue>' + item.form + '</font>';
+								trHTML += '</td><td>' + item.form;
+								trHTML += '</td><td>' + item.lemma;
+								trHTML += '</td><td>' + item.upostag;
+								trHTML += '</td><td>' + item.xpostag;
+								trHTML += '</td><td>' + item.feats;
+								trHTML += '</td><td>' + item.head;
+								trHTML += '</td><td>' + item.deprel;
+								trHTML += '</td><td>' + item.deps;
+								trHTML += '</td><td>' + item.misc;
+								trHTML += '</td></tr>';
+							});
+							trHTML += '<tr></tr>';
+						});
 						$('#record_table').append(trHTML);
 					}
 				}

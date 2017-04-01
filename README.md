@@ -482,7 +482,7 @@ Parse:
                          +-- ㄴ ETM MOD
                              +-- 심하 VA NP
 ```
-- web api using tornado ( on-going )
+- web api using tornado
 ```
 # compile
 $ pwd
@@ -491,7 +491,8 @@ $ bazel build -c opt //work/dragnn_examples:dragnn_dm
 # start tornado web api
 $ cd work/dragnn_examples/www
 $ ./start.sh 0 0 -v -v
-# http://hostip:8897/dragnn?q=hello
+# http://hostip:8897/dragnn?q=i love it
 ```
+![dragnn_api.png](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

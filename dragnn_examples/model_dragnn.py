@@ -255,10 +255,10 @@ def parse_to_conll(sentence) :
         entry['lemma'] = word
         entry['upostag'] = tag[0]
         entry['xpostag'] = tag[1]
-        entry['feats'] = None
+        entry['feats'] = '_'
         entry['head'] = head
         entry['deprel'] = label
-        entry['deps'] = None
-        entry['misc'] = None
+        entry['deps'] = '_'
+        entry['misc'] = '_'
         out['conll'].append(entry)
     return out

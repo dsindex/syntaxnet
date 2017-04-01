@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -11,6 +11,10 @@ from handlers.base import BaseHandler
 
 import json
 import time
+
+# dragnn
+sys.path.append(os.path.abspath('../'))
+import model_dragnn as model
 
 class IndexHandler(BaseHandler):
 	def get(self):
@@ -61,9 +65,37 @@ class DragnnHandler(BaseHandler):
 			rst['output'] = []
 		else :
 			dragnn = self.dragnn
-			
+			sess = dragnn['session']
+			graph = dragnn['graph']
+			builder = dragnn['builder']
+			annotator = dragnn['annotator']
+			enable_tracing = self.enable_tracing
 			try :
-				out = {} # dragnn.analyze(query)
+				out = {}
+				sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+				out['text'] = query
+				out['conll'] = []
+				for i, token in enumerate(sentence.token) :
+					id = i + 1
+					word = token.word.encode('utf-8')
+					attributed_tag = token.tag.encode('utf-8')
+					attr_dict = model.attributed_tag_to_dict(attributed_tag)
+					fPOS = attr_dict['fPOS']
+					tag = fPOS.replace('++',' ').split()
+					head = token.head + 1
+					label = token.label.encode('utf-8').split(':')[0]
+					entry = {}
+					entry['id'] = id
+					entry['form'] = word
+					entry['lemma'] = word
+					entry['upostag'] = tag
+					entry['xpostag'] = tag
+					entry['feats'] = None
+					entry['head'] = head
+					entry['deprel'] = label
+					entry['deps'] = None
+					entry['misc'] = None
+					out['conll'].append(entry)
 				rst['output'] = {}
 			except :
 				rst['status'] = 500

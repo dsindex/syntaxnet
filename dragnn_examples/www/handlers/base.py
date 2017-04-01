@@ -9,3 +9,6 @@ class BaseHandler(tornado.web.RequestHandler):
 	@property
 	def dragnn(self):
 		return self.application.dragnn
+	@property
+	def enable_tracing(self):
+		return self.application.enable_tracing

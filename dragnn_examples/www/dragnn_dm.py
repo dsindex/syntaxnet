@@ -22,13 +22,16 @@ from tornado.options import define, options
 from handlers.index import IndexHandler, HCheckHandler, DragnnHandler, DragnnTestHandler
 
 # dragnn
-import tensorflow as tf
 sys.path.append(os.path.abspath('../'))
 import model_dragnn as model
 
 define('port', default=8897, help='run on the given port', type=int)
 define('debug', default=True, help='run on debug mode', type=bool)
 define('process', default=3, help='number of process for service mode', type=int)
+define('dragnn_spec', default='', help='path to the spec defining the model', type=str)
+define('resource_path', default='', help='path to constructed resources', type=str)
+define('checkpoint_filename', default='', help='filename to save the best checkpoint to', type=str)
+define('enable_tracing', default=False, help='whether tracing annotations', type=bool)
 
 log = logging.getLogger('tornado.application')
 
@@ -75,7 +78,13 @@ class Application(tornado.web.Application):
 		self.log = setupAppLogger()
 
 		self.log.info('initialize...')
-		self.dragnn = None
+		# Loading model
+		dragnn = model.load_model(options.dragnn_spec,
+					options.resource_path,
+					options.checkpoint_filename,
+					options.enable_tracing)
+		self.dragnn = dragnn
+		self.enable_tracing = options.enable_tracing
 		self.log.info('initialize... done')
 
 		log.info('start http start...')

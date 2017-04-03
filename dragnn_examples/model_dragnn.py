@@ -237,7 +237,7 @@ def attributed_tag_to_dict(attributed_tag) :
         i += 1
     return attr_dict
 
-def parse_to_conll(sentence) :
+def parse_to_conll(sentence, tagged=None) :
     out = {}
     out['conll'] = []
     for i, token in enumerate(sentence.token) :
@@ -247,6 +247,9 @@ def parse_to_conll(sentence) :
         attr_dict = attributed_tag_to_dict(attributed_tag)
         fPOS = attr_dict['fPOS']
         tag = fPOS.replace('++',' ').split()
+        if tagged :
+          tag[0] = tagged[i][1] # pos tag from komoran
+          tag[1] = tagged[i][1]
         head = token.head + 1
         label = token.label.encode('utf-8').split(':')[0]
         entry = {}
@@ -262,3 +265,17 @@ def parse_to_conll(sentence) :
         entry['misc'] = '_'
         out['conll'].append(entry)
     return out
+
+def segment_by_konlpy(line, komoran) :
+    analyzed = komoran.pos(line.decode('utf-8'))
+    segmented = []
+    seq = 1
+    for morph, tag in analyzed :
+        '''
+        tp = [seq, morph, morph, tag, tag, '_', 0, '_', '_', '_']
+        print '\t'.join([str(e) for e in tp])
+        '''
+        segmented.append(morph)
+        seq += 1
+    return segmented, analyzed
+

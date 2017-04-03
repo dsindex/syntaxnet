@@ -12,6 +12,14 @@ $(document).ready(function() {
 						d = new Date();
 						$('#graph').attr('src', data.filename + "?" + d.getTime());
 					}
+					if(data.pgraph) {
+						setTimeout( function() {
+							var iframe = $('#pgraph');
+							var doc = iframe[0].contentWindow.document;
+							var body = $('body',doc);
+							body.html(data.pgraph);
+						}, 1 );
+					}
 					$('#info').empty();
 					if(data.info) {
 						$('textarea#info').text(data.info);

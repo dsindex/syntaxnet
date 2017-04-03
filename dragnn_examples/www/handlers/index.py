@@ -174,6 +174,7 @@ class DragnnTestHandler(BaseHandler):
 			komoran = self.komoran
 			# analyze line by line
 			out_list=[]
+			pgraph=None
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
@@ -186,11 +187,14 @@ class DragnnTestHandler(BaseHandler):
 				else :
 					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
 					out = model.parse_to_conll(sentence)
+				if idx == 0 :
+					pgraph = model.parse_tree_graph(sentence)
 				out['text'] = line
 				out_list.append(out['conll'])
 				idx += 1
 			#self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))
-			self.write(dict(success=True, record=out_list, info=None))
+			#self.write(dict(success=True, record=out_list, info=None))
+			self.write(dict(success=True, record=out_list, info=None, pgraph=pgraph))
 
 		self.finish()
 

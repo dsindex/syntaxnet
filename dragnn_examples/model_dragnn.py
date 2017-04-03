@@ -211,6 +211,9 @@ def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
     #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
     return parsed_sentence
 
+def parse_tree_graph(sentence) :
+    return render_parse_tree_graphviz.parse_tree_graph(sentence)
+
 def attributed_tag_to_dict(attributed_tag) :
     '''
     ex) attribute { name: \"Case\" value: \"Nom\" }

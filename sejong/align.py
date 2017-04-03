@@ -2,6 +2,7 @@
 #-*- coding: utf8 -*-
 
 import os
+import copy
 from optparse import OptionParser
 
 # global variable
@@ -45,7 +46,7 @@ def split_row(n_bucket, seq, eoj, mlist, ptst, gov) :
 		n_bucket.append([nseq, morph, tag, nptst, ngov])
 		idx += 1
 
-def spill(bucket) :
+def spill(bucket, extend) :
 	n_bucket = []
 	for line in bucket :
 		seq,eoj,analyzed,ptst,gov = line.split('\t',4)
@@ -70,20 +71,31 @@ def spill(bucket) :
 		nn_bucket.append([n_seq,morph,tag,ptst,n_gov])
 		idx += 1
 
+	# make extended corpus
+	buckets = [nn_bucket]
+	if extend and len(nn_bucket) >= 2 and nn_bucket[-1][2] == 'SF' : # 마지막 구두점 'SF'에 한정
+		t_bucket = copy.deepcopy(nn_bucket[:-1])
+		t_bucket[-1][3] = nn_bucket[-1][3] # 기존 마지막 형태소의 ptst 
+		t_bucket[-1][4] = 0                # 마지막 형태소가 ROOT이므로 gov 0으로 설정
+		buckets.append(t_bucket)
+
 	# print CONLL-U format
-	for seq,morph,tag,ptst,gov in nn_bucket :
-		id = seq
-		form = morph
-		lemma = morph
-		upostag = tag
-		xpostag = tag
-		feats = '_'
-		head = gov
-		deprel = ptst
-		deps = '_'
-		misc = '_'
-		print '\t'.join([str(e) for e in [id,form,lemma,upostag,xpostag,feats,head,deprel,deps,misc]])
-	print '\n',
+	for bucket in buckets :
+		last_seq = bucket[-1][0]
+		for seq,morph,tag,ptst,gov in bucket :
+			id = seq
+			form = morph
+			lemma = morph
+			upostag = tag
+			xpostag = tag
+			feats = '_'
+			head = gov
+			deprel = ptst
+			if seq == last_seq : deprel = 'ROOT'
+			deps = '_'
+			misc = '_'
+			print '\t'.join([str(e) for e in [id,form,lemma,upostag,xpostag,feats,head,deprel,deps,misc]])
+		print '\n',
 
 	return 1
 
@@ -91,9 +103,13 @@ if __name__ == '__main__':
 
 	parser = OptionParser()
 	parser.add_option("--verbose", action="store_const", const=1, dest="verbose", help="verbose mode")
+	parser.add_option("-e", "--extend", dest="extend", type="int", default=0, help="set 1 for generating extended corpus", metavar="extend")
 	(options, args) = parser.parse_args()
 
 	if options.verbose : VERBOSE = 1
+	extend = options.extend
+	if not extend : extend = 0
+	else : extend = 1
 
 	number_of_sent = 0
 	number_of_sent_skip = 0
@@ -108,7 +124,7 @@ if __name__ == '__main__':
 		line = line.strip()
 
 		if not line and len(bucket) >= 1 : 
-			ret = spill(bucket)
+			ret = spill(bucket, options.extend)
 			bucket = []
 			number_of_sent += 1
 			if ret == -1 : number_of_sent_skip += 1
@@ -117,7 +133,7 @@ if __name__ == '__main__':
 		if line : bucket.append(line)
 
 	if len(bucket) != 0 :
-		ret = spill(bucket)
+		ret = spill(bucket, options.extend)
 		number_of_sent += 1
 		if not ret : number_of_sent_skip += 1
 

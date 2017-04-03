@@ -36,9 +36,14 @@ PDIR=$(readlink -f $(dirname $(readlink -f ${BASH_SOURCE[0]}))/..)
 daemon_name='dragnn_dm'
 port_devel=8897
 port_service=8897
+enable_konlpy='False'
 
 # resources
-DATA_DIR=${PDIR}/data
+if [ "${enable_konlpy}" == "True" ]; then
+    DATA_DIR=${PDIR}/data_sejong
+else
+    DATA_DIR=${PDIR}/data
+fi
 DRAGNN_SPEC_FILE=${DATA_DIR}/parser_spec.textproto
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 

@@ -70,10 +70,18 @@ class DragnnHandler(BaseHandler):
 			builder = dragnn['builder']
 			annotator = dragnn['annotator']
 			enable_tracing = self.enable_tracing
+			enable_konlpy = self.enable_konlpy
+			komoran = self.komoran
 			try :
 				out = {}
-				sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
-				out = model.parse_to_conll(sentence)
+				if enable_konlpy :
+					segmented, analyzed = model.segment_by_konlpy(query, komoran)
+					query = ' '.join(segmented)
+					sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+					out = model.parse_to_conll(sentence, analyzed)
+				else :
+					sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+					out = model.parse_to_conll(sentence)
 				out['text'] = query
 				rst['output'] = {}
 			except :
@@ -124,14 +132,22 @@ class DragnnHandler(BaseHandler):
 			builder = dragnn['builder']
 			annotator = dragnn['annotator']
 			enable_tracing = self.enable_tracing
+			enable_konlpy = self.enable_konlpy
+			komoran = self.komoran
 			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-				out = model.parse_to_conll(sentence)
+				if enable_konlpy :
+					segmented, analyzed = model.segment_by_konlpy(line, komoran)
+					line = ' '.join(segmented)
+					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(sentence, analyzed)
+				else :
+					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(sentence)
 				out['text'] = line
 				out_list.append(out)
 				idx += 1
@@ -154,14 +170,22 @@ class DragnnTestHandler(BaseHandler):
 			builder = dragnn['builder']
 			annotator = dragnn['annotator']
 			enable_tracing = self.enable_tracing
+			enable_konlpy = self.enable_konlpy
+			komoran = self.komoran
 			# analyze line by line
 			out_list=[]
 			idx = 0
 			for line in content.split('\n') :
 				line = line.strip()
 				if not line : continue
-				sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-				out = model.parse_to_conll(sentence)
+				if enable_konlpy :
+					segmented, analyzed = model.segment_by_konlpy(line, komoran)
+					line = ' '.join(segmented)
+					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(sentence, analyzed)
+				else :
+					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(sentence)
 				out['text'] = line
 				out_list.append(out['conll'])
 				idx += 1

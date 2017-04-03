@@ -134,6 +134,7 @@ if (( MODE == 0 )); then
 	nohup ${python} ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} \
 		--debug=True \
 		--port=${port_devel} \
+		--enable_konlpy=${enable_konlpy} \
 		--dragnn_spec=${DRAGNN_SPEC_FILE} \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
@@ -145,6 +146,7 @@ else
 		--debug=False \
 		--port=${port_service} \
 		--process=${PROCESS} \
+		--enable_konlpy=${enable_konlpy} \
 		--dragnn_spec=${DRAGNN_SPEC_FILE} \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \

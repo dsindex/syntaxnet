@@ -28,6 +28,7 @@ import model_dragnn as model
 define('port', default=8897, help='run on the given port', type=int)
 define('debug', default=True, help='run on debug mode', type=bool)
 define('process', default=3, help='number of process for service mode', type=int)
+define('enable_konlpy', default=False, help='to use konlpy', type=bool)
 define('dragnn_spec', default='', help='path to the spec defining the model', type=str)
 define('resource_path', default='', help='path to constructed resources', type=str)
 define('checkpoint_filename', default='', help='filename to save the best checkpoint to', type=str)
@@ -85,6 +86,13 @@ class Application(tornado.web.Application):
 					options.enable_tracing)
 		self.dragnn = dragnn
 		self.enable_tracing = options.enable_tracing
+		# import konlpy if needed
+		self.enable_konlpy = options.enable_konlpy
+		self.komoran = None
+		if options.enable_konlpy :
+			from konlpy.tag import Komoran
+			komoran = Komoran()
+			self.komoran = komoran
 		self.log.info('initialize... done')
 
 		log.info('start http start...')

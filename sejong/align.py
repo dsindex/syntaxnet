@@ -51,6 +51,7 @@ def spill(bucket, extend) :
 	for line in bucket :
 		seq,eoj,analyzed,ptst,gov = line.split('\t',4)
 		mlist = get_mlist(analyzed)
+		# 형태소 단위로 분리
 		split_row(n_bucket, seq, eoj, mlist, ptst, gov)
 
 	# re-numbering
@@ -72,16 +73,25 @@ def spill(bucket, extend) :
 		idx += 1
 
 	# make extended corpus
+	# 구두점이 있는 경우와 없는 경우 분석 결과가 달라지는 문제를 커버
+	# ex) '이루 고 있 다 .' -> '이루 고 있 다'
 	buckets = [nn_bucket]
-	if extend and len(nn_bucket) >= 2 and nn_bucket[-1][2] == 'SF' : # 마지막 구두점 'SF'에 한정
-		t_bucket = copy.deepcopy(nn_bucket[:-1])
-		t_bucket[-1][3] = nn_bucket[-1][3] # 기존 마지막 형태소의 ptst 
-		t_bucket[-1][4] = 0                # 마지막 형태소가 ROOT이므로 gov 0으로 설정
-		buckets.append(t_bucket)
+	# 마지막 구두점 'SF'에 한정
+	if extend and len(nn_bucket) >= 2 and nn_bucket[-1][2] == 'SF' :
+		# 기존 마지막 형태소를 지배소로 갖는 의존소의 개수 확인
+		last_seq = nn_bucket[-1][0]
+		dependents_of_root = 0
+		for seq,morph,tag,ptst,gov in nn_bucket :
+			if gov == last_seq : dependents_of_root += 1
+		# head-final 원칙에 의해서 1개일 경우만 확장한다.
+		if dependents_of_root == 1 : 
+			t_bucket = copy.deepcopy(nn_bucket[:-1])
+			t_bucket[-1][3] = nn_bucket[-1][3] # 기존 마지막 형태소의 ptst 
+			t_bucket[-1][4] = 0                # 마지막 형태소가 ROOT이므로 gov 0으로 설정
+			buckets.append(t_bucket)
 
 	# print CONLL-U format
 	for bucket in buckets :
-		last_seq = bucket[-1][0]
 		for seq,morph,tag,ptst,gov in bucket :
 			id = seq
 			form = morph
@@ -91,7 +101,7 @@ def spill(bucket, extend) :
 			feats = '_'
 			head = gov
 			deprel = ptst
-			if seq == last_seq : deprel = 'ROOT'
+			if gov == 0 : deprel = 'ROOT'
 			deps = '_'
 			misc = '_'
 			print '\t'.join([str(e) for e in [id,form,lemma,upostag,xpostag,feats,head,deprel,deps,misc]])

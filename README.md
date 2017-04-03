@@ -502,7 +502,10 @@ Parse:
   # start tornado web api
   $ cd work/dragnn_examples/www
   $ ./start.sh 0 0 -v -v
+  # if you want to link to the model trained by Sejong corpus, just edit env.sh
+  # : enable_konlpy='True'
   # http://hostip:8897/dragnn?q=i love it
+  # http://hostip:8897/dragnn?q=나는 학교에 가서 공부했다.
   ```
   ![view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
   - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)

@@ -501,9 +501,11 @@ Parse:
   $ bazel build -c opt //work/dragnn_examples:dragnn_dm
   # start tornado web api
   $ cd work/dragnn_examples/www
-  $ ./start.sh 0 0 -v -v
+  $ ./start.sh -v -v 0 0
+  # despite tornado suppoting multi-processing, dragnn seems not to support, so do not use multi-processing option.
   # if you want to link to the model trained by Sejong corpus, just edit env.sh
   # : enable_konlpy='True'
+  # http://hostip:8897 
   # http://hostip:8897/dragnn?q=i love it
   # http://hostip:8897/dragnn?q=나는 학교에 가서 공부했다.
   ```

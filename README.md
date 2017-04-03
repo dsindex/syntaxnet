@@ -406,8 +406,16 @@ $ bazel build -c opt //work/dragnn_examples:inference_dragnn
 $ cd work
 $ ./train_dragnn.sh -v -v
 ...
-WARNING:tensorflow:Step 4801/5000
-WARNING:tensorflow:POS 76.45 UAS 70.75 LAS 62.36
+INFO:tensorflow:training step: 25300, actual: 25300
+INFO:tensorflow:training step: 25400, actual: 25400
+INFO:tensorflow:finished step: 25400, actual: 25400
+INFO:tensorflow:Annotating datset: 2002 examples
+INFO:tensorflow:Done. Produced 2002 annotations
+INFO:tensorflow:Total num documents: 2002
+INFO:tensorflow:Total num tokens: 25148
+INFO:tensorflow:POS: 85.63%
+INFO:tensorflow:UAS: 79.67%
+INFO:tensorflow:LAS: 74.36%
 ...
 # test
 $ echo "i love this one" | ./test_dragnn.sh
@@ -431,14 +439,16 @@ $ cd work
 # to prepare corpus, please refer to `training parser from Sejong treebank corpus` section.
 $ ./train_dragnn_sejong.sh -v -v
 ...
-WARNING:tensorflow:Step 7601/10000
-WARNING:tensorflow:POS 89.05 UAS 88.87 LAS 82.72
-...
-WARNING:tensorflow:Step 8401/10000
-WARNING:tensorflow:POS 89.35 UAS 89.06 LAS 82.90
-...
-WARNING:tensorflow:Step 9801/10000
-WARNING:tensorflow:POS 89.80 UAS 89.25 LAS 83.06
+INFO:tensorflow:training step: 33100, actual: 33100
+INFO:tensorflow:training step: 33200, actual: 33200
+INFO:tensorflow:finished step: 33200, actual: 33200
+INFO:tensorflow:Annotating datset: 4114 examples
+INFO:tensorflow:Done. Produced 4114 annotations
+INFO:tensorflow:Total num documents: 4114
+INFO:tensorflow:Total num tokens: 97002
+INFO:tensorflow:POS: 93.95%
+INFO:tensorflow:UAS: 91.38%
+INFO:tensorflow:LAS: 87.76%
 ...
 # test
 # after installing konlpy ( http://konlpy.org/ko/v0.4.3/ )

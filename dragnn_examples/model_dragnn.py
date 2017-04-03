@@ -211,8 +211,8 @@ def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
     #HTML(render_parse_tree_graphviz.parse_tree_graph(parsed_sentence))
     return parsed_sentence
 
-def parse_tree_graph(sentence) :
-    return render_parse_tree_graphviz.parse_tree_graph(sentence)
+def parse_tree_graph(parsed_sentence) :
+    return render_parse_tree_graphviz.parse_tree_graph(parsed_sentence)
 
 def attributed_tag_to_dict(attributed_tag) :
     '''
@@ -240,10 +240,10 @@ def attributed_tag_to_dict(attributed_tag) :
         i += 1
     return attr_dict
 
-def parse_to_conll(sentence, tagged=None) :
+def parse_to_conll(parsed_sentence, tagged=None) :
     out = {}
     out['conll'] = []
-    for i, token in enumerate(sentence.token) :
+    for i, token in enumerate(parsed_sentence.token) :
         id = i + 1
         word = token.word.encode('utf-8')
         attributed_tag = token.tag.encode('utf-8')
@@ -270,15 +270,15 @@ def parse_to_conll(sentence, tagged=None) :
     return out
 
 def segment_by_konlpy(line, komoran) :
-    analyzed = komoran.pos(line.decode('utf-8'))
+    tagged = komoran.pos(line.decode('utf-8'))
     segmented = []
     seq = 1
-    for morph, tag in analyzed :
+    for morph, tag in tagged :
         '''
         tp = [seq, morph, morph, tag, tag, '_', 0, '_', '_', '_']
         print '\t'.join([str(e) for e in tp])
         '''
         segmented.append(morph)
         seq += 1
-    return segmented, analyzed
+    return segmented, tagged
 

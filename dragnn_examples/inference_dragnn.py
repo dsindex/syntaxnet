@@ -43,24 +43,23 @@ def main(unused_argv) :
         if not line : break
         line = line.strip()
         if not line : continue
-        sentence = model.inference(sess, graph, builder, annotator, line, FLAGS.enable_tracing)
+        parsed_sentence = model.inference(sess, graph, builder, annotator, line, FLAGS.enable_tracing)
+        out = model.parse_to_conll(parsed_sentence)
         f = sys.stdout
         f.write('# text = ' + line.encode('utf-8') + '\n')
-        for i, token in enumerate(sentence.token) :
-            head = token.head + 1
-            attributed_tag = token.tag.encode('utf-8')
-            attr_dict = model.attributed_tag_to_dict(attributed_tag)
-            fPOS = attr_dict['fPOS']
-            tag = fPOS.replace('++',' ').split()
-            label = token.label.encode('utf-8').split(':')[0]
-            f.write('%s\t%s\t%s\t%s\t%s\t_\t%d\t%s\t_\t_\n'%(
-                i + 1,
-                token.word.encode('utf-8'),
-                token.word.encode('utf-8'),
-                tag[0],
-                tag[1],
-                head,
-                label))
+        for entry in out['conll'] :
+            id = entry['id']
+            form = entry['form']
+            lemma = entry['lemma']
+            upostag = entry['upostag']
+            xpostag = entry['xpostag']
+            feats = entry['feats']
+            head = entry['head']
+            deprel = entry['deprel']
+            deps = entry['deps']
+            misc = entry['misc']
+            li = [id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc]
+            f.write('\t'.join([str(e) for e in li]) + '\n')
         f.write('\n\n')
     durationTime = time.time() - startTime
     sys.stderr.write("duration time = %f\n" % durationTime)

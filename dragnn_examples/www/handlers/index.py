@@ -75,13 +75,13 @@ class DragnnHandler(BaseHandler):
 			try :
 				out = {}
 				if enable_konlpy :
-					segmented, analyzed = model.segment_by_konlpy(query, komoran)
+					segmented, tagged = model.segment_by_konlpy(query, komoran)
 					query = ' '.join(segmented)
-					sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
-					out = model.parse_to_conll(sentence, analyzed)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence, tagged)
 				else :
-					sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
-					out = model.parse_to_conll(sentence)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, query, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence)
 				out['text'] = query
 				rst['output'] = {}
 			except :
@@ -141,13 +141,13 @@ class DragnnHandler(BaseHandler):
 				line = line.strip()
 				if not line : continue
 				if enable_konlpy :
-					segmented, analyzed = model.segment_by_konlpy(line, komoran)
+					segmented, tagged = model.segment_by_konlpy(line, komoran)
 					line = ' '.join(segmented)
-					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-					out = model.parse_to_conll(sentence, analyzed)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence, tagged)
 				else :
-					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-					out = model.parse_to_conll(sentence)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence)
 				out['text'] = line
 				out_list.append(out)
 				idx += 1
@@ -180,15 +180,15 @@ class DragnnTestHandler(BaseHandler):
 				line = line.strip()
 				if not line : continue
 				if enable_konlpy :
-					segmented, analyzed = model.segment_by_konlpy(line, komoran)
+					segmented, tagged = model.segment_by_konlpy(line, komoran)
 					line = ' '.join(segmented)
-					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-					out = model.parse_to_conll(sentence, analyzed)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence, tagged)
 				else :
-					sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
-					out = model.parse_to_conll(sentence)
+					parsed_sentence = model.inference(sess, graph, builder, annotator, line, enable_tracing)
+					out = model.parse_to_conll(parsed_sentence)
 				if idx == 0 :
-					pgraph = model.parse_tree_graph(sentence)
+					pgraph = model.parse_tree_graph(parsed_sentence)
 				out['text'] = line
 				out_list.append(out['conll'])
 				idx += 1

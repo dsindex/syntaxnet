@@ -181,7 +181,7 @@ function train {
 }
 
 prepare_data   ${SRC_CORPUS_DIR} ${DATA_DIR}
-n_steps=10000
+n_steps=100000
 batch_size=64
 train ${n_steps} ${batch_size}
 

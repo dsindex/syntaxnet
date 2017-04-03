@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*-
 import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 import os
 import os.path
 import random

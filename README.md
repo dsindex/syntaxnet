@@ -502,9 +502,15 @@ Parse:
   # start tornado web api
   $ cd work/dragnn_examples/www
   $ ./start.sh -v -v 0 0
-  # despite tornado suppoting multi-processing, dragnn seems not to support, so do not use multi-processing option.
+  
+  # despite tornado suppoting multi-processing, session of tensorflow is not fork-safe.
+  # so do not use multi-processing option.
+  # `distributed tensorflow support` seems to solve this problem.
+  # see : http://stackoverflow.com/questions/37874838/forking-a-python-process-after-loading-tensorflow
+  
   # if you want to link to the model trained by Sejong corpus, just edit env.sh
   # : enable_konlpy='True'
+
   # http://hostip:8897 
   # http://hostip:8897/dragnn?q=i love it
   # http://hostip:8897/dragnn?q=나는 학교에 가서 공부했다.

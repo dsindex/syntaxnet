@@ -40,8 +40,8 @@ def setupAppLogger():
 	fmtStr = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
 	formatter = logging.Formatter(fmt=fmtStr)
 
-        cdir = os.path.dirname(os.path.abspath(sys.argv[0]))
-	logfile = cdir + '/' + 'log/application.log'
+        cdir = os.path.dirname(os.path.abspath(options.log_file_prefix))
+	logfile = cdir + '/' + 'application.log'
 
 	rotatingHandler = RotatingFileHandler(logfile, 'a', options.log_file_max_size, options.log_file_num_backups)
 	rotatingHandler.setFormatter(formatter)
@@ -102,6 +102,7 @@ class Application(tornado.web.Application):
 		# finalize resources
 		self.log.info('finalize resources...')
 		## finalize something....
+		model.unload_model(self.dragnn)
 		
 		log.info('Close logger...')
 		x = list(log.handlers)

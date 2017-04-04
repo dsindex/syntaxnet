@@ -73,7 +73,7 @@ def train(graph, builder, trainers, annotator, summary_writer, do_restore, stats
     tagger_steps = FLAGS.n_steps
     train_steps = [tagger_steps, 8 * tagger_steps]
 
-    with tf.Session(FLAGS.tf_master, graph=graph) as sess:
+    with tf.Session(target=FLAGS.tf_master, graph=graph) as sess:
         # Make sure to re-initialize all underlying state.
         sess.run(tf.global_variables_initializer())
 

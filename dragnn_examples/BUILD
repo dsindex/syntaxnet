@@ -23,6 +23,12 @@ py_binary(
 )
 
 py_binary(
+    name = "master_server",
+    srcs = ["master_server.py"],
+    deps = [":dragnn-deps"],
+)
+
+py_binary(
     name = "dragnn_dm",
     srcs = [
         "www/dragnn_dm.py",

@@ -172,7 +172,7 @@ def build_inference_graph(master_spec, enable_tracing=False) :
         builder.add_saver()
     return graph, builder, annotator
 
-def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing) :
+def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing=False, tf_master='') :
     logging.set_verbosity(logging.WARN)
     # check
     check.IsTrue(dragnn_spec)
@@ -181,10 +181,10 @@ def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing) 
     # Load master spec
     master_spec = load_master_spec(dragnn_spec, resource_path)
     # Build graph
-    graph, builder, annotator = build_inference_graph(master_spec, enable_tracing)
+    graph, builder, annotator = build_inference_graph(master_spec, enable_tracing=enable_tracing)
     with graph.as_default() :
         # Restore model
-        sess = tf.Session(graph=graph)
+        sess = tf.Session(target=tf_master, graph=graph)
         # Make sure to re-initialize all underlying state.
         sess.run(tf.global_variables_initializer())
         builder.saver.restore(sess, checkpoint_filename)

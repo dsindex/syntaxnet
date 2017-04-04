@@ -12,6 +12,8 @@ import model_dragnn as model
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
+flags.DEFINE_string('tf_master', '',
+                    'TensorFlow execution engine to connect to.')
 flags.DEFINE_string('dragnn_spec', '', 
                     'Path to the spec defining the model.')
 flags.DEFINE_string('resource_path', '',
@@ -31,7 +33,8 @@ def main(unused_argv) :
     m = model.load_model(FLAGS.dragnn_spec,
                          FLAGS.resource_path,
                          FLAGS.checkpoint_filename,
-                         FLAGS.enable_tracing)
+                         enable_tracing=FLAGS.enable_tracing,
+                         tf_master=FLAGS.tf_master)
     sess = m['session']
     graph = m['graph']
     builder = m['builder']

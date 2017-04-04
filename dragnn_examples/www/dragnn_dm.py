@@ -33,6 +33,7 @@ define('dragnn_spec', default='', help='path to the spec defining the model', ty
 define('resource_path', default='', help='path to constructed resources', type=str)
 define('checkpoint_filename', default='', help='filename to save the best checkpoint to', type=str)
 define('enable_tracing', default=False, help='whether tracing annotations', type=bool)
+define('tf_master', default='', help='tensorFlow execution engine to connect to', type=str)
 
 log = logging.getLogger('tornado.application')
 
@@ -83,7 +84,8 @@ class Application(tornado.web.Application):
 		dragnn = model.load_model(options.dragnn_spec,
 					options.resource_path,
 					options.checkpoint_filename,
-					options.enable_tracing)
+					enable_tracing=options.enable_tracing,
+					tf_master=options.tf_master)
 		self.dragnn = dragnn
 		self.enable_tracing = options.enable_tracing
 		# import konlpy if needed

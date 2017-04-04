@@ -72,8 +72,8 @@ def main(unused_argv) :
     durationTime = time.time() - startTime
     sys.stderr.write("duration time = %f\n" % durationTime)
 
-    # Close session
-    sess.close()
+    # Unloading model
+    model.unload_model(m)
 
 if __name__ == '__main__':
     tf.app.run()

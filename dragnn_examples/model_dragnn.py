@@ -195,6 +195,10 @@ def load_model(dragnn_spec, resource_path, checkpoint_filename, enable_tracing) 
     m['annotator'] = annotator
     return m
 
+def unload_model(m) :
+    sess = m['session']
+    sess.close()
+
 def inference(sess, graph, builder, annotator, text, enable_tracing=False) :
     tokens = [sentence_pb2.Token(word=word, start=-1, end=-1) for word in text.split()]
     sentence = sentence_pb2.Sentence()

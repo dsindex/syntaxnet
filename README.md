@@ -65,6 +65,7 @@ syntaxnet
 ### how to test
 ```shell
 # after installing syntaxnet.
+# gpu supporting : https://github.com/tensorflow/models/issues/248#issuecomment-288991859
 $ pwd
 /path/to/models/syntaxnet
 $ git clone https://github.com/dsindex/syntaxnet.git work

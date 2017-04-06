@@ -110,7 +110,7 @@ nohup ${PPPDIR}/bazel-bin/work/dragnn_examples/master_server \
 		--dragnn_spec=${DRAGNN_SPEC_FILE} \
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
-		> ${CDIR}/log/master_server.log 2> ${CDIR}/log/master_server.log
+		> ${CDIR}/log/master_server.log 2> ${CDIR}/log/master_server.log &
 
 close_fd
 

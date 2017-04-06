@@ -139,10 +139,11 @@ if (( MODE == 0 )); then
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 		--enable_tracing=False \
+		--tf_master=${TF_MASTER} \
 		--log_file_prefix=${CDIR}/log/access.log \
 		> /dev/null 2> /dev/null &
 else
-	sudo ${python}  ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} \
+	nohup ${python}  ${PPPDIR}/bazel-bin/work/dragnn_examples/${daemon_name} \
 		--debug=False \
 		--port=${port_service} \
 		--process=${PROCESS} \
@@ -151,6 +152,7 @@ else
 		--resource_path=${DATA_DIR} \
 		--checkpoint_filename=${CHECKPOINT_FILE} \
 		--enable_tracing=False \
+		--tf_master=${TF_MASTER} \
 		--log_file_prefix=${CDIR}/log/access.log \
 		> /dev/null 2> /dev/null &
 fi

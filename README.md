@@ -6,7 +6,7 @@
     - [description](#description)
     - [history](#history)
     - [how to test](#how-to-test)
-    - [download univeral dependency treebank data( http://universaldependencies.org/#en )](#download-univeral-dependency-treebank-data-httpuniversaldependenciesorgen-)
+    - [univeral dependency corpus](#univeral-dependency-corpus)
     - [training tagger and parser with another corpus](#training-tagger-and-parser-with-another-corpus)
     - [training parser only](#training-parser-only)
     - [test new model](#test-new-model)
@@ -15,7 +15,8 @@
     - [apply korean POS tagger(Komoran via konlpy)](#apply-korean-pos-taggerkomoran-via-konlpy)
     - [tensorflow serving and syntaxnet](#tensorflow-serving-and-syntaxnet)
     - [parsey's cousins](#parseys-cousins)
-	- [dragnn](#dragnn)
+    - [dragnn](#dragnn)
+    - [brat annotation tool](#brat-annotation-tool)
     - [comparison to BIST parser](#comparison-to-bist-parser)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -75,7 +76,14 @@ $ echo "hello syntaxnet" | ./demo.sh
 $ ./parser_trainer_test.sh
 ```
 
-### download univeral dependency treebank data( http://universaldependencies.org/#en )
+### univeral dependency corpus
+
+- [UD official website](http://universaldependencies.org/)
+  - [tutorial](http://universaldependencies.org/eacl17tutorial/)
+  - [CoNLL-U format](http://universaldependencies.org/format.html)
+- [UPPipe](https://ufal.mff.cuni.cz/udpipe)
+  - [udpipe(git)](https://github.com/ufal/udpipe)
+- prepare data
 ```shell
 $ cd work
 $ mkdir corpus
@@ -518,5 +526,11 @@ Parse:
   ```
   ![view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
   - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
+
+### brat annotation tool
+
+- [brat](http://brat.nlplab.org/)
+- [conllu to brat format](https://github.com/spyysalo/conllu.py)
+- [reference](https://github.com/dsindex/blog/wiki/%5Bbrat%5D-brat-rapid-annotation-tool)
 
 ### comparison to [BIST parser](https://github.com/dsindex/bist-parser)

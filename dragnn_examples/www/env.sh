@@ -48,7 +48,8 @@ DRAGNN_SPEC_FILE=${DATA_DIR}/parser_spec.textproto
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
 # tf master
-TF_MASTER=grpc://localhost:45806
+TF_MASTER=''
+#TF_MASTER=grpc://localhost:45806
 
 # command setting
 python='/usr/bin/python'

@@ -510,13 +510,10 @@ Parse:
   $ bazel build -c opt //work/dragnn_examples:dragnn_dm
   # start tornado web api
   $ cd work/dragnn_examples/www
+  # start single process
   $ ./start.sh -v -v 0 0
-  
   # despite tornado suppoting multi-processing, session of tensorflow is not fork-safe.
   # so do not use multi-processing option.
-  # `distributed tensorflow support` seems to solve this problem.
-  # see : http://stackoverflow.com/questions/37874838/forking-a-python-process-after-loading-tensorflow
-  
   # if you want to link to the model trained by Sejong corpus, just edit env.sh
   # : enable_konlpy='True'
 
@@ -526,6 +523,9 @@ Parse:
   ```
   ![view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
   - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
+  - multi-processing via distributed tensorflow support ( not working )
+  ```
+  ```
 
 ### brat annotation tool
 

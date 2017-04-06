@@ -78,15 +78,9 @@ class Application(tornado.web.Application):
 		autoreload.add_reload_hook(self.finalize)
 
 		self.log = setupAppLogger()
-
-		self.log.info('initialize...')
-		# Loading model
-		dragnn = model.load_model(options.dragnn_spec,
-					options.resource_path,
-					options.checkpoint_filename,
-					enable_tracing=options.enable_tracing,
-					tf_master=options.tf_master)
-		self.dragnn = dragnn
+		ppid = os.getpid()
+		self.log.info('initialize parent process[%s] ...' % (ppid))
+		self.ppid = ppid
 		self.enable_tracing = options.enable_tracing
 		# import konlpy if needed
 		self.enable_konlpy = options.enable_konlpy
@@ -95,16 +89,29 @@ class Application(tornado.web.Application):
 			from konlpy.tag import Komoran
 			komoran = Komoran()
 			self.komoran = komoran
-		self.log.info('initialize... done')
+		self.log.info('initialize parent process[%s] ... done' % (ppid))
 
 		log.info('start http start...')
 
+	def initialize(self) :
+		pid = os.getpid()
+		self.log.info('initialize per process[%s] ...' % (pid))
+		# Loading model
+		self.dragnn = {}
+		m = model.load_model(options.dragnn_spec,
+					options.resource_path,
+					options.checkpoint_filename,
+					enable_tracing=options.enable_tracing,
+					tf_master=options.tf_master)
+		self.dragnn[pid] = m
+		self.log.info('initialize per process[%s] ... done' % (pid))
 		
 	def finalize(self):
 		# finalize resources
 		self.log.info('finalize resources...')
 		## finalize something....
-		model.unload_model(self.dragnn)
+		for m in self.dragnn.iteritems() :
+			model.unload_model(m)
 		
 		log.info('Close logger...')
 		x = list(log.handlers)
@@ -117,6 +124,7 @@ def main():
 	tornado.options.parse_command_line()
 
 	application = Application()
+	application.initialize()
 	httpServer = tornado.httpserver.HTTPServer(application, no_keep_alive=True)
 	if options.debug == True :
 		httpServer.listen(options.port)
@@ -124,10 +132,15 @@ def main():
 		httpServer.bind(options.port)
 		if options.process == 0 :
 			httpServer.start(0) # Forks multiple sub-processes, maximum to number of cores
+			if pid != application.ppid :
+				application.initialize()
 		else :
 			if options.process < 0 :
 				options.process = 1
 			httpServer.start(options.process) # Forks multiple sub-processes, given number
+			pid = os.getpid()
+			if pid != application.ppid :
+				application.initialize()
 
 	MAX_WAIT_SECONDS_BEFORE_SHUTDOWN = 3
 

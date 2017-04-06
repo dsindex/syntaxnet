@@ -50,6 +50,8 @@ class DragnnHandler(BaseHandler):
 		debug = {}
 		debug['callback'] = callback
 		debug['mode'] = mode
+		pid = os.getpid()
+		debug['pid'] = pid
 
 		rst = {}
 		rst['msg'] = ''
@@ -64,11 +66,11 @@ class DragnnHandler(BaseHandler):
 			rst['msg'] = "input query encode('utf-8') fail"
 			rst['output'] = []
 		else :
-			dragnn = self.dragnn
-			sess = dragnn['session']
-			graph = dragnn['graph']
-			builder = dragnn['builder']
-			annotator = dragnn['annotator']
+			m = self.dragnn[pid]
+			sess = m['session']
+			graph = m['graph']
+			builder = m['builder']
+			annotator = m['annotator']
 			enable_tracing = self.enable_tracing
 			enable_konlpy = self.enable_konlpy
 			komoran = self.komoran
@@ -126,11 +128,12 @@ class DragnnHandler(BaseHandler):
 			ret = str(e)
 			self.write(dict(success=True, info=ret))
 		else :
-			dragnn = self.dragnn
-			sess = dragnn['session']
-			graph = dragnn['graph']
-			builder = dragnn['builder']
-			annotator = dragnn['annotator']
+			pid = os.getpid()
+			m = self.dragnn[pid]
+			sess = m['session']
+			graph = m['graph']
+			builder = m['builder']
+			annotator = m['annotator']
 			enable_tracing = self.enable_tracing
 			enable_konlpy = self.enable_konlpy
 			komoran = self.komoran
@@ -164,11 +167,12 @@ class DragnnTestHandler(BaseHandler):
 			ret = str(e)
 			self.write(dict(success=True, info=ret))
 		else :
-			dragnn = self.dragnn
-			sess = dragnn['session']
-			graph = dragnn['graph']
-			builder = dragnn['builder']
-			annotator = dragnn['annotator']
+			pid = os.getpid()
+			m = self.dragnn[pid]
+			sess = m['session']
+			graph = m['graph']
+			builder = m['builder']
+			annotator = m['annotator']
 			enable_tracing = self.enable_tracing
 			enable_konlpy = self.enable_konlpy
 			komoran = self.komoran
@@ -193,7 +197,6 @@ class DragnnTestHandler(BaseHandler):
 				out_list.append(out['conll'])
 				idx += 1
 			#self.write(dict(success=True, record=out_list, info=None, filename='static/img/tree.png'))
-			#self.write(dict(success=True, record=out_list, info=None))
 			self.write(dict(success=True, record=out_list, info=None, pgraph=pgraph))
 
 		self.finish()

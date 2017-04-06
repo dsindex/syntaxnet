@@ -17,13 +17,13 @@ flags.DEFINE_bool('enable_tracing', False,
 def main(unused_argv) :
     tf.logging.info('Start master server...')
     server = tf.train.Server.create_local_server()
-    print server.target  # for other processes to connect
     # Loading model
     m = model.load_model(FLAGS.dragnn_spec,
                          FLAGS.resource_path,
                          FLAGS.checkpoint_filename,
                          enable_tracing=FLAGS.enable_tracing,
                          tf_master=server.target)
+    print server.target  # for other processes to connect
     server.join()
 
 if __name__ == '__main__':

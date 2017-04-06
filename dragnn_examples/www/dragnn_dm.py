@@ -82,7 +82,7 @@ class Application(tornado.web.Application):
 		self.log.info('initialize parent process[%s] ...' % (ppid))
 		self.ppid = ppid
 		self.enable_tracing = options.enable_tracing
-		# import konlpy if needed
+		# import konlpy if enabled
 		self.enable_konlpy = options.enable_konlpy
 		self.komoran = None
 		if options.enable_konlpy :

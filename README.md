@@ -523,14 +523,6 @@ Parse:
   ```
   ![view(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api_view.png)
   - [api output format(sample)](https://raw.githubusercontent.com/dsindex/syntaxnet/master/dragnn_examples/www/static/img/dragnn_api.png)
-  - multi-processing via distributed tensorflow support ( not working )
-  ```
-  # 1. i try to call `load_model()` per child process.
-  #    - it hangs in the second call.
-  # 2. i try to use distributed tensorflow support.
-  #    (see http://stackoverflow.com/questions/37874838/forking-a-python-process-after-loading-tensorflow )
-  #    - not working. hmm...
-  ```
 
 ### brat annotation tool
 

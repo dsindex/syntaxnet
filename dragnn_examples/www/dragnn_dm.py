@@ -110,7 +110,7 @@ class Application(tornado.web.Application):
 		# finalize resources
 		self.log.info('finalize resources...')
 		## finalize something....
-		for m in self.dragnn.iteritems() :
+		for pid, m in self.dragnn.iteritems() :
 			model.unload_model(m)
 		
 		log.info('Close logger...')

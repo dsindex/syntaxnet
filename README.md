@@ -6,7 +6,7 @@
     - [description](#description)
     - [history](#history)
     - [how to test](#how-to-test)
-    - [univeral dependency corpus](#univeral-dependency-corpus)
+    - [universal dependency corpus](#universal-dependency-corpus)
     - [training tagger and parser with another corpus](#training-tagger-and-parser-with-another-corpus)
     - [training parser only](#training-parser-only)
     - [test new model](#test-new-model)

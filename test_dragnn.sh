@@ -132,6 +132,10 @@ python=/usr/bin/python
 DATA_DIR=${CDIR}/dragnn_examples/data
 CHECKPOINT_FILE=${DATA_DIR}/checkpoint.model
 
+# for testing pretrained models, https://github.com/tensorflow/models/tree/master/research/syntaxnet/g3doc/conll2017
+# DATA_DIR=${CDIR}/dragnn_examples/conll17/Korean
+# CHECKPOINT_FILE=${DATA_DIR}/checkpoint
+
 CONLL2TREE=${PDIR}/bazel-bin/syntaxnet/conll2tree
 
 function test {

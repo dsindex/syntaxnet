@@ -297,7 +297,6 @@ function copy_model {
 
 convert_corpus ${CORPUS_DIR}
 train_tagger
-exit
 preprocess_with_tagger
 pretrain_parser
 evaluate_pretrained_parser

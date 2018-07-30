@@ -176,6 +176,10 @@ function train_tagger {
 	  --report_every=100 \
 	  --checkpoint_every=1000 \
 	  --logtostderr
+	  
+	  # for retraining brain_tagger with new corpus
+	  #--pretrained_params=${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model \
+	  #--pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
 }
 
 function preprocess_with_tagger {
@@ -293,6 +297,7 @@ function copy_model {
 
 convert_corpus ${CORPUS_DIR}
 train_tagger
+exit
 preprocess_with_tagger
 pretrain_parser
 evaluate_pretrained_parser

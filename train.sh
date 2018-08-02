@@ -179,7 +179,7 @@ function train_tagger {
 	  
 	  # for retraining brain_tagger with new corpus
 	  #--pretrained_params=${TMP_DIR}/brain_tagger/greedy/${TAGGER_PARAMS}/model \
-	  #--pretrained_params_names=embedding_matrix_0,embedding_matrix_1,embedding_matrix_2,bias_0,weights_0,bias_1,weights_1 \
+	  #--pretrained_params_names=bias_0,weights_0,bias_1,weights_1 \
 }
 
 function preprocess_with_tagger {

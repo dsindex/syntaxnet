@@ -9,6 +9,6 @@
   "author": "David Mansfield <dmansfield@gmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "grpc": "^0.14.1"
+    "grpc": ">=1.24.4"
   }
 }
